@@ -1,17 +1,17 @@
 package by.bsu.uir.university.service.impl;
 
-import by.bsu.uir.university.service.trait.Creator;
-import by.bsu.uir.university.service.trait.Deleter;
-import by.bsu.uir.university.service.trait.Reader;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+import java.util.Objects;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
-
-import static java.util.stream.Collectors.toList;
+import by.bsu.uir.university.service.trait.Deleter;
+import by.bsu.uir.university.service.trait.Reader;
 
 public abstract class AbstractService<T, D, K>
     implements Reader<D, K>
@@ -62,6 +62,11 @@ public abstract class AbstractService<T, D, K>
         .stream()
         .map(this::toDto)
         .collect(toList());
+  }
+
+  @Override
+  public void delete(D item) {
+    // FIXME: Stub
   }
 
   @Override

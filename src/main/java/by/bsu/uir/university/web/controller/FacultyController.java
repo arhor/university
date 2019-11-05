@@ -28,12 +28,7 @@ public class FacultyController {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public List<FacultyDto> getAllFaculties() {
-    return service.findAll();
-  }
-
-  @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-  public List<FacultyDto> getFacultiesPage(
+  public List<FacultyDto> getFaculties(
       @RequestParam Integer page,
       @RequestParam Integer size) {
     return service.findPage(

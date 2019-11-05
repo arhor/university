@@ -1,6 +1,8 @@
 package by.bsu.uir.university.web.filter;
 
 import by.bsu.uir.university.util.Lazy;
+
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
@@ -24,19 +26,16 @@ import java.util.regex.Pattern;
   * @author Maksim Buryshynets
   * @version 1.0 11 March 2019
   */
-@Component("customCsrfFilter")
+@Component
+@Profile({"!dev"})
 public class CustomCsrfFilter extends OncePerRequestFilter {
 
   private static final String ERROR_MSG = "CSRF token is missing or not matching";
   private static final String CSRF_COOKIE = "XSRF-TOKEN";
   private static final String CSRF_HEADER = "X-XSRF-TOKEN";
-  private static final Supplier<Pattern> SAFE_METHOD;
-
-  static {
-    SAFE_METHOD = Lazy.eval(() -> Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$"));
-  }
 
   private final AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
+  private final Supplier<Pattern> safeMethod = Lazy.eval(() -> Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$"));
 
   @Override
   protected void doFilterInternal(
@@ -45,7 +44,7 @@ public class CustomCsrfFilter extends OncePerRequestFilter {
       FilterChain filterChain) throws IOException, ServletException {
 
     final var method = req.getMethod();
-    final var isTokenRequired = SAFE_METHOD.get().matcher(method).matches();
+    final var isTokenRequired = safeMethod.get().matcher(method).matches();
 
     if (isTokenRequired) {
       final var csrfHeaderToken = req.getHeader(CSRF_HEADER);
