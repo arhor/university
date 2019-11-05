@@ -1,0 +1,22 @@
+plugins {
+    id 'com.moowork.node' version '1.3.1'
+    id 'base'
+}
+
+node {
+    download = true
+    version  = '12.4.0'
+
+    workDir    = file("${project.projectDir}/nodejs")
+    npmWorkDir = file("${project.projectDir}/npm")
+}
+
+task webappBuild(type: NpmTask, dependsOn: npmInstall) {
+    description = 'Builds production version of the webapp'
+    workingDir = file("${project.projectDir}")
+    args = ['run', 'build']
+}
+
+assemble.dependsOn webappBuild
+
+description = 'webapp'

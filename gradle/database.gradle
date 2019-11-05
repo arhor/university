@@ -1,0 +1,53 @@
+import groovy.sql.Sql
+
+//buildscript {
+//    repositories {
+//        mavenCentral()
+//    }
+//
+//    dependencies {
+//        classpath 'com.microsoft.sqlserver:mssql-jdbc'
+//    }
+//}
+
+class Module {
+    final String name
+    final String text
+
+    Module(String name, String text) {
+        this.name = name
+        this.text = text
+    }
+}
+
+task loadModules() {
+    doLast {
+        def modules = new ArrayList<Module>()
+
+        println 'loading modules >>> START'
+
+        fileTree('sql/database').each {
+            if (it.name.endsWith('.sql')) {
+                def name = it.name.replace('.sql', '')
+                def text = it.text
+                modules.add(new Module(name, text))
+            }
+        }
+
+        println 'loading modules <<< END'
+
+        modules.each {println it.name}
+    }
+}
+
+//task initSchema() {
+//    doLast {
+//        def url    = 'jdbc:sqlserver://localhost;databaseName=university'
+//        def driver = 'com.microsoft.sqlserver.jdbc.SQLServerDriver'
+//        def props  = [user: 'sa', password: 'password', allowMultiQueries: 'true'] as Properties
+//
+//        def sql = Sql.newInstance(url, props, driver)
+//
+//        sql.close()
+//    }
+//}
