@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.1.9.RELEASE'
+    id 'org.springframework.boot' version '2.2.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
     id 'idea'
@@ -10,9 +10,10 @@ apply from: './gradle/database.gradle'
 
 group = 'by.bsu.uir'
 version = '0.0.1-SNAPSHOT'
+description = 'university'
 
-sourceCompatibility = '12'
-targetCompatibility = '12'
+sourceCompatibility = '13'
+targetCompatibility = '13'
 
 configurations {
     compileOnly {
@@ -76,5 +77,3 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
-
-description = 'university'

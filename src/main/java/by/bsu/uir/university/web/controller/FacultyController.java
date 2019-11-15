@@ -1,8 +1,7 @@
 package by.bsu.uir.university.web.controller;
 
-import by.bsu.uir.university.service.FacultyService;
-import by.bsu.uir.university.service.dto.FacultyDto;
-import by.bsu.uir.university.web.controller.util.Constants;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
@@ -13,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import by.bsu.uir.university.service.FacultyService;
+import by.bsu.uir.university.service.dto.FacultyDto;
+import by.bsu.uir.university.web.controller.util.Constants;
 
 @Lazy
 @RestController
@@ -27,7 +28,7 @@ public class FacultyController {
     this.service = service;
   }
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FacultyDto> getFaculties(
       @RequestParam Integer page,
       @RequestParam Integer size) {
@@ -36,7 +37,7 @@ public class FacultyController {
         (size != null) ? size : Constants.DEFAULT_SIZE);
   }
 
-  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public FacultyDto getFaculty(@PathVariable("id") Long id) {
     return service.findOne(id);
   }
