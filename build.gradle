@@ -23,8 +23,9 @@ configurations {
 
 tasks.withType(JavaCompile).each {
     it.options.compilerArgs += [
+//            '--enable-preview',
             '-Xlint:preview',
-            '-Xlint:unchecked'
+            '-Xlint:unchecked',
     ]
 }
 
@@ -45,10 +46,8 @@ jacocoTestReport {
             fileTree(dir: it, exclude: [
                     "**/domain/**",
                     "**/dto/**",
-                    "**/context/**",
-                    "**/exception/**",
                     "**/error/**",
-                    "**/config/**"
+                    "**/config/**",
             ])
         }
     }

@@ -1,6 +1,6 @@
 package by.bsu.uir.university.domain.model;
 
-import lombok.Data;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -11,7 +11,8 @@ import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import java.io.Serializable;
+
+import lombok.Data;
 
 @Data
 @Entity

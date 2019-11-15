@@ -1,18 +1,18 @@
 package by.bsu.uir.university.domain.model;
 
-import lombok.Data;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
+import lombok.Data;
+
 @Data
 @MappedSuperclass
-public abstract class AbstractEntity<K> {
+public abstract class AbstractEntity<ID> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  protected K id;
+  protected ID id;
 
 }

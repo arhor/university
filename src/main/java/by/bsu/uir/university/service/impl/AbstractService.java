@@ -3,7 +3,6 @@ package by.bsu.uir.university.service.impl;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -12,23 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import by.bsu.uir.university.service.trait.Deleter;
 import by.bsu.uir.university.service.trait.Reader;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public abstract class AbstractService<T, D, K>
     implements Reader<D, K>
              , Deleter<D, K> {
 
-  protected final Class<D> dtoClass;
-  protected final JpaRepository<T, K> repository;
-  protected final ModelMapper mapper;
-
-  public AbstractService(Class<D> dtoClass, JpaRepository<T, K> repository, ModelMapper mapper) {
-    Objects.requireNonNull(dtoClass);
-    Objects.requireNonNull(repository);
-    Objects.requireNonNull(mapper);
-    this.dtoClass = dtoClass;
-    this.repository = repository;
-    this.mapper = mapper;
-  }
+  @NonNull protected final Class<D> dtoClass;
+  @NonNull protected final JpaRepository<T, K> repository;
+  @NonNull protected final ModelMapper mapper;
 
   protected D toDto(T entity) {
     return mapper.map(entity, dtoClass);
@@ -41,7 +34,6 @@ public abstract class AbstractService<T, D, K>
         .findById(id)
         .map(this::toDto)
         .orElseThrow(() -> new RuntimeException());
-//        .orElseThrow(ExceptionProvider.notFound(dtoClass).apply("Id", id));
   }
 
   @Override

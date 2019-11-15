@@ -25,6 +25,7 @@ public final class Lazy<T> implements RichSupplier<T> {
       synchronized (this) {
         if (!computed) {
           value = source.get();
+          // Nullifying source reference allows to release associated scope and prevent memory leaks
           source = null;
           computed = true;
         }
@@ -39,17 +40,16 @@ public final class Lazy<T> implements RichSupplier<T> {
 
   @Override
   public <R> Lazy<R> map(final Function<T, R> f) {
-    return new Lazy<>(() -> f.apply(this.get()));
+    return eval(() -> f.apply(this.get()));
   }
 
   @Override
   public <R> Lazy<R> flatMap(Function<T, Lazy<R>> f) {
-    return new Lazy<>(() -> f.apply(this.get()).get());
+    return eval(() -> f.apply(this.get()).get());
   }
 
   @Override
-  public <R, U> Lazy<U> merge(Lazy<R> that, BiFunction<T, R, U> f) {
-    Objects.requireNonNull(that);
-    return new Lazy<>(() -> f.apply(this.get(), that.get()));
+  public <R, U> Lazy<U> compose(Lazy<R> that, BiFunction<T, R, U> f) {
+    return eval(() -> f.apply(this.get(), that.get()));
   }
 }

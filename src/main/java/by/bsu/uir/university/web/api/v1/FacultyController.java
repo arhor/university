@@ -1,4 +1,4 @@
-package by.bsu.uir.university.web.controller;
+package by.bsu.uir.university.web.api.v1;
 
 import java.util.List;
 
@@ -14,19 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import by.bsu.uir.university.service.FacultyService;
 import by.bsu.uir.university.service.dto.FacultyDto;
-import by.bsu.uir.university.web.controller.util.Constants;
+import by.bsu.uir.university.web.api.util.Constants;
+import lombok.RequiredArgsConstructor;
 
 @Lazy
 @RestController
-@RequestMapping(path = {"/api/faculties"})
+@RequestMapping(path = "/api/v1/faculties")
+@RequiredArgsConstructor
 public class FacultyController {
 
   private final FacultyService service;
-
-  @Autowired
-  public FacultyController(FacultyService service) {
-    this.service = service;
-  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FacultyDto> getFaculties(

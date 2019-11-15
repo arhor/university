@@ -1,5 +1,9 @@
 package by.bsu.uir.university.service.error;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public enum ErrorLabel {
 
   NOT_FOUND_USER     ("error.not.found.user"),
@@ -9,13 +13,6 @@ public enum ErrorLabel {
   NOT_FOUND_LANG     ("error.not.found.lang"),
   NOT_FOUND_ROLE     ("error.not.found.role");
 
+  @Getter
   private final String value;
-
-  ErrorLabel(String value) {
-    this.value = value;
-  }
-
-  public String getValue() {
-    return value;
-  }
 }

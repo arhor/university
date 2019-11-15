@@ -1,4 +1,4 @@
-package by.bsu.uir.university.web.controller.util;
+package by.bsu.uir.university.web.api.util;
 
 public final class Constants {
   public static final int DEFAULT_PAGE = 1;
