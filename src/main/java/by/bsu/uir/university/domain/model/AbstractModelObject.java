@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @MappedSuperclass
-public abstract class AbstractEntity<ID> {
+public abstract class AbstractModelObject<ID> implements ModelObject {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

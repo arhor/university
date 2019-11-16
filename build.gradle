@@ -23,7 +23,6 @@ configurations {
 
 tasks.withType(JavaCompile).each {
     it.options.compilerArgs += [
-//            '--enable-preview',
             '-Xlint:preview',
             '-Xlint:unchecked',
     ]
@@ -44,10 +43,10 @@ jacocoTestReport {
     afterEvaluate {
         getClassDirectories() from classDirectories.files.collect {
             fileTree(dir: it, exclude: [
-                    "**/domain/**",
-                    "**/dto/**",
-                    "**/error/**",
-                    "**/config/**",
+                    '**/domain/**',
+                    '**/dto/**',
+                    '**/error/**',
+                    '**/config/**',
             ])
         }
     }

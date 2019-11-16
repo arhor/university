@@ -18,7 +18,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
-public class User extends AbstractEntity<Long> {
+public class User extends AbstractModelObject<Long> {
 
   @NotEmpty
   @Size(min = 6, max = 255)

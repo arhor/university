@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "roles")
 @EqualsAndHashCode(callSuper = true)
-public class Role extends AbstractEntity<Short> {
+public class Role extends AbstractModelObject<Short> {
 
   @NotNull
   @Enumerated(EnumType.STRING)

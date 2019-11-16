@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "subjects")
 @EqualsAndHashCode(callSuper = true)
-public class Subject extends AbstractEntity<Long> {
+public class Subject extends AbstractModelObject<Long> {
 
   @NotEmpty
   @Column(name = "default_title", nullable = false, unique = true, length = 64)

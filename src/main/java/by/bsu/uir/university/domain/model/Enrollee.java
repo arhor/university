@@ -23,7 +23,7 @@ import lombok.ToString;
 @Table(name = "enrollees")
 @EqualsAndHashCode(callSuper = true, exclude = {"user"})
 @ToString(exclude = {"user"})
-public class Enrollee extends AbstractEntity<Long> {
+public class Enrollee extends AbstractModelObject<Long> {
 
   @NotEmpty
   @Column(name = "country", nullable = false, length = 64)

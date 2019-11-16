@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Table(name = "langs")
 @EqualsAndHashCode(callSuper = true)
-public class Lang extends AbstractEntity<Short> {
+public class Lang extends AbstractModelObject<Short> {
 
   @NotNull
   @Enumerated(EnumType.STRING)

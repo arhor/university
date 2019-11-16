@@ -7,7 +7,7 @@ export default function Home() {
     async function fetchData() {
       try {
         const { data } = await axios.get('http://localhost:8080/api/v1/langs')
-        setMsg(data.map(lang => `{lang.label} `))
+        setMsg(data.map(lang => `${lang.label} `))
       } catch (error) {
         console.error(error)
       }
