@@ -4,7 +4,7 @@
 USE [university]
 GO
 
-IF (OBJECT_ID('faculties_has_enrollees'))
+IF (OBJECT_ID('faculties_has_enrollees') IS NULL)
 BEGIN
     CREATE TABLE [dbo].[faculties_has_enrollees]
     (
@@ -14,12 +14,12 @@ BEGIN
 
         CONSTRAINT [PK_faculties_has_enrollees] PRIMARY KEY CLUSTERED ([faculty_id], [enrollee_id]),
 
-        CONSTRAINT [FK_faculties_has_enrollees_faculty_id] FOREIGN KEY ([faculty_id] ASC)
+        CONSTRAINT [FK_faculties_has_enrollees_faculty_id] FOREIGN KEY ([faculty_id])
         REFERENCES [dbo].[faculties] (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
 
-        CONSTRAINT [FK_faculties_has_enrollees_enrollee_id] FOREIGN KEY ([enrollee_id] ASC)
+        CONSTRAINT [FK_faculties_has_enrollees_enrollee_id] FOREIGN KEY ([enrollee_id])
         REFERENCES [dbo].[enrollees] (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE

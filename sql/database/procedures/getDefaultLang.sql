@@ -12,7 +12,7 @@ END
 CREATE PROCEDURE [dbo].[getDefaultLang]
 AS
 BEGIN
-    DECLARE @defaultLang = 'RU'
+    DECLARE @defaultLang [CHAR](2) = 'RU'
     DECLARE @id AS [BIGINT]
 
     SELECT @id = [langs].[id]

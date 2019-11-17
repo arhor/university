@@ -11,7 +11,7 @@ BEGIN
 
         CONSTRAINT [PK_langs] PRIMARY KEY CLUSTERED ([Id] ASC),
 
-        CONSTRAINT [CK_langs_label] CHECK
+        CONSTRAINT [CHK_langs_label] CHECK
         (
             [label] LIKE '[A-Z][A-Z]'
         )

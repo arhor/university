@@ -16,7 +16,17 @@ BEGIN
         [role_id]       [BIGINT]           NOT NULL,
         [lang_id]       [BIGINT]           NOT NULL,
 
-        CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED ([Id] ASC)
+        CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED ([Id] ASC),
+
+        CONSTRAINT [FK_users_role_id] FOREIGN KEY ([role_id])
+        REFERENCES [dbo].[roles] (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+
+        CONSTRAINT [FK_users_langs_id] FOREIGN KEY ([lang_id])
+        REFERENCES [dbo].[langs] (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
     )
 
     CREATE UNIQUE NONCLUSTERED INDEX [IDX_users_email] ON [users] ([email] ASC)

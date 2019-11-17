@@ -1,23 +1,23 @@
 -- #dependencies: [roles]
 
--- #create-procedure: getDefaultRole >>> START
+-- #create-procedure: getAdminRole >>> START
 USE [university]
 GO
 
-IF (OBJECT_ID('getDefaultRole') IS NOT NULL)
+IF (OBJECT_ID('getAdminRole') IS NOT NULL)
 BEGIN
-    DROP PROCEDURE [getDefaultRole]
+    DROP PROCEDURE [getAdminRole]
 END
 
-CREATE PROCEDURE [dbo].[getDefaultRole]
+CREATE PROCEDURE [dbo].[getAdminRole]
 AS
 BEGIN
-    DECLARE @defaultRole [NVARCHAR] = 'USER'
+    DECLARE @adminRole [NVARCHAR] = 'ADMIN'
     DECLARE @id AS [BIGINT]
 
     SELECT @id = [roles].[id]
     FROM  [roles] WITH (NOLOCK)
-    WHERE [roles].[title] = @defaultRole
+    WHERE [roles].[title] = @adminRole
 
     IF (@id IS NULL)
     BEGIN
@@ -25,11 +25,11 @@ BEGIN
         BEGIN TRANSACTION
             SELECT @id = [roles].[id]
             FROM  [roles]
-            WHERE [roles].[title] = @defaultRole
+            WHERE [roles].[title] = @adminRole
 
             IF (@id IS NULL)
             BEGIN
-                INSERT INTO [roles] (title) VALUES (@defaultRole)
+                INSERT INTO [roles] (title) VALUES (@adminRole)
                 SELECT @id = SCOPE_IDENTITY()
             END
         COMMIT TRANSACTION
@@ -37,4 +37,4 @@ BEGIN
 
     SELECT @id
 END
--- #create-procedure: getDefaultRole <<< END
+-- #create-procedure: getAdminRole <<< END

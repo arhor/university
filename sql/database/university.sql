@@ -33,7 +33,7 @@ GO
 IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
 BEGIN
     CREATE LOGIN UniversitySA
-    WITH PASSWORD = 'dragonlance'
+    WITH PASSWORD = '1university@SECRET!'
     GO
 
     CREATE USER UniversitySA
