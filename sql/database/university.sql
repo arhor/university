@@ -7,18 +7,18 @@ GO
 IF (DB_ID('university') IS NULL)
 BEGIN
     CREATE DATABASE [university]
-    ON [PRIMARY]
+    ON
     (
         NAME = university_db,
-        FILENAME = 'D:\\database\\university_db.mdf',
+        FILENAME = 'D:\database\university_db.mdf',
         SIZE = 128MB,
         MAXSIZE = UNLIMITED,
         FILEGROWTH = 15%
     )
     LOG ON
     (
-        NAME = university_db,
-        FILENAME = 'D:\\database\\university_db.ldf',
+        NAME = university_log,
+        FILENAME = 'D:\database\university_db.ldf',
         SIZE = 128MB,
         MAXSIZE = UNLIMITED,
         FILEGROWTH = 15%
