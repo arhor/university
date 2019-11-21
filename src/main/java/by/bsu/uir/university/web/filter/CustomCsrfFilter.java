@@ -1,6 +1,6 @@
 package by.bsu.uir.university.web.filter;
 
-import by.bsu.uir.university.util.Lazy;
+import by.arhor.utility.Lazy;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.AccessDeniedException;
@@ -35,7 +35,7 @@ public class CustomCsrfFilter extends OncePerRequestFilter {
   private static final String CSRF_HEADER = "X-XSRF-TOKEN";
 
   private final AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
-  private final Supplier<Pattern> safeMethod = Lazy.eval(() -> Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$"));
+  private final Lazy<Pattern> safeMethod = Lazy.eval(() -> Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$"));
 
   @Override
   protected void doFilterInternal(

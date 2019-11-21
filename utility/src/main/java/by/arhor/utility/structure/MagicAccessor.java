@@ -1,4 +1,4 @@
-package by.bsu.uir.university.util;
+package by.arhor.utility.structure;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import lombok.RequiredArgsConstructor;
+import by.arhor.utility.Lazy;
 
 public class MagicAccessor {
 
@@ -54,6 +54,7 @@ public class MagicAccessor {
 
       fieldMetaHolders.add(
           new FieldMetaHolder(
+              declaredField.getName(),
               target.getAnnotations(),
               varHandle
           )
@@ -63,11 +64,18 @@ public class MagicAccessor {
     metas.put(target, fieldMetaHolders);
   }
 
-  @RequiredArgsConstructor
   private static class FieldMetaHolder<T> {
+    private final String name;
     private final Annotation[] constraints;
     private final VarHandle accessor;
 
+    private FieldMetaHolder(String name, Annotation[] constraints, VarHandle accessor) {
+      this.name = name;
+      this.constraints = constraints;
+      this.accessor = accessor;
+    }
+
+    @SuppressWarnings("unchecked")
     T get(Object that) {
       return (T) accessor.get(that);
     }

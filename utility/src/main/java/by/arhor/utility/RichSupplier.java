@@ -1,4 +1,4 @@
-package by.bsu.uir.university.util;
+package by.arhor.utility;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -17,7 +17,7 @@ public interface RichSupplier<T> extends Supplier<T> {
     return () -> f.apply(this.get()).get();
   }
 
-  default <R, U> RichSupplier<U> compose(Lazy<R> that, BiFunction<T, R, U> f) {
+  default <R, U> RichSupplier<U> merge(Lazy<R> that, BiFunction<T, R, U> f) {
     return () -> f.apply(this.get(), that.get());
   }
 

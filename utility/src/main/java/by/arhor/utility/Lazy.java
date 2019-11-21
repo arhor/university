@@ -1,4 +1,4 @@
-package by.bsu.uir.university.util;
+package by.arhor.utility;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -49,7 +49,7 @@ public final class Lazy<T> implements RichSupplier<T> {
   }
 
   @Override
-  public <R, U> Lazy<U> compose(Lazy<R> that, BiFunction<T, R, U> f) {
+  public <R, U> Lazy<U> merge(Lazy<R> that, BiFunction<T, R, U> f) {
     return eval(() -> f.apply(this.get(), that.get()));
   }
 }

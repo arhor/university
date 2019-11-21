@@ -1,2 +1,4 @@
 rootProject.name = 'university'
+
+include ':utility'
 include ':webapp'
