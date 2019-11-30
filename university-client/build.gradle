@@ -8,12 +8,12 @@ node {
     version  = '13.1.0'
 }
 
-task webappBuild(type: NpmTask, dependsOn: npmInstall) {
+task clientBuild (type: NpmTask, dependsOn: npmInstall) {
     description = 'Builds production version of the webapp'
     workingDir = file("${project.projectDir}")
     args = ['run', 'build']
 }
 
-assemble.dependsOn webappBuild
+assemble.dependsOn clientBuild
 
-description = 'webapp'
+description = 'university-client'

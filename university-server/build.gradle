@@ -2,18 +2,16 @@ plugins {
     id 'org.springframework.boot' version '2.2.1.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
-    id 'idea'
     id 'jacoco'
 }
 
-apply from: './gradle/database.gradle'
-
 group = 'by.bsu.uir'
 version = '0.0.1-SNAPSHOT'
-description = 'university'
 
-sourceCompatibility = '13'
-targetCompatibility = '13'
+description = 'university-server'
+
+sourceCompatibility = '11'
+targetCompatibility = '11'
 
 configurations {
     compileOnly {
@@ -32,12 +30,12 @@ bootRun {
     args = ['--spring.profiles.active=dev']
 }
 
-task webappCopy(type: Copy, dependsOn: ':webapp:build') {
-    from 'webapp/build'
+task clientCopy(type: Copy, dependsOn: ':university-client:build') {
+    from '../university-client/build'
     into 'build/resources/main/static/.'
 }
 
-//compileJava.dependsOn webappCopy
+compileJava.dependsOn clientCopy
 
 jacocoTestReport {
     afterEvaluate {
@@ -64,14 +62,12 @@ dependencies {
 
     runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
 
-    implementation project(':utility')
-
-    implementation 'com.h2database:h2'
-    implementation 'org.modelmapper:modelmapper:2.3.5'
-
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'com.h2database:h2'
+    implementation 'org.modelmapper:modelmapper:2.3.5'
 
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
