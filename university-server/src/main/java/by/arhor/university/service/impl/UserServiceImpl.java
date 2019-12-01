@@ -1,5 +1,6 @@
 package by.arhor.university.service.impl;
 
+import by.arhor.university.domain.model.Role;
 import by.arhor.university.domain.model.User;
 import by.arhor.university.domain.repository.RoleRepository;
 import by.arhor.university.domain.repository.UserRepository;
@@ -8,16 +9,24 @@ import by.arhor.university.service.dto.UserDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.function.ToLongFunction;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Lazy
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
   private final PasswordEncoder encoder;
@@ -38,11 +47,12 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     return repository
         .findByEmail(email)
         .map(this::userToUserDetails)
-        .orElseThrow(() -> new RuntimeException());
+        .orElseThrow(RuntimeException::new);
   }
 
   private UserDetails userToUserDetails(User user) {
@@ -58,6 +68,13 @@ public class UserServiceImpl implements UserService {
   public UserDTO create(UserDTO userDto) {
     checkForDuplicates(userDto.getEmail());
     final var newUser = mapper.map(userDto, User.class);
+
+    final var encoded = encoder.encode(newUser.getPassword());
+    final var defaultRole = roleRepository.getDefaultRole();
+
+    newUser.setPassword(encoded);
+    newUser.setRole(defaultRole);
+
     final var savedUser = repository.save(newUser);
     return mapper.map(savedUser, UserDTO.class);
   }
@@ -69,27 +86,44 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void delete(UserDTO item) {
-
+    deleteById(item.getId());
   }
 
   @Override
   public void deleteById(Long id) {
-
+    final var user = repository
+        .findById(id)
+        .orElseThrow(RuntimeException::new);
+    repository.delete(user);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public UserDTO findOne(Long id) {
-    return null;
+    return repository
+        .findById(id)
+        .map(user -> mapper.map(user, UserDTO.class))
+        .orElseThrow(RuntimeException::new);
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<UserDTO> findAll() {
-    return null;
+    return repository
+        .findAll()
+        .stream()
+        .map(user -> mapper.map(user, UserDTO.class))
+        .collect(toList());
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<UserDTO> findPage(int page, int size) {
-    return null;
+    return repository
+        .findAll(PageRequest.of(page, size))
+        .stream()
+        .map(user -> mapper.map(user, UserDTO.class))
+        .collect(toList());
   }
 
   @Override
