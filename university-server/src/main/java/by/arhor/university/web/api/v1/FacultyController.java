@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 import static by.arhor.university.web.api.util.PageUtils.paginate;
 
@@ -22,17 +23,19 @@ import static by.arhor.university.web.api.util.PageUtils.paginate;
 public class FacultyController {
 
   private final FacultyService service;
+  private final BiFunction<Number, Number, List<FacultyDTO>> paginate;
 
   @Autowired
   public FacultyController(FacultyService service) {
     this.service = service;
+    this.paginate = paginate(service::findPage);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FacultyDTO> getFaculties(
       @RequestParam Integer page,
       @RequestParam Integer size) {
-    return paginate(service::findPage).apply(page, size);
+    return paginate.apply(page, size);
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

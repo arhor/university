@@ -4,27 +4,31 @@ import by.arhor.core.IntBiFunction;
 import by.arhor.core.NumberUtils;
 
 import java.util.function.BiFunction;
+import java.util.function.ToIntFunction;
 
 public final class PageUtils {
 
   private static final int DEFAULT_PAGE = 1;
-  private static final int DEFAULT_SIZE = 10;
+  private static final int DEFAULT_SIZE = 50;
+
+  private static final ToIntFunction<Number> BOUNDED_PAGE = NumberUtils.minBound(DEFAULT_PAGE);
+  private static final ToIntFunction<Number> BOUNDED_SIZE = NumberUtils.maxBound(DEFAULT_SIZE);
 
   private PageUtils() {}
 
   public static
   <T, N extends Number> BiFunction<N, N, T> paginate(IntBiFunction<T> request) {
     return (p, s) -> request.apply(
-        parsePage(p),
-        parseSize(s));
+        boundPage(p),
+        boundSize(s));
   }
 
-  private static <N extends Number> int parsePage(N page) {
-    return NumberUtils.minBound(DEFAULT_PAGE).applyAsInt(page);
+  private static <N extends Number> int boundPage(N page) {
+    return BOUNDED_PAGE.applyAsInt(page);
   }
 
-  private static <N extends Number> int parseSize(N size) {
-    return NumberUtils.maxBound(DEFAULT_SIZE).applyAsInt(size);
+  private static <N extends Number> int boundSize(N size) {
+    return BOUNDED_SIZE.applyAsInt(size);
   }
 
 }
