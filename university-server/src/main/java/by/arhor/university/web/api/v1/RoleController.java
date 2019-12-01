@@ -28,4 +28,9 @@ public class RoleController {
     return repository.findAll();
   }
 
+  @GetMapping(path = "/default", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Role getRolesDefault() {
+    return repository.getDefaultRole();
+  }
+
 }

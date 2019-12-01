@@ -30,7 +30,7 @@ public class Enrollee extends AbstractModelObject<Long> {
   @Min(0)
   @Max(100)
   @Column(name = "school_score", nullable = false)
-  private byte schoolScore;
+  private Byte schoolScore;
 
   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
@@ -55,11 +55,11 @@ public class Enrollee extends AbstractModelObject<Long> {
     this.city = city;
   }
 
-  public byte getSchoolScore() {
+  public Byte getSchoolScore() {
     return schoolScore;
   }
 
-  public void setSchoolScore(byte schoolScore) {
+  public void setSchoolScore(Byte schoolScore) {
     this.schoolScore = schoolScore;
   }
 
@@ -84,9 +84,9 @@ public class Enrollee extends AbstractModelObject<Long> {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Enrollee enrollee = (Enrollee) o;
-    return schoolScore == enrollee.schoolScore &&
-        Objects.equals(country, enrollee.country) &&
-        Objects.equals(city, enrollee.city);
+    return schoolScore.equals(enrollee.schoolScore)
+        && Objects.equals(country, enrollee.country)
+        && Objects.equals(city, enrollee.city);
   }
 
   @Override

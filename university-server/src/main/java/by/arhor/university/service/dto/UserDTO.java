@@ -1,9 +1,12 @@
 package by.arhor.university.service.dto;
 
+import by.arhor.university.domain.model.Lang;
+import by.arhor.university.domain.model.Role;
+
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class UserDTO implements DTO {
+public final class UserDTO implements DTO {
 
   private Long   id;
   private String email;
@@ -61,6 +64,10 @@ public class UserDTO implements DTO {
     this.role = role;
   }
 
+  public void setRole(Role role) {
+    this.role = role.getTitle().name();
+  }
+
   public String getLang() {
     return lang;
   }
@@ -69,18 +76,22 @@ public class UserDTO implements DTO {
     this.lang = lang;
   }
 
+  public void setLang(Lang lang) {
+    this.lang = lang.getLabel().getName();
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     UserDTO userDto = (UserDTO) o;
-    return Objects.equals(id, userDto.id) &&
-        Objects.equals(email, userDto.email) &&
-        Objects.equals(password, userDto.password) &&
-        Objects.equals(firstName, userDto.firstName) &&
-        Objects.equals(lastName, userDto.lastName) &&
-        Objects.equals(role, userDto.role) &&
-        Objects.equals(lang, userDto.lang);
+    return Objects.equals(id, userDto.id)
+        && Objects.equals(email, userDto.email)
+        && Objects.equals(password, userDto.password)
+        && Objects.equals(firstName, userDto.firstName)
+        && Objects.equals(lastName, userDto.lastName)
+        && Objects.equals(role, userDto.role)
+        && Objects.equals(lang, userDto.lang);
   }
 
   @Override

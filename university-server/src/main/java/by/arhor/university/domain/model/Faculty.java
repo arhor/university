@@ -25,11 +25,11 @@ public class Faculty extends AbstractModelObject<Long> {
 
   @Min(0)
   @Column(name = "seats_paid", nullable = false)
-  private short seatsPaid;
+  private Short seatsPaid;
 
   @Min(0)
   @Column(name = "seats_budget", nullable = false)
-  private short seatsBudget;
+  private Short seatsBudget;
 
   @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<FacultyTitle> facultyTitles;
@@ -52,19 +52,19 @@ public class Faculty extends AbstractModelObject<Long> {
     this.defaultTitle = defaultTitle;
   }
 
-  public short getSeatsPaid() {
+  public Short getSeatsPaid() {
     return seatsPaid;
   }
 
-  public void setSeatsPaid(short seatsPaid) {
+  public void setSeatsPaid(Short seatsPaid) {
     this.seatsPaid = seatsPaid;
   }
 
-  public short getSeatsBudget() {
+  public Short getSeatsBudget() {
     return seatsBudget;
   }
 
-  public void setSeatsBudget(short seatsBudget) {
+  public void setSeatsBudget(Short seatsBudget) {
     this.seatsBudget = seatsBudget;
   }
 

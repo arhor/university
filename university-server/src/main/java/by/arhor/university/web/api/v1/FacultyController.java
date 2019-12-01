@@ -1,7 +1,7 @@
 package by.arhor.university.web.api.v1;
 
 import by.arhor.university.service.FacultyService;
-import by.arhor.university.service.dto.FacultyDto;
+import by.arhor.university.service.dto.FacultyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
@@ -29,14 +29,14 @@ public class FacultyController {
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<FacultyDto> getFaculties(
+  public List<FacultyDTO> getFaculties(
       @RequestParam Integer page,
       @RequestParam Integer size) {
     return paginate(service::findPage).apply(page, size);
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public FacultyDto getFaculty(@PathVariable("id") Long id) {
+  public FacultyDTO getFaculty(@PathVariable("id") Long id) {
     return service.findOne(id);
   }
 
