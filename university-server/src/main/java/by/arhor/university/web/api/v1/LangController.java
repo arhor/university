@@ -1,7 +1,7 @@
 package by.arhor.university.web.api.v1;
 
-import java.util.List;
-
+import by.arhor.university.domain.model.Lang;
+import by.arhor.university.domain.repository.LangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import by.arhor.university.domain.model.Lang;
-import by.arhor.university.domain.repository.LangRepository;
+import java.util.List;
 
 @Lazy
 @RestController

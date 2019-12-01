@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -32,8 +33,13 @@ public class CustomCsrfFilter extends OncePerRequestFilter {
   private static final String CSRF_COOKIE = "XSRF-TOKEN";
   private static final String CSRF_HEADER = "X-XSRF-TOKEN";
 
-  private final AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
-  private final Lazy<Pattern> safeMethod = Lazy.eval(() -> Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$"));
+  private final AccessDeniedHandler accessDeniedHandler;
+  private final Supplier<Pattern> safeMethod;
+
+  {
+    accessDeniedHandler = new AccessDeniedHandlerImpl();
+    safeMethod = Lazy.evalSafe(() -> Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$"));
+  }
 
   @Override
   protected void doFilterInternal(
