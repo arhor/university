@@ -1,4 +1,5 @@
 rootProject.name = 'university'
 
+include ':core'
 include ':university-server'
 include ':university-client'

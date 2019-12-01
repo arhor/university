@@ -1,5 +1,6 @@
 package by.bsu.uir.university.domain.repository;
 
+import by.arhor.university.domain.repository.RoleRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

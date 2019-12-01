@@ -9,7 +9,7 @@ node {
 }
 
 task clientBuild (type: NpmTask, dependsOn: npmInstall) {
-    description = 'Builds production version of the webapp'
+    description = 'Builds production version of the university client'
     workingDir = file("${project.projectDir}")
     args = ['run', 'build']
 }
