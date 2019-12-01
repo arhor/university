@@ -1,6 +1,7 @@
 package by.arhor.university.web.api.util;
 
 import by.arhor.core.IntBiFunction;
+import by.arhor.core.NumberUtils;
 
 import java.util.function.BiFunction;
 
@@ -19,15 +20,11 @@ public final class PageUtils {
   }
 
   private static <N extends Number> int parsePage(N page) {
-    return ((page == null) || (page.intValue() <= DEFAULT_PAGE))
-        ? DEFAULT_PAGE
-        : page.intValue();
+    return NumberUtils.minBound(DEFAULT_PAGE).applyAsInt(page);
   }
 
   private static <N extends Number> int parseSize(N size) {
-    return ((size == null) || (size.intValue() <= 0) || (size.intValue() >= DEFAULT_SIZE))
-        ? DEFAULT_SIZE
-        : size.intValue();
+    return NumberUtils.maxBound(DEFAULT_SIZE).applyAsInt(size);
   }
 
 }
