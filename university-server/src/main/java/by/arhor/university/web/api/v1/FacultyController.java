@@ -1,5 +1,6 @@
 package by.arhor.university.web.api.v1;
 
+import by.arhor.core.IntBiFunction;
 import by.arhor.university.service.FacultyService;
 import by.arhor.university.service.dto.FacultyDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import static by.arhor.university.web.api.util.PageUtils.paginate;
 public class FacultyController {
 
   private final FacultyService service;
-  private final BiFunction<Number, Number, List<FacultyDTO>> paginate;
+  private final IntBiFunction<List<FacultyDTO>> paginate;
 
   @Autowired
   public FacultyController(FacultyService service) {

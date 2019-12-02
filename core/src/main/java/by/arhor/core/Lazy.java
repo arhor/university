@@ -15,10 +15,24 @@ public class Lazy<T> implements RichSupplier<T> {
     this.source = source;
   }
 
+  /**
+   * Lazy evaluates passed expression and memorizes its result.
+   *
+   * @param source expression to evaluate
+   * @param <T> type of returned by expression value
+   * @return result of expression execution
+   */
   public static <T> Lazy<T> eval(final Supplier<T> source) {
     return new Lazy<>(source);
   }
 
+  /**
+   * Thread-safe version on the {@link Lazy#eval} method.
+   *
+   * @param source expression to evaluate
+   * @param <T> type of returned by expression value
+   * @return result of expression execution
+   */
   public static <T> Lazy<T> evalSafe(final Supplier<T> source) {
     return new Lazy<>(source) {
       @Override

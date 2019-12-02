@@ -17,7 +17,7 @@ public final class PageUtils {
   private PageUtils() {}
 
   public static
-  <T, N extends Number> BiFunction<N, N, T> paginate(IntBiFunction<T> request) {
+  <T> IntBiFunction<T> paginate(IntBiFunction<T> request) {
     return (p, s) -> request.apply(
         boundPage(p),
         boundSize(s));
