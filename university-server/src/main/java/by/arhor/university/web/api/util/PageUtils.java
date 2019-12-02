@@ -1,9 +1,8 @@
 package by.arhor.university.web.api.util;
 
 import by.arhor.core.IntBiFunction;
-import by.arhor.core.NumberUtils;
+import by.arhor.core.util.NumberUtils;
 
-import java.util.function.BiFunction;
 import java.util.function.ToIntFunction;
 
 public final class PageUtils {

@@ -1,7 +1,13 @@
-package by.arhor.core;
+package by.arhor.core.util;
 
 import java.util.function.ToIntFunction;
 
+/**
+ * Class provides various utility functions to work with numbers.
+ *
+ * @author Maksim_Buryshynets
+ * @version 1
+ */
 public final class NumberUtils {
 
   private NumberUtils() {}

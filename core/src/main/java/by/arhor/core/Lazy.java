@@ -6,9 +6,10 @@ import java.util.function.Supplier;
 
 public class Lazy<T> implements RichSupplier<T> {
 
-  private Supplier<T> source;
   protected boolean computed;
   protected T value;
+
+  private Supplier<T> source;
 
   private Lazy(final Supplier<T> source) {
     Objects.requireNonNull(source, "Lazy evaluation source must not be null");
