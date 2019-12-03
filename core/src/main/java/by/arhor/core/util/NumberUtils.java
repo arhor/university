@@ -1,5 +1,6 @@
 package by.arhor.core.util;
 
+import javax.annotation.Nonnull;
 import java.util.function.ToIntFunction;
 
 /**
@@ -21,7 +22,9 @@ public final class NumberUtils {
    * @param <N> any number type
    * @return closure with min bound value
    */
-  public static <N extends Number> ToIntFunction<N> minBound(final int bound) {
+  @Nonnull
+  public static
+  <N extends Number> ToIntFunction<N> minBound(final int bound) {
     return (arg) ->
         ((arg == null) || (arg.intValue() <= bound))
             ? bound
@@ -37,7 +40,9 @@ public final class NumberUtils {
    * @param <N> any number type
    * @return closure with max bound value
    */
-  public static <N extends Number> ToIntFunction<N> maxBound(final int bound) {
+  @Nonnull
+  public static
+  <N extends Number> ToIntFunction<N> maxBound(final int bound) {
     return (arg) ->
         ((arg == null) || (arg.intValue() <= 0) || (arg.intValue() >= bound))
             ? bound
