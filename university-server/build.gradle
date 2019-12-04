@@ -19,13 +19,6 @@ configurations {
     }
 }
 
-tasks.withType(JavaCompile).each {
-    it.options.compilerArgs += [
-            '-Xlint:preview',
-            '-Xlint:unchecked',
-    ]
-}
-
 bootRun {
     args = ['--spring.profiles.active=dev']
 }

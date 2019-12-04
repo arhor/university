@@ -1,0 +1,6 @@
+tasks.withType(JavaCompile).each {
+    it.options.compilerArgs += [
+            '-Xlint:preview',
+            '-Xlint:unchecked',
+    ]
+}
