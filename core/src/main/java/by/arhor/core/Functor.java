@@ -1,9 +1,10 @@
 package by.arhor.core;
 
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 public interface Functor<A, B> {
 
-  Function<Function<A, A>, Function<B, B>> flatMap(Function<A, B> f);
+  Function<UnaryOperator<A>, UnaryOperator<B>> flatMap(Function<A, B> f);
 
 }
