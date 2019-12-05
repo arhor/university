@@ -72,11 +72,24 @@ public class NumberUtilsTest {
 
     @Test
     public void maxBound_lessThanBoundTest() {
-      final int boundedValue = maxBound.applyAsInt(max - 1);
-
-      log.info(() -> format("bounded value: %d", boundedValue));
       assertTrue(
-          max > boundedValue
+          max > maxBound.applyAsInt(max - 1)
+      );
+    }
+
+    @Test
+    public void maxBound_equalBoundTest() {
+      assertEquals(
+          max,
+          maxBound.applyAsInt(min)
+      );
+    }
+
+    @Test
+    public void maxBound_greaterThanBoundTest() {
+      assertEquals(
+          max,
+          maxBound.applyAsInt(min + 1)
       );
     }
 

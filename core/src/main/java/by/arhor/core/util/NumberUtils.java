@@ -44,7 +44,7 @@ public final class NumberUtils {
   public static
   <N extends Number> ToIntFunction<N> maxBound(final int bound) {
     return (arg) ->
-        ((arg == null) || (arg.intValue() <= 0) || (arg.intValue() >= bound))
+        ((arg == null) || (arg.intValue() >= bound))
             ? bound
             : arg.intValue();
   }

@@ -5,6 +5,6 @@ import java.util.function.UnaryOperator;
 
 public interface Functor<A, B> {
 
-  Function<UnaryOperator<A>, UnaryOperator<B>> flatMap(Function<A, B> f);
+  Function<UnaryOperator<B>, UnaryOperator<A>> flatMap(Function<A, B> f);
 
 }
