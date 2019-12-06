@@ -14,6 +14,6 @@ public interface EnrolleeService
           , Updater<EnrolleeDTO>
           , Deleter<EnrolleeDTO, Long> {
 
-  List<EnrolleeDTO> findBestEnrollees();
+  List<EnrolleeDTO> findBestEnrollees(int page, int size);
 
 }

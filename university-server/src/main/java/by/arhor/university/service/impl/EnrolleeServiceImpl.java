@@ -42,7 +42,7 @@ public class EnrolleeServiceImpl implements EnrolleeService {
   }
 
   @Override
-  public List<EnrolleeDTO> findBestEnrollees() {
+  public List<EnrolleeDTO> findBestEnrollees(int page, int size) {
     return null;
   }
 }

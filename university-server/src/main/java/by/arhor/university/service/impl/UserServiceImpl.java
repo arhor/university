@@ -2,12 +2,15 @@ package by.arhor.university.service.impl;
 
 import static java.util.stream.Collectors.toList;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import by.arhor.core.RichSupplier;
 import by.arhor.university.domain.model.User;
 import by.arhor.university.domain.repository.RoleRepository;
 import by.arhor.university.domain.repository.UserRepository;
@@ -57,9 +61,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     return new org.springframework.security.core.userdetails.User(
         user.getEmail(),
         user.getPassword(), // fixme: should I encode password here or just pass it raw?
-        List.of(
-            new SimpleGrantedAuthority(
-                user.getRole().toString())));
+        authoritiesFrom(user::getRole));
+  }
+
+  private Collection<? extends GrantedAuthority> authoritiesFrom(RichSupplier<?> source) {
+    return source
+        .map(Object::toString)
+        .map(SimpleGrantedAuthority::new)
+        .map(List::of)
+        .get();
   }
 
   @Override

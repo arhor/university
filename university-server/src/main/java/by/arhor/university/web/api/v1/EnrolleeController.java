@@ -28,12 +28,10 @@ import by.arhor.university.web.api.util.PageUtils;
 public class EnrolleeController {
 
   private final EnrolleeService service;
-  private final IntBiFunction<List<EnrolleeDTO>> pageRequest;
 
   @Autowired
   public EnrolleeController(EnrolleeService service) {
     this.service = service;
-    this.pageRequest = PageUtils.paginate(service::findPage);
   }
 
   @PostMapping
@@ -57,12 +55,18 @@ public class EnrolleeController {
   public List<EnrolleeDTO> getEnrollees(
       @RequestParam(required = false) int page,
       @RequestParam(required = false) int size) {
-    return pageRequest.apply(page, size);
+    return PageUtils
+        .paginate(service::findPage)
+        .apply(page, size);
   }
 
   @GetMapping(path = "/best")
-  public List<EnrolleeDTO> getBestEnrollees() {
-    return service.findBestEnrollees();
+  public List<EnrolleeDTO> getBestEnrollees(
+      @RequestParam(required = false) int page,
+      @RequestParam(required = false) int size) {
+    return PageUtils
+        .paginate(service::findBestEnrollees)
+        .apply(page, size);
   }
 
 }
