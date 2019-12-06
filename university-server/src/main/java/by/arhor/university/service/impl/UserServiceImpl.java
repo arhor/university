@@ -1,33 +1,31 @@
 package by.arhor.university.service.impl;
 
-import by.arhor.university.domain.model.Role;
-import by.arhor.university.domain.model.User;
-import by.arhor.university.domain.repository.RoleRepository;
-import by.arhor.university.domain.repository.UserRepository;
-import by.arhor.university.service.UserService;
-import by.arhor.university.service.dto.UserDTO;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.function.ToLongFunction;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
+import by.arhor.university.domain.model.User;
+import by.arhor.university.domain.repository.RoleRepository;
+import by.arhor.university.domain.repository.UserRepository;
+import by.arhor.university.service.UserService;
+import by.arhor.university.service.dto.UserDTO;
 
 @Lazy
 @Service
 @Transactional
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
   private final PasswordEncoder encoder;
   private final ModelMapper mapper;

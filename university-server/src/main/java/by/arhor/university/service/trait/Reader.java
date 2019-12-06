@@ -2,7 +2,9 @@ package by.arhor.university.service.trait;
 
 import java.util.List;
 
-public interface Reader<T, K> {
+import by.arhor.university.service.dto.DTO;
+
+public interface Reader<T extends DTO, K> {
 
   T findOne(K id);
 
