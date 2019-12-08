@@ -1,7 +1,7 @@
 package by.arhor.university.web.api.v1;
 
-import by.arhor.university.domain.model.Role;
-import by.arhor.university.domain.repository.RoleRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import by.arhor.university.domain.model.Role;
+import by.arhor.university.domain.repository.RoleRepository;
 
 @Lazy
 @RestController
@@ -29,7 +30,7 @@ public class RoleController {
   }
 
   @GetMapping(path = "/default", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Role getRolesDefault() {
+  public Role getDefaultRole() {
     return repository.getDefaultRole();
   }
 

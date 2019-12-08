@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,18 +29,19 @@ public class UserController {
     this.service = service;
   }
 
+  @GetMapping(
+      path = "/{id}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public UserDTO getUser(@PathVariable Long id) {
+    return service.findOne(id);
+  }
+
   @PostMapping(
-      path = "/register",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
   public UserDTO register(@RequestBody UserDTO dto) {
     return service.create(dto);
-  }
-
-  @PostMapping(path = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void login(@RequestBody UserDTO userDto) {
-    // FIXME
   }
 
   @PatchMapping(
@@ -46,6 +50,12 @@ public class UserController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public UserDTO update(@RequestBody UserDTO dto) {
     return service.update(dto);
+  }
+
+  @DeleteMapping(path = "/{id}")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  public void deleteUser(Long id) {
+    service.deleteById(id);
   }
 
 }

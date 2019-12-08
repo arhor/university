@@ -21,10 +21,7 @@ import by.arhor.university.service.dto.EnrolleeDTO;
 import by.arhor.university.web.api.util.PageUtils;
 
 @RestController
-@RequestMapping(
-    path = "/api/v1/enrollees",
-    consumes = MediaType.APPLICATION_JSON_VALUE,
-    produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/v1/enrollees")
 public class EnrolleeController {
 
   private final EnrolleeService service;
@@ -34,24 +31,32 @@ public class EnrolleeController {
     this.service = service;
   }
 
-  @PostMapping
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)
   public EnrolleeDTO enroll(@RequestBody EnrolleeDTO dto) {
     return service.create(dto);
   }
 
-  @DeleteMapping(path = "/{id}")
+  @DeleteMapping(
+      path = "/{id}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.OK)
   public void unroll(@PathVariable Long id) {
     service.deleteById(id);
   }
 
-  @GetMapping(path = "/{id}")
+  @GetMapping(
+      path = "/{id}",
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public EnrolleeDTO getEnrolleeById(@PathVariable Long id) {
     return service.findOne(id);
   }
 
-  @GetMapping
+  @GetMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public List<EnrolleeDTO> getEnrollees(
       @RequestParam(required = false) int page,
       @RequestParam(required = false) int size) {
@@ -60,7 +65,10 @@ public class EnrolleeController {
         .apply(page, size);
   }
 
-  @GetMapping(path = "/best")
+  @GetMapping(
+      path = "/best",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public List<EnrolleeDTO> getBestEnrollees(
       @RequestParam(required = false) int page,
       @RequestParam(required = false) int size) {
