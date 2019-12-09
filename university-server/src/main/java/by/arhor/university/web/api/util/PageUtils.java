@@ -10,8 +10,13 @@ public final class PageUtils {
   public static final int DEFAULT_PAGE = 1;
   public static final int DEFAULT_SIZE = 50;
 
-  private static final ToIntFunction<Number> BOUNDED_PAGE = NumberUtils.minBound(DEFAULT_PAGE);
-  private static final ToIntFunction<Number> BOUNDED_SIZE = NumberUtils.maxBound(DEFAULT_SIZE);
+  private static final ToIntFunction<Number> BOUNDED_PAGE;
+  private static final ToIntFunction<Number> BOUNDED_SIZE;
+
+  static {
+    BOUNDED_PAGE = NumberUtils.minBound(DEFAULT_PAGE);
+    BOUNDED_SIZE = NumberUtils.maxBound(DEFAULT_SIZE);
+  }
 
   private PageUtils() {}
 
