@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import HomeService from './service/HomeService.js';
+
+const service = new HomeService();
 
 export default function Home() {
-  const [msg, setMsg] = useState(['loading...']);
+  const [langs, setLangs] = useState(['loading langs...']);
+  const [roles, setRoles] = useState(['loading roles...']);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const { data } = await axios.get('http://localhost:8080/api/v1/langs');
-        setMsg(data.map(lang => `${lang.label} `))
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    fetchData();
+    service.fetchLangs().then(res => setLangs(res));
+    service.fetchRoles().then(res => setRoles(res));
   }, []);
 
   return (
     <>
-      {msg}
+      {langs}
+      <br />
+      {roles}
     </>
   );
 }

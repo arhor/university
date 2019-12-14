@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import by.arhor.university.domain.model.Subject;
 import by.arhor.university.service.SubjectService;
+import by.arhor.university.service.dto.SubjectDTO;
 
 @Lazy
 @RestController
@@ -21,7 +22,7 @@ public class SubjectController {
   }
 
   public List<SubjectDTO> getSubjects() {
-    return
+    return service.findAll();
   }
 
 }

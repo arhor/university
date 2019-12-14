@@ -1,5 +1,6 @@
 package by.arhor.university.service.impl;
 
+import by.arhor.university.service.dto.DTO;
 import by.arhor.university.service.trait.Deleter;
 import by.arhor.university.service.trait.Reader;
 import org.modelmapper.ModelMapper;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public abstract class AbstractService<T, D, K>
+public abstract class AbstractService<T, D extends DTO, K>
     implements Reader<D, K>
              , Deleter<D, K> {
 

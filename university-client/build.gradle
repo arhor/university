@@ -8,7 +8,13 @@ node {
     version  = '13.1.0'
 }
 
-task clientBuild (type: NpmTask, dependsOn: npmInstall) {
+task npmAuditFix (type: NpmTask, dependsOn: npmInstall) {
+    description = 'Verify and fix vulnerabilities in dependencies'
+    workingDir = file("${project.projectDir}")
+    args = ['audit', 'fix']
+}
+
+task clientBuild (type: NpmTask, dependsOn: npmAuditFix) {
     description = 'Builds production version of the university client'
     workingDir = file("${project.projectDir}")
     args = ['run', 'build']

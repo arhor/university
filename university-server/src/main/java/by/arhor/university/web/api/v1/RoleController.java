@@ -1,5 +1,8 @@
 package by.arhor.university.web.api.v1;
 
+import static java.util.stream.Collectors.toList;
+
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +29,8 @@ public class RoleController {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<Role> getRoles() {
-    return repository.findAll();
+//    return repository.findAll();
+    return Arrays.stream(Role.Value.values()).map(Role::new).collect(toList()); // FIXME: stub!
   }
 
   @GetMapping(path = "/default", produces = MediaType.APPLICATION_JSON_VALUE)

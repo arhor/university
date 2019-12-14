@@ -18,6 +18,12 @@ public class Role extends AbstractModelObject<Short> {
   @Column(name = "title", unique = true, nullable = false)
   private Role.Value title;
 
+  public Role() {}
+
+  public Role(Role.Value title) {
+    this.title = title;
+  }
+
   public Value getTitle() {
     return title;
   }

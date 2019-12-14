@@ -1,4 +1,7 @@
 package by.arhor.university.service;
 
-public interface SubjectService {
+import by.arhor.university.service.dto.SubjectDTO;
+import by.arhor.university.service.trait.Reader;
+
+public interface SubjectService extends Reader<SubjectDTO, Long> {
 }

@@ -16,7 +16,7 @@ public class RepositoryTestConfig {
   public DataSource dataSource() throws Exception {
     return new EmbeddedDatabaseBuilder()
         .setType(EmbeddedDatabaseType.H2)
-        .setName("university;MODE=MSSQLServer")
+        .setName("university;MODE=MSSQLServer").
         .build();
   }
 

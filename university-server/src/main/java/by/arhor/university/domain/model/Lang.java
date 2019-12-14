@@ -18,6 +18,12 @@ public class Lang extends AbstractModelObject<Short> {
   @Column(name = "label", unique = true, nullable = false)
   private Lang.Value label;
 
+  public Lang() {}
+
+  public Lang(Lang.Value label) {
+    this.label = label;
+  }
+
   public Value getLabel() {
     return label;
   }

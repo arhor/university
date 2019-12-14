@@ -1,6 +1,8 @@
 package by.arhor.core.util;
 
 import javax.annotation.Nonnull;
+
+import java.util.function.ToIntBiFunction;
 import java.util.function.ToIntFunction;
 
 /**
