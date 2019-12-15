@@ -30,8 +30,8 @@ import java.util.regex.Pattern;
 public class CustomCsrfFilter extends OncePerRequestFilter {
 
   private static final String ERROR_MSG = "CSRF token is missing or not matching";
-  private static final String CSRF_COOKIE = "XSRF-TOKEN";
-  private static final String CSRF_HEADER = "X-XSRF-TOKEN";
+  private static final String CSRF_COOKIE = "xsrf-token";
+  private static final String CSRF_HEADER = "x-xsrf-token";
 
   private final AccessDeniedHandler accessDeniedHandler;
   private final Supplier<Pattern> safeMethod;

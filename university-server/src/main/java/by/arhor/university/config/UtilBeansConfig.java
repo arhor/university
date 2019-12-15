@@ -1,6 +1,8 @@
 package by.arhor.university.config;
 
+import by.arhor.university.web.filter.CustomCsrfFilter;
 import org.modelmapper.ModelMapper;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,14 @@ public class UtilBeansConfig {
     final var messageSource = new ResourceBundleMessageSource();
     messageSource.setBasename("messages");
     return messageSource;
+  }
+
+  @Bean
+  public FilterRegistrationBean<CustomCsrfFilter> loggingFilter(CustomCsrfFilter csrfFilter) {
+    final var registrationBean = new FilterRegistrationBean<CustomCsrfFilter>();
+    registrationBean.setFilter(csrfFilter);
+    registrationBean.addUrlPatterns("/api/*");
+    return registrationBean;
   }
 
 }

@@ -1,11 +1,10 @@
-import axios from 'axios';
 import Service from '../../../core/Service.js';
 
 export default class HomeService extends Service {
 
   async fetchLangs() {
     try {
-      const { data } = await axios.get(this.baseUrl + 'langs');
+      const { data } = await this.api.get('langs');
       return data.map(lang => `${lang.label} `);
     } catch (error) {
       console.error(error);
@@ -14,7 +13,7 @@ export default class HomeService extends Service {
 
   async fetchRoles() {
     try {
-      const { data } = await axios.get(this.baseUrl + 'roles');
+      const { data } = await this.api.get('roles');
       return data.map(role => `${role.title} `);
     } catch (error) {
       console.error(error);
