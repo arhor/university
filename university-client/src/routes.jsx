@@ -6,7 +6,7 @@ const Loading = () => <div>loading...</div>;
 
 export default function RouterView() {
   return (
-    <main>
+    <main className="container-fluid">
       <Suspense fallback={<Loading />}>
         <Switch>
           <Route exact path="/" component={Home} />

@@ -6,6 +6,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,7 @@ public class UtilBeansConfig {
   }
 
   @Bean
+  @Profile({"!dev"})
   public FilterRegistrationBean<CustomCsrfFilter> loggingFilter(CustomCsrfFilter csrfFilter) {
     final var registrationBean = new FilterRegistrationBean<CustomCsrfFilter>();
     registrationBean.setFilter(csrfFilter);
