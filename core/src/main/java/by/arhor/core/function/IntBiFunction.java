@@ -1,4 +1,4 @@
-package by.arhor.core;
+package by.arhor.core.function;
 
 @FunctionalInterface
 public interface IntBiFunction<T> {

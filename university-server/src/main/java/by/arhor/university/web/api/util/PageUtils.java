@@ -2,7 +2,7 @@ package by.arhor.university.web.api.util;
 
 import java.util.function.ToIntFunction;
 
-import by.arhor.core.IntBiFunction;
+import by.arhor.core.function.IntBiFunction;
 import by.arhor.core.util.NumberUtils;
 
 public final class PageUtils {

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import by.arhor.core.IntBiFunction;
 import by.arhor.university.service.EnrolleeService;
 import by.arhor.university.service.dto.EnrolleeDTO;
 import by.arhor.university.web.api.util.PageUtils;

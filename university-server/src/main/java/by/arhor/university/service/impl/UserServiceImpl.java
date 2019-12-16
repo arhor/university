@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import by.arhor.core.RichSupplier;
+import by.arhor.core.function.RichSupplier;
 import by.arhor.university.domain.model.User;
 import by.arhor.university.domain.repository.RoleRepository;
 import by.arhor.university.domain.repository.UserRepository;

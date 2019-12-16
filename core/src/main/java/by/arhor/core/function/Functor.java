@@ -1,4 +1,4 @@
-package by.arhor.core;
+package by.arhor.core.function;
 
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
