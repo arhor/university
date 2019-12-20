@@ -15,6 +15,8 @@ export default function Home() {
 
   return (
     <>
+      <h2>Welcome to the University App</h2>
+
       {langs}
       <br />
       {roles}
