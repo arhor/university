@@ -1,6 +1,6 @@
 import Service from '../../../core/Service.js';
 
-export default class HomeService extends Service {
+class HomeService extends Service {
 
   async fetchLangs() {
     try {
@@ -21,3 +21,5 @@ export default class HomeService extends Service {
   }
 
 }
+
+export default new HomeService();
