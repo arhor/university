@@ -1,16 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import RouterView from './component/RouterView';
-import NavBar from './component/Navbar';
-import Container from '@material-ui/core/Container';
-
+import AppNavBar from './component/AppNavBar';
 
 export default function App() {
   return (
-    <>
-      <NavBar />
-      <Container>
-        <RouterView />
-      </Container>
-    </>
+    <Router>
+      <AppNavBar />
+      <RouterView />
+    </Router>
   );
 }

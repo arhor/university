@@ -11,4 +11,16 @@ public abstract class EntityNotFoundException extends RuntimeException {
     this.fieldName = fieldName;
     this.fieldValue = fieldValue;
   }
+
+  public ErrorLabel getErrorLabel() {
+    return errorLabel;
+  }
+
+  public String getFieldName() {
+    return fieldName;
+  }
+
+  public Object getFieldValue() {
+    return fieldValue;
+  }
 }

@@ -1,5 +1,6 @@
 package by.arhor.university.web.api.util;
 
+import java.util.function.BiFunction;
 import java.util.function.ToIntFunction;
 
 import by.arhor.core.function.IntBiFunction;
@@ -20,7 +21,15 @@ public final class PageUtils {
 
   private PageUtils() {}
 
-  public static <T> IntBiFunction<T> paginate(IntBiFunction<T> request) {
+  /**
+   * IntBiFunction MUST be returned as BiFunction to be able handle `null` arguments.
+   *
+   * @param request function which argument should be bounded
+   * @param <N> Numeric type of arguments for resulting function
+   * @param <T> return type of resulting function
+   * @return bounded Function which consumes bounded arguments
+   */
+  public static <N extends Number, T> BiFunction<N, N, T> paginate(IntBiFunction<T> request) {
     return (p, s) -> request.apply(
         boundPage(p),
         boundSize(s));

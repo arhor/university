@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import service from './service/HomeService.js';
 
-export default function Home() {
+export default function HomeView() {
   const [langs, setLangs] = useState(['loading langs...']);
   const [roles, setRoles] = useState(['loading roles...']);
 

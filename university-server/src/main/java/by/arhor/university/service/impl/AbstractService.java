@@ -1,16 +1,17 @@
 package by.arhor.university.service.impl;
 
-import by.arhor.university.service.dto.DTO;
-import by.arhor.university.service.trait.Deleter;
-import by.arhor.university.service.trait.Reader;
+import static java.util.stream.Collectors.toList;
+
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
-import static java.util.stream.Collectors.toList;
+import by.arhor.university.service.dto.DTO;
+import by.arhor.university.service.trait.Deleter;
+import by.arhor.university.service.trait.Reader;
 
 public abstract class AbstractService<T, D extends DTO, K>
     implements Reader<D, K>
