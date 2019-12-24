@@ -1,23 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
-import SideNavBar from './components/SideNavBar';
-import RouterView from './routes';
-import Row from "./components/Row";
-import Container from "./components/Container";
+import AppRouter from "./component/RouterComponent";
+import NavBar from "./component/Navbar";
+import Container from '@material-ui/core/Container';
+
 
 export default function App() {
   return (
-    <Router>
-      <Header />
+    <>
+      <NavBar/>
       <Container>
-        <Row>
-          <SideNavBar />
-          <RouterView />
-        </Row>
+        <AppRouter/>
       </Container>
-      <Footer />
-    </Router>
+    </>
   );
 }
