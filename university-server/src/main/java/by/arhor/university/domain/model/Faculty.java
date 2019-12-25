@@ -32,9 +32,6 @@ public class Faculty extends AbstractModelObject<Long> {
   private Short seatsBudget;
 
   @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<FacultyTitle> facultyTitles;
-
-  @OneToMany(mappedBy = "faculty", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<FacultyEnrollee> facultyEnrollees;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -66,14 +63,6 @@ public class Faculty extends AbstractModelObject<Long> {
 
   public void setSeatsBudget(Short seatsBudget) {
     this.seatsBudget = seatsBudget;
-  }
-
-  public List<FacultyTitle> getFacultyTitles() {
-    return facultyTitles;
-  }
-
-  public void setFacultyTitles(List<FacultyTitle> facultyTitles) {
-    this.facultyTitles = facultyTitles;
   }
 
   public List<FacultyEnrollee> getFacultyEnrollees() {

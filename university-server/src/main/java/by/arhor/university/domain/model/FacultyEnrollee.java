@@ -131,8 +131,8 @@ public class FacultyEnrollee {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
       CompositeId that = (CompositeId) o;
-      return Objects.equals(facultyId, that.facultyId) &&
-          Objects.equals(enrolleeId, that.enrolleeId);
+      return Objects.equals(facultyId, that.facultyId)
+          && Objects.equals(enrolleeId, that.enrolleeId);
     }
 
     @Override

@@ -1,13 +1,11 @@
 package by.arhor.university.domain.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -22,9 +20,6 @@ public class Subject extends AbstractModelObject<Long> {
   @Column(name = "default_title", nullable = false, unique = true, length = 64)
   private String defaultTitle;
 
-  @OneToMany(mappedBy = "subject", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<SubjectTitle> subjectTitles;
-
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "faculties_has_subjects",
@@ -38,14 +33,6 @@ public class Subject extends AbstractModelObject<Long> {
 
   public void setDefaultTitle(String defaultTitle) {
     this.defaultTitle = defaultTitle;
-  }
-
-  public List<SubjectTitle> getSubjectTitles() {
-    return subjectTitles;
-  }
-
-  public void setSubjectTitles(List<SubjectTitle> subjectTitles) {
-    this.subjectTitles = subjectTitles;
   }
 
   public List<Faculty> getFaculties() {
