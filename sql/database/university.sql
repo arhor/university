@@ -34,10 +34,8 @@ IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
 BEGIN
     CREATE LOGIN UniversitySA
     WITH PASSWORD = '1university@SECRET!'
-    GO
 
     CREATE USER UniversitySA
     FOR LOGIN UniversitySA
-    GO
 END
 -- #create-user <<< END

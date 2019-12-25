@@ -19,7 +19,7 @@ BEGIN
         CONSTRAINT [CK_enrollees_school_score] CHECK
         (
             [school_score] >= 0 AND [school_score] <= 100
-        )
+        ),
 
         CONSTRAINT [FK_enrollees_user_id] FOREIGN KEY ([user_id])
         REFERENCES [dbo].[users] (id)
