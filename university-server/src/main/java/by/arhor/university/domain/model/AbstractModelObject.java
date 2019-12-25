@@ -8,16 +8,18 @@ import java.io.Serializable;
 
 @MappedSuperclass
 public abstract class AbstractModelObject<ID extends Serializable>
-    implements ModelObject {
+    implements ModelObject<ID> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   protected ID id;
 
+  @Override
   public ID getId() {
     return id;
   }
 
+  @Override
   public void setId(ID id) {
     this.id = id;
   }

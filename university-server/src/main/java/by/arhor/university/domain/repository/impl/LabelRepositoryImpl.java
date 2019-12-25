@@ -22,7 +22,7 @@ public class LabelRepositoryImpl implements LabelRepository {
   public Optional<String> getLocalizedString(String label, Lang lang) {
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
-            "SELECT value FROM labels WITH(NOLOCK) WHERE label = ? AND lang_id = ?",
+            "SELECT lb.value FROM labels lb WITH(NOLOCK) WHERE lb.label = ? AND lb.lang_id = ?",
             new Object[] { label, lang.getId() },
             String.class
         )
