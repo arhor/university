@@ -4,7 +4,7 @@ GO
 
 IF (OBJECT_ID('faculties') IS NULL)
 BEGIN
-    CREATE TABLE [dbo].[faculties]
+    CREATE TABLE [faculties]
     (
         [id]               [BIGINT]          NOT NULL IDENTITY(1,1),
         [default_title]    [NVARCHAR](64)    NOT NULL UNIQUE,

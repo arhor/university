@@ -4,7 +4,7 @@ GO
 
 IF (OBJECT_ID('roles') IS NULL)
 BEGIN
-    CREATE TABLE [dbo].[roles]
+    CREATE TABLE [roles]
     (
         [id]       [BIGINT]         NOT NULL IDENTITY(1,1),
         [title]    [NVARCHAR](15)   NOT NULL,

@@ -6,7 +6,7 @@ GO
 
 IF (OBJECT_ID('users') IS NULL)
 BEGIN
-    CREATE TABLE [dbo].[users]
+    CREATE TABLE [users]
     (
         [id]            [BIGINT]           NOT NULL IDENTITY(1,1),
         [email]         [NVARCHAR](255)    NOT NULL,
@@ -19,12 +19,12 @@ BEGIN
         CONSTRAINT [PK_users] PRIMARY KEY CLUSTERED ([Id] ASC),
 
         CONSTRAINT [FK_users_role_id] FOREIGN KEY ([role_id])
-        REFERENCES [dbo].[roles] (id)
+        REFERENCES [roles] (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
 
         CONSTRAINT [FK_users_langs_id] FOREIGN KEY ([lang_id])
-        REFERENCES [dbo].[langs] (id)
+        REFERENCES [langs] (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )

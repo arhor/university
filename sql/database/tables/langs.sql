@@ -4,7 +4,7 @@ GO
 
 IF (OBJECT_ID('langs') IS NULL)
 BEGIN
-    CREATE TABLE [dbo].[langs]
+    CREATE TABLE [langs]
     (
         [id]       [BIGINT]     NOT NULL IDENTITY(1,1),
         [label]    [CHAR](2)    NOT NULL,

@@ -6,7 +6,7 @@ GO
 
 IF (OBJECT_ID('enrollees') IS NULL)
 BEGIN
-    CREATE TABLE [dbo].[enrollees]
+    CREATE TABLE [enrollees]
     (
         [id]              [BIGINT]          NOT NULL IDENTITY(1,1),
         [country]         [NVARCHAR](64)    NOT NULL,
@@ -22,7 +22,7 @@ BEGIN
         ),
 
         CONSTRAINT [FK_enrollees_user_id] FOREIGN KEY ([user_id])
-        REFERENCES [dbo].[users] (id)
+        REFERENCES [users] (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
