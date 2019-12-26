@@ -8,6 +8,7 @@ IF (OBJECT_ID('getDefaultLang') IS NOT NULL)
 BEGIN
     DROP PROCEDURE [getDefaultLang]
 END
+GO
 
 CREATE PROCEDURE [dbo].[getDefaultLang]
 AS

@@ -8,6 +8,7 @@ IF (OBJECT_ID('getDefaultRole') IS NOT NULL)
 BEGIN
     DROP PROCEDURE [getDefaultRole]
 END
+GO
 
 CREATE PROCEDURE [dbo].[getDefaultRole]
 AS

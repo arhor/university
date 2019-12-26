@@ -8,6 +8,7 @@ IF (OBJECT_ID('createNewUser') IS NOT NULL)
 BEGIN
     DROP PROCEDURE [createNewUser]
 END
+GO
 
 CREATE PROCEDURE [dbo].[createNewUser]
     @email         [NVARCHAR](255),

@@ -8,6 +8,7 @@ IF (OBJECT_ID('getAdminRole') IS NOT NULL)
 BEGIN
     DROP PROCEDURE [getAdminRole]
 END
+GO
 
 CREATE PROCEDURE [dbo].[getAdminRole]
 AS
