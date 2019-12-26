@@ -13,7 +13,7 @@ public interface LangRepository extends JpaRepository<Lang, Long> {
   @Procedure
   Lang getDefaultLang();
 
-  @Query("SELECT l FROM langs l WHERE l.label = :label")
+  @Query("SELECT l FROM Lang l WHERE l.label = :label")
   Optional<Lang> findByLabel(String label);
 
 }

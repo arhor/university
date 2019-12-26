@@ -24,12 +24,10 @@ BEGIN
         FILEGROWTH = 15%
     )
 END
+GO
 -- #create-database: university <<< END
 
 -- #create-user >>> START
-USE [university]
-GO
-
 IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
 BEGIN
     CREATE LOGIN UniversitySA
@@ -38,4 +36,5 @@ BEGIN
     CREATE USER UniversitySA
     FOR LOGIN UniversitySA
 END
+GO
 -- #create-user <<< END
