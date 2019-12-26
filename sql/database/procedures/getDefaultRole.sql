@@ -13,7 +13,7 @@ GO
 CREATE PROCEDURE [dbo].[getDefaultRole]
 AS
 BEGIN
-    DECLARE @defaultRole [NVARCHAR] = 'USER'
+    DECLARE @defaultRole [NVARCHAR](10) = N'USER'
     DECLARE @id AS [BIGINT]
 
     SELECT @id = [roles].[id]
@@ -37,5 +37,6 @@ BEGIN
     END
 
     SELECT @id
+    RETURN @id
 END
 -- #create-procedure: getDefaultRole <<< END

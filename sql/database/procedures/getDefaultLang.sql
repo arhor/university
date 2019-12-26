@@ -37,5 +37,6 @@ BEGIN
     END
 
     SELECT @id
+    RETURN @id
 END
 -- #create-procedure: getDefaultLang <<< END
