@@ -13,7 +13,7 @@ GO
 CREATE PROCEDURE [dbo].[getAdminRole]
 AS
 BEGIN
-    DECLARE @adminRole [NVARCHAR] = 'ADMIN'
+    DECLARE @adminRole [NVARCHAR](10) = 'ADMIN'
     DECLARE @id AS [BIGINT]
 
     SELECT @id = [roles].[id]
@@ -37,5 +37,6 @@ BEGIN
     END
 
     SELECT @id
+    RETURN @id
 END
 -- #create-procedure: getAdminRole <<< END
