@@ -13,7 +13,7 @@ import by.arhor.university.service.dto.DTO;
 import by.arhor.university.service.trait.Deleter;
 import by.arhor.university.service.trait.Reader;
 
-public abstract class AbstractService<T, D extends DTO, K>
+public abstract class AbstractService<T, D extends DTO<K>, K>
     implements Reader<D, K>
              , Deleter<D, K> {
 

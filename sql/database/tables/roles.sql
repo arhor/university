@@ -14,10 +14,3 @@ BEGIN
 END
 GO
 -- #create-table: roles <<< END
-
--- #init-table: roles >>> START
-INSERT INTO [roles] (title)
-VALUES ('USER')
-     , ('ADMIN')
-GO
--- #init-table: roles <<< END

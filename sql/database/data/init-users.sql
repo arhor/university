@@ -16,13 +16,7 @@ IF NOT EXISTS (SELECT * FROM [users] WHERE [email] = N'admin@gmail.com')
         DECLARE @Admin BIGINT
         EXEC @Admin = [dbo].[getAdminRole]
 
-        EXEC [dbo].[createNewUser]
-            N'admin@gmail.com',
-            @Password,
-            N'Максим',
-            N'Буришинец',
-            @Admin,
-            @RU
+        EXEC [dbo].[createNewUser] N'admin@gmail.com', @Password, N'Максим', N'Буришинец', @Admin,  @RU
     END
 
 DECLARE @counter INT = 1
@@ -75,13 +69,7 @@ WHILE (@counter <= 100)
 
         IF NOT EXISTS (SELECT * FROM [users] WHERE [email] = @Email)
             BEGIN
-                EXECUTE [dbo].[createNewUser]
-                    @Email,
-                    @Password,
-                    @FirstName,
-                    @LastName,
-                    null,
-                    @LangToUse
+                EXECUTE [dbo].[createNewUser] @Email, @Password, @FirstName, @LastName, null, @LangToUse
             END
         SET @counter = @counter + 1
     END

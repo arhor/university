@@ -3,6 +3,7 @@ package by.arhor.university.web.api.v1;
 import static by.arhor.university.web.api.util.PageUtils.paginate;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,10 +28,12 @@ import by.arhor.university.service.dto.FacultyDTO;
 public class FacultyController {
 
   private final FacultyService service;
+  private final BiFunction<Integer, Integer, List<FacultyDTO>> findPage;
 
   @Autowired
   public FacultyController(FacultyService service) {
     this.service = service;
+    this.findPage = paginate(service::findPage);
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -39,7 +42,7 @@ public class FacultyController {
       @RequestParam(required = false) Integer size,
       WebRequest request
   ) {
-    return paginate(service::findPage).apply(page, size);
+    return findPage.apply(page, size);
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -19,11 +19,3 @@ BEGIN
 END
 GO
 -- #create-table: langs <<< END
-
--- #init-table: langs >>> START
-INSERT INTO [langs] (label)
-VALUES ('RU')
-     , ('BY')
-	 , ('EN')
-GO
--- #init-table: langs <<< END

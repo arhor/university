@@ -8,7 +8,7 @@ import by.arhor.core.util.NumberUtils;
 
 public final class PageUtils {
 
-  public static final int DEFAULT_PAGE = 1;
+  public static final int DEFAULT_PAGE = 0;
   public static final int DEFAULT_SIZE = 50;
 
   private static final ToIntFunction<Number> BOUNDED_PAGE;

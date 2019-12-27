@@ -3,7 +3,7 @@ package by.arhor.university.service.dto;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public final class EnrolleeDTO implements DTO {
+public final class EnrolleeDTO implements DTO<Long> {
 
   private Long id;
   private String country;

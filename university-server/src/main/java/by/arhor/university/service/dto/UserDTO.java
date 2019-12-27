@@ -6,7 +6,7 @@ import by.arhor.university.domain.model.Role;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public final class UserDTO implements DTO {
+public final class UserDTO implements DTO<Long> {
 
   private Long   id;
   private String email;
