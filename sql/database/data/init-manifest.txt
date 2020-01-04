@@ -1,0 +1,9 @@
+# init-langs
+# init-roles
+# init-subjects
+# init-faculties
+# init-users
+# init-enrollees
+# init-faculties_has_subjects
+# init-enrollees_has_subjects
+# init-faculties_has_enrollees

@@ -4,72 +4,40 @@
 USE [university]
 GO
 
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Биологический факультет')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Биологический факультет', 10, 25)
-    END
+DECLARE @TempFaculties TABLE
+(
+    [id]    [INT],
+    [title] [NVARCHAR](64)
+)
 
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Исторический факультет')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Исторический факультет', 13, 21);
-    END
-GO
+INSERT INTO @TempFaculties ([id], [title])
+VALUES (0, N'Биологический факультет')
+     , (1, N'Исторический факультет')
+     , (2, N'Химический факультет')
+     , (3, N'Факультет прикладной математики и информатики')
+     , (4, N'Факультет радиофизики и компьютерных технологий')
+     , (5, N'Экономический факультет')
+     , (6, N'Юридический факультет')
+     , (7, N'Военный факультет')
+     , (8, N'Филологический факультет')
+     , (9, N'Республиканский институт китаеведения имени Конфуция')
 
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Химический факультет')
+DECLARE @counter INT = 0
+WHILE (@counter <= 9)
     BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Химический факультет', 16, 33);
-    END
-GO
+        DECLARE @title NVARCHAR(64) = (SELECT [title] FROM @TempFaculties WHERE [id] = @counter)
 
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Факультет прикладной математики и информатики')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Факультет прикладной математики и информатики', 7, 35);
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Факультет радиофизики и компьютерных технологий')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Факультет радиофизики и компьютерных технологий', 11, 19);
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Экономический факультет')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Экономический факультет', 19, 37);
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Юридический факультет')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Юридический факультет', 5, 23);
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Военный факультет')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Военный факультет', 15, 40);
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Филологический факультет')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Филологический факультет', 14, 28);
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = N'Республиканский институт китаеведения имени Конфуция')
-    BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
-        VALUES (N'Республиканский институт китаеведения имени Конфуция', 9, 30);
+        IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = @title)
+            BEGIN
+                INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
+                VALUES
+                (
+                    @title,
+                    CEILING((10 * RAND()) + 5),
+                    CEILING((25 * RAND()) + 15)
+                )
+            END
+        SET @counter = @counter + 1
     END
 GO
 -- #init-table: faculties  <<< END
