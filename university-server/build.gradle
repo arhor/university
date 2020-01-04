@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.1.RELEASE'
+    id 'org.springframework.boot' version '2.2.2.RELEASE'
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
     id 'jacoco'
@@ -58,7 +58,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
-    implementation 'org.modelmapper:modelmapper:2.3.5'
+    implementation 'org.modelmapper:modelmapper:2.3.6'
 
     testImplementation 'com.h2database:h2'
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
