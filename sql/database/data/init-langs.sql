@@ -4,21 +4,26 @@
 USE [university]
 GO
 
-IF NOT EXISTS (SELECT * FROM [langs] WHERE [label] = 'BY')
-    BEGIN
-        INSERT INTO [langs] ([label]) VALUES ('BY')
-    END
-GO
+DECLARE @TempLangs TABLE
+(
+    [id]    [INT],
+    [label] [CHAR](2)
+)
 
-IF NOT EXISTS (SELECT * FROM [langs] WHERE [label] = 'RU')
-    BEGIN
-        INSERT INTO [langs] ([label]) VALUES ('RU')
-    END
-GO
+VALUES (0, 'BY')
+     , (1, 'RU')
+     , (2, 'EN')
 
-IF NOT EXISTS (SELECT * FROM [langs] WHERE [label] = 'EN')
+DECLARE @counter INT = 0
+WHILE (@counter <= 2)
     BEGIN
-        INSERT INTO [langs] ([label]) VALUES ('EN')
+        DECLARE @label CHAR(2) = (SELECT [label] FROM @TempLangs WHERE [id] = @counter)
+
+        IF NOT EXISTS (SELECT * FROM [langs] WHERE [label] = label)
+            BEGIN
+                INSERT INTO [langs] ([label]) VALUES (@label)
+            END
+        SET @counter = @counter + 1
     END
 GO
 -- #init-table: langs  <<< END

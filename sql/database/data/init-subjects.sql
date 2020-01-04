@@ -4,51 +4,32 @@
 USE [university]
 GO
 
-IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = N'русский язык')
-BEGIN
-    INSERT INTO [subjects] ([default_title]) VALUES (N'русский язык')
-END
-GO
+DECLARE @TempSubjects TABLE
+(
+    [id]    [INT],
+    [title] [NVARCHAR](64)
+)
 
-IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = N'белорусский язык')
-    BEGIN
-        INSERT INTO [subjects] ([default_title]) VALUES (N'белорусский язык')
-    END
-GO
+INSERT INTO @TempSubjects ([id], [title])
+VALUES (0, N'Русский язык')
+     , (1, N'Белорусский язык')
+     , (2, N'Иностранный язык')
+     , (3, N'Математика')
+     , (4, N'Физика')
+     , (5, N'Химия')
+     , (6, N'История')
+     , (7, N'Биология')
 
-IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = N'иностранный язык')
+DECLARE @counter INT = 0
+WHILE (@counter <= 7)
     BEGIN
-        INSERT INTO [subjects] ([default_title]) VALUES (N'иностранный язык')
-    END
-GO
+        DECLARE @title NVARCHAR(64) = (SELECT [title] FROM @TempSubjects WHERE [id] = @counter)
 
-IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = N'математика')
-    BEGIN
-        INSERT INTO [subjects] ([default_title]) VALUES (N'математика')
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = N'физика')
-    BEGIN
-        INSERT INTO [subjects] ([default_title]) VALUES (N'физика')
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = N'химия')
-    BEGIN
-        INSERT INTO [subjects] ([default_title]) VALUES (N'химия')
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = N'история')
-    BEGIN
-        INSERT INTO [subjects] ([default_title]) VALUES (N'история')
-    END
-GO
-
-IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = N'биология')
-    BEGIN
-        INSERT INTO [subjects] ([default_title]) VALUES (N'биология')
+        IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = @title)
+            BEGIN
+                INSERT INTO [subjects] ([default_title]) VALUES (@title)
+            END
+        SET @counter = @counter + 1
     END
 GO
 -- #init-table: subjects  <<< END
