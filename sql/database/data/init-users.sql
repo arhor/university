@@ -1,4 +1,4 @@
--- #dependencies: [users]
+-- #dependencies: [langs, users, getAdminRole, createNewUser]
 
 -- #init-table: users  >>> START
 USE [university]
