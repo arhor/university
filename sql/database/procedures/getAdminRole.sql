@@ -13,7 +13,7 @@ GO
 CREATE PROCEDURE [dbo].[getAdminRole]
 AS
 BEGIN
-    DECLARE @adminRole [NVARCHAR](10) = 'ADMIN'
+    DECLARE @adminRole [NVARCHAR](10) = N'ADMIN'
     DECLARE @id AS [BIGINT]
 
     SELECT @id = [roles].[id]

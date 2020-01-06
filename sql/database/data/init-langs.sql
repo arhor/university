@@ -10,6 +10,7 @@ DECLARE @TempLangs TABLE
     [label] [CHAR](2)
 )
 
+INSERT INTO @TempLangs ([id], [label])
 VALUES (0, 'BY')
      , (1, 'RU')
      , (2, 'EN')
@@ -19,7 +20,7 @@ WHILE (@counter <= 2)
     BEGIN
         DECLARE @label CHAR(2) = (SELECT [label] FROM @TempLangs WHERE [id] = @counter)
 
-        IF NOT EXISTS (SELECT * FROM [langs] WHERE [label] = label)
+        IF NOT EXISTS (SELECT * FROM [langs] WHERE [label] = @label)
             BEGIN
                 INSERT INTO [langs] ([label]) VALUES (@label)
             END
