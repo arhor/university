@@ -12,30 +12,23 @@ import Typography from '@material-ui/core/Typography';
 
 class ListUserComponent extends Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            users: [],
-            message: null
-        }
-        this.deleteUser = this.deleteUser.bind(this);
-        this.editUser = this.editUser.bind(this);
-        this.addUser = this.addUser.bind(this);
-        this.reloadUserList = this.reloadUserList.bind(this);
-    }
+    state = {
+        users: [],
+        message: null,
+    };
 
     componentDidMount() {
         this.reloadUserList();
     }
 
-    reloadUserList() {
+    reloadUserList = () => {
         ApiService.fetchUsers()
             .then((res) => {
                 this.setState({users: res.data.result})
             });
     }
 
-    deleteUser(userId) {
+    deleteUser = (userId) => {
         ApiService.deleteUser(userId)
            .then(res => {
                this.setState({message : 'User deleted successfully.'});
@@ -43,12 +36,12 @@ class ListUserComponent extends Component {
            })
     }
 
-    editUser(id) {
+    editUser = (id) => {
         window.localStorage.setItem("userId", id);
         this.props.history.push('/edit-user');
     }
 
-    addUser() {
+    addUser = () => {
         window.localStorage.removeItem("userId");
         this.props.history.push('/add-user');
     }

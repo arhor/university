@@ -18,6 +18,13 @@ import IconButton from '@material-ui/core/IconButton';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 
+const MENU_ITEMS = [
+  {
+    name: 'Faculties',
+    link: '/faculties',
+  },
+];
+
 export default function AppNavBar() {
   const [isOpen, setOpen] = useState(false);
 
@@ -35,9 +42,11 @@ export default function AppNavBar() {
               React University Application
             </RouterLink>
           </Typography>
-          <RouterLink to="/faculties">
-            Faculties
-          </RouterLink>
+          <Typography variant="h6">
+            <RouterLink to="/faculties">
+              Faculties
+            </RouterLink>
+          </Typography>
           <Button color="inherit">
             Login
           </Button>
@@ -53,25 +62,12 @@ export default function AppNavBar() {
         <Divider />
 
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
+          {MENU_ITEMS.map((item, index) => (
+            <ListItem button key={item.name}>
               <ListItemIcon>
                 {(index % 2 === 0) ? <InboxIcon /> : <MailIcon />}
               </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-          ))}
-        </List>
-
-        <Divider />
-
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {(index % 2 === 0) ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+              <ListItemText primary={item.name} />
             </ListItem>
           ))}
         </List>

@@ -25,8 +25,8 @@ import java.util.regex.Pattern;
   * @author Maksim Buryshynets
   * @version 1.0 11 March 2019
   */
-@Component
-@Profile({"!dev"})
+//@Component
+//@Profile({"!dev"})
 public class CustomCsrfFilter extends OncePerRequestFilter {
 
   private static final String ERROR_MSG = "CSRF token is missing or not matching";
