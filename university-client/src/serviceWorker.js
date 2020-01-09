@@ -48,9 +48,9 @@ export function register(config) {
         })
       } else {
         // Is not localhost. Just register service worker
-        registerValidSW(swUrl, config)
+        registerValidSW(swUrl, config);
       }
-    })
+    });
   }
 }
 
@@ -61,7 +61,7 @@ function registerValidSW(swUrl, config) {
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
-          return
+          return;
         }
         installingWorker.onstatechange = () => {
           if (installingWorker.state === 'installed') {
@@ -76,7 +76,7 @@ function registerValidSW(swUrl, config) {
 
               // Execute callback
               if (config && config.onUpdate) {
-                config.onUpdate(registration)
+                config.onUpdate(registration);
               }
             } else {
               // At this point, everything has been precached.
@@ -86,7 +86,7 @@ function registerValidSW(swUrl, config) {
 
               // Execute callback
               if (config && config.onSuccess) {
-                config.onSuccess(registration)
+                config.onSuccess(registration);
               }
             }
           }
@@ -95,7 +95,7 @@ function registerValidSW(swUrl, config) {
     })
     .catch(error => {
       console.error('Error during service worker registration:', error)
-    })
+    });
 }
 
 function checkValidServiceWorker(swUrl, config) {
@@ -130,6 +130,6 @@ export function unregister() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready.then(registration => {
       registration.unregister();
-    })
+    });
   }
 }

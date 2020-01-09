@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ApiService from "../../service/ApiService";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -22,18 +21,18 @@ class ListUserComponent extends Component {
     }
 
     reloadUserList = () => {
-        ApiService.fetchUsers()
-            .then((res) => {
-                this.setState({users: res.data.result})
-            });
+//         ApiService.fetchUsers()
+//             .then((res) => {
+//                 this.setState({users: res.data.result})
+//             });
     }
 
     deleteUser = (userId) => {
-        ApiService.deleteUser(userId)
-           .then(res => {
-               this.setState({message : 'User deleted successfully.'});
-               this.setState({users: this.state.users.filter(user => user.id !== userId)});
-           })
+//         ApiService.deleteUser(userId)
+//            .then(res => {
+//                this.setState({message : 'User deleted successfully.'});
+//                this.setState({users: this.state.users.filter(user => user.id !== userId)});
+//            })
     }
 
     editUser = (id) => {

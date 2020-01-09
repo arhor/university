@@ -1,23 +1,23 @@
 plugins {
-    id 'com.github.node-gradle.node' version '2.2.0'
-    id 'base'
+  id 'com.github.node-gradle.node' version '2.2.0'
+  id 'base'
 }
 
 node {
-    download = true
-    version  = '13.1.0'
+  download = true
+  version  = '13.1.0'
 }
 
 task npmAuditFix (type: NpmTask, dependsOn: npmInstall) {
-    description = 'Verify and fix vulnerabilities in dependencies'
-    workingDir = file("${project.projectDir}")
-    args = ['audit', 'fix']
+  description = 'Verify and fix vulnerabilities in dependencies'
+  workingDir = file("${project.projectDir}")
+  args = ['audit', 'fix']
 }
 
 task clientBuild (type: NpmTask, dependsOn: npmAuditFix) {
-    description = 'Builds production version of the university client'
-    workingDir = file("${project.projectDir}")
-    args = ['run', 'build']
+  description = 'Builds production version of the university client'
+  workingDir = file("${project.projectDir}")
+  args = ['run', 'build']
 }
 
 assemble.dependsOn clientBuild

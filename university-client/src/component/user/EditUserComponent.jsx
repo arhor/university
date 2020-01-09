@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import ApiService from "../../service/ApiService";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -24,18 +23,18 @@ class EditUserComponent extends Component {
     }
 
     loadUser() {
-        ApiService.fetchUserById(window.localStorage.getItem("userId"))
-            .then((res) => {
-                let user = res.data.result;
-                this.setState({
-                id: user.id,
-                username: user.username,
-                firstName: user.firstName,
-                lastName: user.lastName,
-                age: user.age,
-                salary: user.salary,
-                })
-            });
+//         ApiService.fetchUserById(window.localStorage.getItem("userId"))
+//             .then((res) => {
+//                 let user = res.data.result;
+//                 this.setState({
+//                 id: user.id,
+//                 username: user.username,
+//                 firstName: user.firstName,
+//                 lastName: user.lastName,
+//                 age: user.age,
+//                 salary: user.salary,
+//                 })
+//             });
     }
 
     onChange = (e) =>
@@ -44,11 +43,11 @@ class EditUserComponent extends Component {
     saveUser = (e) => {
         e.preventDefault();
         let user = {id: this.state.id, password: this.state.password, firstName: this.state.firstName, lastName: this.state.lastName, age: this.state.age, salary: this.state.salary};
-        ApiService.editUser(user)
-            .then(res => {
-                this.setState({message : 'User added successfully.'});
-                this.props.history.push('/users');
-            });
+//         ApiService.editUser(user)
+//             .then(res => {
+//                 this.setState({message : 'User added successfully.'});
+//                 this.props.history.push('/users');
+//             });
     }
 
     render() {

@@ -28,13 +28,19 @@ GO
 -- #create-database: university <<< END
 
 -- #create-user >>> START
-IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
-BEGIN
-    CREATE LOGIN UniversitySA
-    WITH PASSWORD = '1university@SECRET!'
+USE [university]
+GO
 
-    CREATE USER UniversitySA
-    FOR LOGIN UniversitySA
-END
+IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
+    BEGIN
+        CREATE LOGIN UniversitySA
+        WITH PASSWORD = '1university@SECRET!', DEFAULT_DATABASE = [master]
+
+        CREATE USER UniversitySA
+        FOR LOGIN UniversitySA
+    END
+GO
+
+GRANT CONTROL ON DATABASE::university TO UniversitySA
 GO
 -- #create-user <<< END
