@@ -5,25 +5,25 @@ USE [master]
 GO
 
 IF (DB_ID('university') IS NULL)
-BEGIN
-    CREATE DATABASE [university]
-    ON
-    (
-        NAME = university_db,
-        FILENAME = 'D:\database\university_db.mdf',
-        SIZE = 128MB,
-        MAXSIZE = UNLIMITED,
-        FILEGROWTH = 15%
-    )
-    LOG ON
-    (
-        NAME = university_log,
-        FILENAME = 'D:\database\university_db.ldf',
-        SIZE = 128MB,
-        MAXSIZE = UNLIMITED,
-        FILEGROWTH = 15%
-    )
-END
+    BEGIN
+        CREATE DATABASE [university]
+        ON
+        (
+            NAME = university_db,
+            FILENAME = 'D:\database\university_db.mdf',
+            SIZE = 128MB,
+            MAXSIZE = UNLIMITED,
+            FILEGROWTH = 15%
+        )
+        LOG ON
+        (
+            NAME = university_log,
+            FILENAME = 'D:\database\university_db.ldf',
+            SIZE = 128MB,
+            MAXSIZE = UNLIMITED,
+            FILEGROWTH = 15%
+        )
+    END
 GO
 -- #create-database: university <<< END
 
@@ -34,7 +34,7 @@ GO
 IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
     BEGIN
         CREATE LOGIN UniversitySA
-        WITH PASSWORD = '1university@SECRET!', DEFAULT_DATABASE = [master]
+        WITH PASSWORD = '1university@SECRET!', DEFAULT_DATABASE = [university]
 
         CREATE USER UniversitySA
         FOR LOGIN UniversitySA
