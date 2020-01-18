@@ -1,6 +1,7 @@
 package by.arhor.university.config;
 
 import by.arhor.university.web.filter.CustomCsrfFilter;
+import by.arhor.university.web.filter.JwtAuthTokenFilter;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
@@ -39,6 +40,11 @@ public class UtilBeansConfig {
     registrationBean.setFilter(csrfFilter);
     registrationBean.addUrlPatterns("/api/*");
     return registrationBean;
+  }
+
+  @Bean
+  public JwtAuthTokenFilter authenticationJwtTokenFilter() {
+    return new JwtAuthTokenFilter();
   }
 
 }

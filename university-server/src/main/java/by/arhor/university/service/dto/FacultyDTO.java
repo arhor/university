@@ -5,10 +5,19 @@ import java.util.StringJoiner;
 
 public final class FacultyDTO implements DTO<Long> {
 
-  private Long   id;
+  private Long id;
   private String defaultTitle;
-  private Short  seatsPaid;
-  private Short  seatsBudget;
+  private Short seatsPaid;
+  private Short seatsBudget;
+
+  public FacultyDTO() {}
+
+  public FacultyDTO(Long id, String defaultTitle, Short seatsPaid, Short seatsBudget) {
+    this.id = id;
+    this.defaultTitle = defaultTitle;
+    this.seatsPaid = seatsPaid;
+    this.seatsBudget = seatsBudget;
+  }
 
   public Long getId() {
     return id;
@@ -44,8 +53,12 @@ public final class FacultyDTO implements DTO<Long> {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     FacultyDTO that = (FacultyDTO) o;
     return Objects.equals(id, that.id)
         && Objects.equals(defaultTitle, that.defaultTitle)

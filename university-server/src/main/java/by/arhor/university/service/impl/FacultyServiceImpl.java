@@ -2,6 +2,7 @@ package by.arhor.university.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +23,23 @@ public class FacultyServiceImpl
   }
 
   @Override
-  public FacultyDTO create(FacultyDTO item) {
-    return null;
+  public FacultyDTO create(FacultyDTO dto) {
+    boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
+    if (exists) {
+      throw new RuntimeException("");
+    }
+    var newFaculty = mapper.map(dto, Faculty.class);
+    var createdFaculty = repository.save(newFaculty);
+    return toDto(createdFaculty);
   }
 
   @Override
   public FacultyDTO update(FacultyDTO item) {
+    var faculty = repository.findById(item.getId()).orElseThrow(RuntimeException::new);
     return null;
+  }
+
+  private FacultyRepository facultyRepository() {
+    return (FacultyRepository) repository;
   }
 }

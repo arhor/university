@@ -8,7 +8,7 @@ import by.arhor.university.service.trait.Updater;
 
 public interface FacultyService
     extends Creator<FacultyDTO>
-          , Reader<FacultyDTO, Long>
+          , Reader <FacultyDTO, Long>
           , Updater<FacultyDTO>
           , Deleter<FacultyDTO, Long> {
 }
