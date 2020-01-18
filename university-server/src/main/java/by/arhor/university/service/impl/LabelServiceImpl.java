@@ -22,9 +22,10 @@ public class LabelServiceImpl implements LabelService {
 
   @Override
   public String localize(String label, Locale locale) {
-    return labelRepository.getLocalizedString(
-        label,
-        langRepository.findByLabel(locale.getLanguage()).orElseGet(langRepository::getDefaultLang)
-    ).orElseThrow();
+//    return labelRepository.getLocalizedString(
+//        label,
+//        langRepository.findByLabel(locale.getLanguage()).orElseGet(langRepository::getDefaultLang)
+//    ).orElseThrow();
+    return "not implemented yet =)";
   }
 }

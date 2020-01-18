@@ -77,7 +77,10 @@ public class AuthController {
     var newUser = mapper.map(signUpRequest, User.class);
     newUser.setPassword(encoder.encode(signUpRequest.getPassword()));
 
-    userRepository.save(newUser);
+    System.out.println(roleRepository.getDefaultRole());
+    var createdUser = userRepository.createNewUser(newUser);
+
+    System.out.println(createdUser);
 
     return ResponseEntity.ok().body("User registered successfully!");
   }
