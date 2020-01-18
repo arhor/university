@@ -1,11 +1,11 @@
 package by.arhor.university.config;
 
-import by.arhor.university.domain.model.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -23,10 +23,10 @@ public class JwtProvider {
 
   public String generateJwtToken(Authentication authentication) {
 
-    User userPrincipal = (User) authentication.getPrincipal();
+    User principal = (User) authentication.getPrincipal();
 
     return Jwts.builder()
-        .setSubject((userPrincipal.getEmail()))
+        .setSubject(principal.getUsername())
         .setIssuedAt(new Date())
         .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
         .signWith(SignatureAlgorithm.HS512, jwtSecret)

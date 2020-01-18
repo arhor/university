@@ -11,7 +11,7 @@ import by.arhor.university.domain.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-  @Procedure
+  @Procedure("createNewUser")
   User createNewUser(User user);
 
   @Query(

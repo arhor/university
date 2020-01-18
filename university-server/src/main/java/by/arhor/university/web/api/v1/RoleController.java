@@ -1,10 +1,7 @@
 package by.arhor.university.web.api.v1;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.Arrays;
-import java.util.List;
-
+import by.arhor.university.domain.model.Role;
+import by.arhor.university.domain.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
@@ -12,8 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import by.arhor.university.domain.model.Role;
-import by.arhor.university.domain.repository.RoleRepository;
+import java.util.List;
 
 @Lazy
 @RestController
@@ -29,12 +25,11 @@ public class RoleController {
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<Role> getRoles() {
-//    return repository.findAll();
-    return Arrays.stream(Role.Value.values()).map(Role::new).collect(toList()); // FIXME: stub!
+    return repository.findAll();
   }
 
   @GetMapping(path = "/default", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Role getDefaultRole() {
+  public Long getDefaultRole() {
     return repository.getDefaultRole();
   }
 

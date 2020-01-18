@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     final var defaultRole = roleRepository.getDefaultRole();
 
     newUser.setPassword(encoded);
-    newUser.setRole(defaultRole);
+//    newUser.setRole(defaultRole);
 
     final var savedUser = repository.save(newUser);
     return mapper.map(savedUser, UserDTO.class);

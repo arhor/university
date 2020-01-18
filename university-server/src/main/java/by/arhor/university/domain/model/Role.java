@@ -1,16 +1,20 @@
 package by.arhor.university.domain.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.StringJoiner;
 
 @Entity
 @Table(name = "roles")
+@NamedStoredProcedureQueries({
+    @NamedStoredProcedureQuery(
+        name = "getDefaultRole",
+        procedureName = "getDefaultRole",
+        resultClasses = Long.class
+
+    )
+})
 public class Role extends AbstractModelObject<Short> {
 
   @NotNull

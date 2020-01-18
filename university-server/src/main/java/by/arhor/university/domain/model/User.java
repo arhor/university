@@ -1,13 +1,6 @@
 package by.arhor.university.domain.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Objects;
@@ -15,6 +8,21 @@ import java.util.StringJoiner;
 
 @Entity
 @Table(name = "users")
+@NamedStoredProcedureQueries({
+    @NamedStoredProcedureQuery(
+        name = "createNewUser",
+        procedureName = "createNewUser",
+        resultClasses = User.class,
+        parameters = {
+            @StoredProcedureParameter(name = "email", type = String.class),
+            @StoredProcedureParameter(name = "password", type = String.class),
+            @StoredProcedureParameter(name = "first_name", type = String.class),
+            @StoredProcedureParameter(name = "last_name", type = String.class),
+            @StoredProcedureParameter(name = "role_id", type = Long.class),
+            @StoredProcedureParameter(name = "lang_id", type = Long.class)
+        }
+    )
+})
 public class User extends AbstractModelObject<Long> {
 
   @NotEmpty

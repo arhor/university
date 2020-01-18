@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.query.Procedure;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
-  @Procedure
-  Role getDefaultRole();
+  @Procedure("getDefaultRole")
+  Long getDefaultRole();
 
   @Query("SELECT r from Role r WHERE r.title = :title")
   Optional<Role> findRoleByTitle(Role.Value title);

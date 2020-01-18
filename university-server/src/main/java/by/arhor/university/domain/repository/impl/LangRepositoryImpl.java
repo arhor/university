@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 @Repository
 public class LangRepositoryImpl implements LangRepository {
@@ -39,11 +42,20 @@ public class LangRepositoryImpl implements LangRepository {
 
   @Override
   public List<Lang> findAll() {
+
     return jdbcTemplate.query(
-        "SELECT l.id, l.label FROM langs l WITH(NOLOCK)",
+        "SELECT " +
+            getColumns().stream()
+                .map(name -> '[' + name + ']')
+                .map(name -> "l." + name)
+                .collect(joining()) +
+            " FROM langs l WITH(NOLOCK)",
         rowMapper
     );
   }
 
+  private List<String> getColumns() {
+    return List.of("id", "label");
+  }
 
 }
