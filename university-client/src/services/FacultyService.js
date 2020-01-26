@@ -1,6 +1,6 @@
-import Service from '../../../core/Service.js';
+import BaseService from 'services/BaseService.js';
 
-class FacultyService extends Service {
+class FacultyService extends BaseService {
 
   async fetchFaculties() {
     try {

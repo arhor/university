@@ -13,9 +13,7 @@ import by.arhor.university.service.dto.FacultyDTO;
 
 @Service
 @Transactional
-public class FacultyServiceImpl
-    extends AbstractService<Faculty, FacultyDTO, Long>
-    implements FacultyService {
+public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Long> implements FacultyService {
 
   @Autowired
   public FacultyServiceImpl(FacultyRepository repository, ModelMapper mapper) {
@@ -34,9 +32,17 @@ public class FacultyServiceImpl
   }
 
   @Override
-  public FacultyDTO update(FacultyDTO item) {
-    var faculty = repository.findById(item.getId()).orElseThrow(RuntimeException::new);
-    return null;
+  public FacultyDTO update(FacultyDTO dto) {
+    boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
+    if (exists) {
+      throw new RuntimeException("Faculty with the same name already exists");
+    }
+    var faculty = repository.findById(dto.getId()).orElseThrow(RuntimeException::new);
+    faculty.setDefaultTitle(dto.getDefaultTitle());
+    faculty.setSeatsBudget(dto.getSeatsBudget());
+    faculty.setSeatsPaid(dto.getSeatsPaid());
+    var savedFaculty = repository.save(faculty);
+    return toDto(savedFaculty);
   }
 
   private FacultyRepository facultyRepository() {

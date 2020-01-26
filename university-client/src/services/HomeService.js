@@ -1,6 +1,6 @@
-import Service from '../../../core/Service.js';
+import BaseService from 'services/BaseService.js';
 
-class HomeService extends Service {
+class HomeService extends BaseService {
 
   async fetchLangs() {
     try {

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import service from './service/FacultyService.js';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
+import service from 'services/FacultyService.js';
 
 export default function FacultiesView() {
   const [faculties, setFaculties] = useState([]);

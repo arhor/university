@@ -9,12 +9,13 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.joining;
+import static by.arhor.university.domain.repository.impl.RepositoryUtils.columns;
 
 @Repository
 public class LangRepositoryImpl implements LangRepository {
+
+  private static final String COLUMNS = columns("id", "label");
 
   private final JdbcTemplate jdbcTemplate;
   private final RowMapper<Lang> rowMapper;
@@ -33,7 +34,7 @@ public class LangRepositoryImpl implements LangRepository {
   public Optional<Lang> findByLabel(String label) {
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
-            "SELECT l FROM langs l WHERE l.label = :label",
+            "SELECT" + COLUMNS + "FROM langs  WITH(NOLOCK) WHERE [label] = :label",
             new Object[] { label },
             Lang.class
         )
@@ -42,20 +43,9 @@ public class LangRepositoryImpl implements LangRepository {
 
   @Override
   public List<Lang> findAll() {
-
     return jdbcTemplate.query(
-        "SELECT " +
-            getColumns().stream()
-                .map(name -> '[' + name + ']')
-                .map(name -> "l." + name)
-                .collect(joining()) +
-            " FROM langs l WITH(NOLOCK)",
+        "SELECT" + COLUMNS + "FROM langs WITH(NOLOCK)",
         rowMapper
     );
   }
-
-  private List<String> getColumns() {
-    return List.of("id", "label");
-  }
-
 }
