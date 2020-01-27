@@ -9,8 +9,6 @@ public final class SignUpRequest {
   private String password;
   private String firstName;
   private String lastName;
-  private String role;
-  private String lang;
 
   public String getEmail() {
     return email;
@@ -44,22 +42,6 @@ public final class SignUpRequest {
     this.lastName = lastName;
   }
 
-  public String getRole() {
-    return role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
-  }
-
-  public String getLang() {
-    return lang;
-  }
-
-  public void setLang(String lang) {
-    this.lang = lang;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -68,14 +50,12 @@ public final class SignUpRequest {
     return Objects.equals(email, that.email) &&
         Objects.equals(password, that.password) &&
         Objects.equals(firstName, that.firstName) &&
-        Objects.equals(lastName, that.lastName) &&
-        Objects.equals(role, that.role) &&
-        Objects.equals(lang, that.lang);
+        Objects.equals(lastName, that.lastName);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(email, password, firstName, lastName, role, lang);
+    return Objects.hash(email, password, firstName, lastName);
   }
 
   @Override
@@ -85,8 +65,6 @@ public final class SignUpRequest {
         .add("password='" + password + "'")
         .add("firstName='" + firstName + "'")
         .add("lastName='" + lastName + "'")
-        .add("role='" + role + "'")
-        .add("lang='" + lang + "'")
         .toString();
   }
 }

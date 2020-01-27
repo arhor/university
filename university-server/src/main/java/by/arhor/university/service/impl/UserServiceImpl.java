@@ -74,16 +74,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   @Override
   public UserDTO create(UserDTO userDto) {
     checkForDuplicates(userDto.getEmail());
-    final var newUser = mapper.map(userDto, User.class);
 
-    final var encoded = encoder.encode(newUser.getPassword());
-    final var defaultRole = roleRepository.getDefaultRole();
+    final var newUser = repository.createNewUser(
+        userDto.getEmail(),
+        encoder.encode(userDto.getPassword()),
+        userDto.getFirstName(),
+        userDto.getLastName()
+    );
 
-    newUser.setPassword(encoded);
-//    newUser.setRole(defaultRole);
-
-    final var savedUser = repository.save(newUser);
-    return mapper.map(savedUser, UserDTO.class);
+    return mapper.map(newUser, UserDTO.class);
   }
 
   private void checkForDuplicates(String email) {

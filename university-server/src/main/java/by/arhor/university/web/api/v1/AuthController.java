@@ -27,7 +27,6 @@ public class AuthController {
 
   private final AuthenticationManager authenticationManager;
   private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
   private final PasswordEncoder encoder;
   private final JwtProvider jwtProvider;
   private final ModelMapper mapper;
@@ -36,13 +35,11 @@ public class AuthController {
   public AuthController(
       AuthenticationManager authenticationManager,
       UserRepository userRepository,
-      RoleRepository roleRepository,
       PasswordEncoder encoder,
       JwtProvider jwtProvider,
       ModelMapper mapper) {
     this.authenticationManager = authenticationManager;
     this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
     this.encoder = encoder;
     this.jwtProvider = jwtProvider;
     this.mapper = mapper;
@@ -72,12 +69,14 @@ public class AuthController {
     }
 
     // Creating user's account
-    var newUser = mapper.map(signUpRequest, User.class);
-    newUser.setPassword(encoder.encode(signUpRequest.getPassword()));
+    var newUser = userRepository.createNewUser(
+        signUpRequest.getEmail(),
+        encoder.encode(signUpRequest.getPassword()),
+        signUpRequest.getFirstName(),
+        signUpRequest.getLastName()
+    );
 
-    var createdUser = userRepository.createNewUser(newUser);
-
-    System.out.println(createdUser);
+    System.out.println(newUser);
 
     return ResponseEntity.ok().body("User registered successfully!");
   }

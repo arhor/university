@@ -10,6 +10,7 @@ public final class UserDTO implements DTO<Long> {
 
   private Long id;
   private String email;
+  private String password;
   private String firstName;
   private String lastName;
   private String role;
@@ -29,6 +30,14 @@ public final class UserDTO implements DTO<Long> {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public String getFirstName() {
@@ -78,6 +87,7 @@ public final class UserDTO implements DTO<Long> {
     UserDTO userDto = (UserDTO) o;
     return Objects.equals(id, userDto.id)
         && Objects.equals(email, userDto.email)
+        && Objects.equals(password, userDto.password)
         && Objects.equals(firstName, userDto.firstName)
         && Objects.equals(lastName, userDto.lastName)
         && Objects.equals(role, userDto.role)
@@ -86,7 +96,7 @@ public final class UserDTO implements DTO<Long> {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, email, firstName, lastName, role, lang);
+    return Objects.hash(id, email, password, firstName, lastName, role, lang);
   }
 
   @Override
@@ -94,6 +104,7 @@ public final class UserDTO implements DTO<Long> {
     return new StringJoiner(", ", UserDTO.class.getSimpleName() + "[", "]")
         .add("id=" + id)
         .add("email='" + email + "'")
+        .add("password='" + password + "'")
         .add("firstName='" + firstName + "'")
         .add("lastName='" + lastName + "'")
         .add("role='" + role + "'")

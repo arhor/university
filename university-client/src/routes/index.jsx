@@ -12,6 +12,7 @@ export default function RouterView() {
           <Switch>
             <Route path="/"          component={HomeView} exact />
             <Route path="/signin"    component={lazy(() => import('views/signin'))} />
+            <Route path="/signup"    component={lazy(() => import('views/signup'))} />
             <Route path="/faculties" component={lazy(() => import('views/faculties'))} />
             <Route path="/users"     component={lazy(() => import('components/user/ListUserComponent'))} />
             <Route path="/edit-user" component={lazy(() => import('components/user/EditUserComponent'))} />

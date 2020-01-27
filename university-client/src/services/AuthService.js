@@ -13,6 +13,17 @@ class AuthService extends BaseService {
     return false;
   }
 
+  async signUp({email, password, firstName, lastName}) {
+      try {
+        const { data } = await this.api.post('/auth/signup', { email, password, firstName, lastName });
+        console.log(data);
+        return true;
+      } catch (e) {
+        console.error('authentication failed: ', e);
+      }
+      return false;
+    }
+
   async refresh() {
     const { data } = await this.api.post('/auth/refresh', {})
   }
