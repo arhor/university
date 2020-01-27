@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.NamedStoredProcedureQueries;
+import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
@@ -11,6 +13,12 @@ import java.util.StringJoiner;
 
 @Entity
 @Table(name = "langs")
+@NamedStoredProcedureQueries({
+    @NamedStoredProcedureQuery(
+        name = "getDefaultLangId",
+        procedureName = "getDefaultLang"
+    )
+})
 public class Lang extends AbstractModelObject<Short> {
 
   @NotNull

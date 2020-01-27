@@ -1,32 +1,36 @@
 package by.arhor.university.domain.repository.impl;
 
-import by.arhor.university.domain.model.Lang;
-import by.arhor.university.domain.repository.LabelRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import by.arhor.university.domain.model.Lang;
+import by.arhor.university.domain.repository.LabelRepository;
 
 @Repository
 public class LabelRepositoryImpl implements LabelRepository {
 
-  private final JdbcTemplate jdbcTemplate;
+  private static final String SQL_GET_LOCALIZED_STRING = ""
+      + "SELECT lb.value "
+      + "FROM labels lb WITH(NOLOCK) "
+      + "WHERE lb.label = :label "
+      + "AND lb.lang_id = :lang_id";
 
-  @Autowired
-  public LabelRepositoryImpl(JdbcTemplate jdbcTemplate) {
-    this.jdbcTemplate = jdbcTemplate;
-  }
+  @PersistenceContext
+  private EntityManager entityManager;
 
   @Override
   public Optional<String> getLocalizedString(String label, Lang lang) {
     return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            "SELECT lb.value FROM labels lb WITH(NOLOCK) WHERE lb.label = ? AND lb.lang_id = ?",
-            new Object[] { label, lang.getId() },
-            String.class
-        )
+        entityManager
+            .createNativeQuery(SQL_GET_LOCALIZED_STRING, String.class)
+            .setParameter("label", label)
+            .setParameter("lang_id", lang.getId())
+            .getSingleResult()
+            .toString()
     );
   }
-
 }

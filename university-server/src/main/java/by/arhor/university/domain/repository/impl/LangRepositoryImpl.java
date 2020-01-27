@@ -1,7 +1,6 @@
 package by.arhor.university.domain.repository.impl;
 
-import static by.arhor.university.domain.repository.impl.RepositoryUtils.columns;
-
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +15,6 @@ import by.arhor.university.domain.repository.LangRepository;
 @Repository
 public class LangRepositoryImpl implements LangRepository {
 
-  private static final String COLUMNS = columns("id", "label");
-
   @PersistenceContext
   private EntityManager entityManager;
 
@@ -29,6 +26,12 @@ public class LangRepositoryImpl implements LangRepository {
             .setParameter("label", label)
             .getSingleResult()
     );
+  }
+
+  @Override
+  public short getDefaultLangId() {
+    var langId = (Number) entityManager.createNamedStoredProcedureQuery("getDefaultLangId").getSingleResult();
+    return langId != null ? langId.shortValue() : -1;
   }
 
   @Override

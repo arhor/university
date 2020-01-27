@@ -28,4 +28,8 @@ public class LangController {
     return repository.findAll();
   }
 
+  @GetMapping(path = "/default", produces = MediaType.APPLICATION_JSON_VALUE)
+  public short getDefaultLangId() {
+    return repository.getDefaultLangId();
+  }
 }

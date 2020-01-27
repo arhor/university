@@ -14,16 +14,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
   @Procedure("createNewUser")
   User createNewUser(User user);
 
-  @Query(
-      "SELECT u " +
-      "FROM User u " +
-      "WHERE u.email = :email")
+  @Query("SELECT u FROM User u WHERE u.email = :email")
   Optional<User> findByEmail(@Param("email") String email);
 
-  @Query(
-      "SELECT COUNT(u) " +
-      "FROM User u " +
-      "WHERE u.email = :email")
+  @Query("SELECT COUNT(u) FROM User u WHERE u.email = :email")
   long countByEmail(@Param("email") String email);
 
 }

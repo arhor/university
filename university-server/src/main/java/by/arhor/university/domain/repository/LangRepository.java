@@ -9,6 +9,8 @@ public interface LangRepository {
 
   Optional<Lang> findByLabel(String label);
 
+  short getDefaultLangId();
+
   List<Lang> findAll();
 
 }
