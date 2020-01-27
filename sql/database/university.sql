@@ -10,7 +10,7 @@ IF (DB_ID('university') IS NULL)
         ON
         (
             NAME = university_db,
-            FILENAME = 'D:\database\university_db.mdf',
+            FILENAME = 'C:\database\university_db.mdf',
             SIZE = 128MB,
             MAXSIZE = UNLIMITED,
             FILEGROWTH = 15%
@@ -18,7 +18,7 @@ IF (DB_ID('university') IS NULL)
         LOG ON
         (
             NAME = university_log,
-            FILENAME = 'D:\database\university_db.ldf',
+            FILENAME = 'C:\database\university_db.ldf',
             SIZE = 128MB,
             MAXSIZE = UNLIMITED,
             FILEGROWTH = 15%

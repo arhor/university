@@ -18,33 +18,33 @@ class AuthService extends BaseService {
   }
 
   invalidate() {
-    token_type = undefined;
-    auth_token = undefined;
-    refresh_token = undefined;
+    this.tokenType = undefined;
+    this.accessToken = undefined;
+    this.refreshToken = undefined;
   }
 
-  get token_type() {
-    return window.localStorage.getItem('token_type');
+  get tokenType() {
+    return window.localStorage.getItem('tokenType');
   }
 
-  set token_type(type) {
-    window.localStorage.setItem('token_type', type);
+  set tokenType(type) {
+    window.localStorage.setItem('tokenType', type);
   }
 
-  get auth_token() {
-    return window.localStorage.getItem('auth_token');
+  get accessToken() {
+    return window.localStorage.getItem('accessToken');
   }
 
-  set auth_token(token) {
-    window.localStorage.setItem('auth_token', token);
+  set accessToken(token) {
+    window.localStorage.setItem('accessToken', token);
   }
 
-  get refresh_token() {
-    return window.localStorage.getItem('refresh_token');
+  get refreshToken() {
+    return window.localStorage.getItem('refreshToken');
   }
 
-  set refresh_token(token) {
-    window.localStorage.setItem('refresh_token', token);
+  set refreshToken(token) {
+    window.localStorage.setItem('refreshToken', token);
   }
 
 }

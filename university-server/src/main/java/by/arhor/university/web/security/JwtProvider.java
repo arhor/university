@@ -1,41 +1,56 @@
-package by.arhor.university.config;
+package by.arhor.university.web.security;
 
-import io.jsonwebtoken.*;
+import java.util.Date;
+
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 @Component
 public class JwtProvider {
 
   private static final Logger log = LoggerFactory.getLogger(JwtProvider.class);
 
-//  @Value("${grokonez.app.jwtSecret}")
-  private String jwtSecret = "secret";
+  @Value("${security.jwt.secret}")
+  private String jwtSecret;
 
-//  @Value("${grokonez.app.jwtExpiration}")
-  private int jwtExpiration = 3600;
+  @Value("${security.jwt.expire}")
+  private int jwtExpiration;
+
+  private JwtParser jwtParser;
+
+  @PostConstruct
+  public void init() {
+    jwtParser = Jwts.parser().setSigningKey(jwtSecret);
+  }
 
   public String generateJwtToken(Authentication authentication) {
-
-    User principal = (User) authentication.getPrincipal();
-
+    var principal = (UserDetails) authentication.getPrincipal();
+    var startTime = new Date();
     return Jwts.builder()
         .setSubject(principal.getUsername())
-        .setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
+        .setIssuedAt(startTime = new Date())
+        .setExpiration(new Date(startTime.getTime() + jwtExpiration))
         .signWith(SignatureAlgorithm.HS512, jwtSecret)
         .compact();
   }
 
   public String getUserNameFromJwtToken(String token) {
-    return Jwts.parser()
-        .setSigningKey(jwtSecret)
+    return jwtParser
         .parseClaimsJws(token)
         .getBody()
         .getSubject();
@@ -43,7 +58,7 @@ public class JwtProvider {
 
   public boolean validateJwtToken(String authToken) {
     try {
-      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
+      jwtParser.parseClaimsJws(authToken);
       return true;
     } catch (SignatureException e) {
       log.error("Invalid JWT signature -> Message: {} ", e.getMessage());
@@ -56,8 +71,6 @@ public class JwtProvider {
     } catch (IllegalArgumentException e) {
       log.error("JWT claims string is empty -> Message: {}", e.getMessage());
     }
-
     return false;
   }
-
 }

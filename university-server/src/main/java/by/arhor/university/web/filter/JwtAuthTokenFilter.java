@@ -1,6 +1,6 @@
 package by.arhor.university.web.filter;
 
-import by.arhor.university.config.JwtProvider;
+import by.arhor.university.web.security.JwtProvider;
 import by.arhor.university.service.impl.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

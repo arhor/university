@@ -1,10 +1,10 @@
 package by.arhor.university.web.api.v1;
 
-import by.arhor.university.config.JwtProvider;
+import by.arhor.university.web.security.JwtProvider;
 import by.arhor.university.domain.model.User;
 import by.arhor.university.domain.repository.RoleRepository;
 import by.arhor.university.domain.repository.UserRepository;
-import by.arhor.university.web.api.model.JwtResponse;
+import by.arhor.university.web.security.JwtResponse;
 import by.arhor.university.web.api.model.SignInRequest;
 import by.arhor.university.web.api.model.SignUpRequest;
 import org.modelmapper.ModelMapper;
@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -51,8 +49,7 @@ public class AuthController {
   }
 
   @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@RequestBody SignInRequest signInRequest) {
-
+  public JwtResponse authenticateUser(@RequestBody SignInRequest signInRequest) {
     Authentication authentication = authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             signInRequest.getEmail(),
@@ -62,8 +59,9 @@ public class AuthController {
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    String jwt = jwtProvider.generateJwtToken(authentication);
-    return ResponseEntity.ok(new JwtResponse(jwt));
+    return new JwtResponse(
+        jwtProvider.generateJwtToken(authentication)
+    );
   }
 
   @PostMapping("/signup")
@@ -77,7 +75,6 @@ public class AuthController {
     var newUser = mapper.map(signUpRequest, User.class);
     newUser.setPassword(encoder.encode(signUpRequest.getPassword()));
 
-    System.out.println(roleRepository.getDefaultRole());
     var createdUser = userRepository.createNewUser(newUser);
 
     System.out.println(createdUser);

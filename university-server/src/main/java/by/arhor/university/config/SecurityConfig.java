@@ -2,6 +2,8 @@ package by.arhor.university.config;
 
 import by.arhor.university.service.impl.UserServiceImpl;
 import by.arhor.university.web.filter.JwtAuthTokenFilter;
+import by.arhor.university.web.security.JwtAuthEntryPoint;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,9 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   private JwtAuthTokenFilter jwtAuthTokenFilter;
 
   @Override
-  public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-    authenticationManagerBuilder
-        .userDetailsService(userService)
+  public void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userService)
         .passwordEncoder(encoder);
   }
 
