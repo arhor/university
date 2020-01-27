@@ -36,7 +36,8 @@ BEGIN
         COALESCE(@lang_id, @default_lang_id)
     )
 
-    SELECT [u].[email]
+    SELECT [u].[id]
+         , [u].[email]
          , [u].[password]
          , [u].[first_name]
          , [u].[last_name]

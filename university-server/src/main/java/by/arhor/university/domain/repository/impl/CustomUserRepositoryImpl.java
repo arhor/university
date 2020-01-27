@@ -1,7 +1,9 @@
 package by.arhor.university.domain.repository.impl;
 
 import javax.persistence.EntityManager;
+import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
+import javax.persistence.StoredProcedureQuery;
 
 import org.springframework.stereotype.Repository;
 
@@ -22,6 +24,8 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         .setParameter("password", password)
         .setParameter("first_name", firstName)
         .setParameter("last_name", lastName)
+        .setParameter("role_id", null)
+        .setParameter("lang_id", null)
         .getSingleResult();
   }
 

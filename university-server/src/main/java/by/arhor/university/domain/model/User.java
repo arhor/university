@@ -18,8 +18,8 @@ import java.util.StringJoiner;
             @StoredProcedureParameter(name = "password", type = String.class),
             @StoredProcedureParameter(name = "first_name", type = String.class),
             @StoredProcedureParameter(name = "last_name", type = String.class),
-//            @StoredProcedureParameter(name = "role_id", type = Long.class),
-//            @StoredProcedureParameter(name = "lang_id", type = Long.class)
+            @StoredProcedureParameter(name = "role_id", type = Long.class),
+            @StoredProcedureParameter(name = "lang_id", type = Long.class),
         }
     )
 })

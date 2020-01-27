@@ -1,10 +1,15 @@
 package by.arhor.university.web.security;
 
 public final class JwtResponse {
+
   private String accessToken;
   private String tokenType = "Bearer";
 
-  public JwtResponse(String accessToken) {
+  public static JwtResponse withToken(String token) {
+    return new JwtResponse(token);
+  }
+
+  private JwtResponse(String accessToken) {
     this.accessToken = accessToken;
   }
 
