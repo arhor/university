@@ -3,6 +3,8 @@ plugins {
   id 'base'
 }
 
+description = 'university-client'
+
 node {
   download = true
   version  = '13.1.0'
@@ -27,5 +29,3 @@ task clientStart (type: NpmTask, dependsOn: clientBuild) {
 }
 
 assemble.dependsOn clientBuild
-
-description = 'university-client'

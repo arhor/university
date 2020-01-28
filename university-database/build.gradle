@@ -1,0 +1,32 @@
+plugins {
+    id 'application'
+}
+
+group = 'by.arhor'
+version = '0.0.1-SNAPSHOT'
+
+description = 'university-database'
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+mainClassName = 'by.arhor.university.database.Main'
+
+test {
+    useJUnitPlatform()
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':core')
+
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
+    implementation 'com.microsoft.sqlserver:mssql-jdbc:8.1.1.jre11-preview'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+}
