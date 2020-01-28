@@ -13,7 +13,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import by.arhor.core.Lazy;
 
-public final class DBEngine implements AutoCloseable {
+public final class ConnectionPool implements AutoCloseable {
 
   private static final String DEFAULT_URL      = "jdbc:sqlserver://localhost:1433;database=university;";
   private static final String DEFAULT_DRIVER   = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
@@ -27,24 +27,25 @@ public final class DBEngine implements AutoCloseable {
   private static final String DB_PASSWORD = "db.password";
   private static final String DB_POOLSIZE = "db.poolsize";
 
-  private static final Lazy<DBEngine> INSTANCE = Lazy.evalSafe(DBEngine::new);
+  private static final Lazy<ConnectionPool> INSTANCE = Lazy.evalSafe(ConnectionPool::new);
 
   private final ArrayBlockingQueue<Connection> freeConnections;
   private final ArrayBlockingQueue<Connection> busyConnections;
   private final Properties config;
   private final Throwable error;
 
-  public static DBEngine getInstance() {
+  public static ConnectionPool getInstance() {
     return INSTANCE.get();
   }
 
-  private DBEngine() {
+  private ConnectionPool() {
     final var classLoader = getClass().getClassLoader();
     final var properties = new Properties();
 
     ArrayBlockingQueue<Connection> freeConnectionsTemp;
     ArrayBlockingQueue<Connection> busyConnectionsTemp;
     Throwable errorTemp;
+
     try {
       final var configFile = classLoader.getResourceAsStream("database.properties");
       if (configFile != null) {
@@ -59,13 +60,12 @@ public final class DBEngine implements AutoCloseable {
 
       final int dbConnections = Integer.parseInt(properties.getProperty(DB_POOLSIZE));
 
-      Class.forName(DB_DRIVER);
+      Class.forName(properties.getProperty(DB_DRIVER));
 
       freeConnectionsTemp = new ArrayBlockingQueue<>(dbConnections);
       busyConnectionsTemp = new ArrayBlockingQueue<>(dbConnections);
 
-      final Class<?>[] CLASSES = { Connection.class };
-
+      final Class<?>[] classes = { Connection.class, ProxyConnection.class };
 
       for (int i = 0; i < dbConnections; i++) {
         final var connection = DriverManager.getConnection(
@@ -76,11 +76,11 @@ public final class DBEngine implements AutoCloseable {
 
         final var proxy = Proxy.newProxyInstance(
             classLoader,
-            CLASSES,
+            classes,
             invocationHandlerFor(connection)
         );
 
-        freeConnectionsTemp.add((Connection) proxy);
+        freeConnectionsTemp.add((ProxyConnection) proxy);
       }
 
       errorTemp = null;
@@ -97,21 +97,56 @@ public final class DBEngine implements AutoCloseable {
 
   public final Connection getConnection() throws Throwable {
     if (error == null) {
-      final var connection = freeConnections.take();
-      busyConnections.put(connection);
+      Connection connection = null;
+      try {
+        connection = freeConnections.take();
+        busyConnections.put(connection);
+        return connection;
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      }
       return connection;
     }
     throw error;
   }
 
+  public final void releaseConnection(Connection connection) {
+    try {
+      if (connection instanceof ProxyConnection) {
+        busyConnections.remove(connection);
+        if (!connection.getAutoCommit()) {
+          connection.setAutoCommit(true);
+        }
+        freeConnections.put((ProxyConnection) connection);
+      }
+
+    } catch (SQLException e) {
+      // fuf
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+  }
+
   private InvocationHandler invocationHandlerFor(Connection connection) {
     return (obj, method, args) -> {
-      if ("close".equals(method.getName())) {
-        freeConnections.put(connection);
-        return null;
-      } else {
-        return method.invoke(obj, args);
-      }
+//      if ("close".equals(method.getName())) {
+//        freeConnections.put(connection);
+//        System.out.println("fake");
+//        return null;
+//      } else if ("_close".equals(method.getName())) {
+//        connection.close();
+//        System.out.println("real");
+//        return null;
+//      } else {
+        System.out.println(method);
+        try {
+          return method.invoke(obj, args);
+        } catch (Throwable t) {
+          System.out.println(t);
+          Thread.currentThread().interrupt();
+          return null;
+        }
+//      }
     };
   }
 
@@ -139,6 +174,10 @@ public final class DBEngine implements AutoCloseable {
         // fuf
       }
     }
-
   }
+
+  private interface ProxyConnection extends Connection {
+    void _close() throws SQLException;
+  }
+
 }

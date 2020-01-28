@@ -2,6 +2,7 @@ package by.arhor.university.database;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.Connection;
 
 public class Runner {
 
@@ -16,8 +17,12 @@ public class Runner {
     }
   }
 
-  public static void main(String[] args) {
-    final var engine = DBEngine.getInstance();
+  public static void main(String[] args) throws Throwable {
+    final var engine = ConnectionPool.getInstance();
+
+    try (var connection = engine.getConnection()) {
+      System.out.println(connection);
+    }
 
 //    init();
 //
