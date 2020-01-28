@@ -65,7 +65,9 @@ public final class DBEngine {
 
   public final Connection getConnection() throws Throwable {
     if (error == null) {
-      return freeConnections.poll();
+      final var connection = freeConnections.take();
+      busyConnections.put(connection);
+      return connection;
     }
     throw error;
   }
