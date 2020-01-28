@@ -17,7 +17,7 @@ public class Runner {
   }
 
   public static void main(String[] args) {
-    final var app = new Runner();
+    final var engine = DBEngine.getInstance();
 
 //    init();
 //
