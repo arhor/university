@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import Loading from 'components/Loading';
 import HomeView from 'views/home';

@@ -20,6 +20,12 @@ task clientBuild (type: NpmTask, dependsOn: npmAuditFix) {
   args = ['run', 'build']
 }
 
+task clientStart (type: NpmTask, dependsOn: clientBuild) {
+  description = 'Serves client for development purposes'
+  workingDir = file("${project.projectDir}")
+  args = ['run', 'start']
+}
+
 assemble.dependsOn clientBuild
 
 description = 'university-client'
