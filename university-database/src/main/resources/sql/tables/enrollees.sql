@@ -1,4 +1,4 @@
--- #dependencies: [users]
+--#dependencies: [users]
 
 -- #create-table: enrollees >>> START
 USE [university]

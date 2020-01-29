@@ -2,9 +2,11 @@ package by.arhor.university.database;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import by.arhor.university.database.parser.Directive;
+import by.arhor.university.database.parser.ScriptParser;
 
 public class Runner {
 
@@ -30,23 +32,16 @@ public class Runner {
             if (innerFile.isFile()) {
               System.out.println(innerFile.getName());
 
-              try (var scan = new Scanner(innerFile)) {
-                int row = 0;
-                while (scan.hasNext()) {
-                  final var line = scan.nextLine();
+              final var parser = ScriptParser.getInstance();
 
-                  if (Directive.DEPENDENCIES.matches(line)) {
-                    System.out.println("dependencies directive!");
-                  } else if (Directive.MAIN.matches(line)) {
-                    System.out.println("main directive!");
-                  } else if (Directive.CREATE.matches(line)) {
-                    System.out.println("create directive!");
-                  } else if (Directive.INIT.matches(line)) {
-                    System.out.println("init directive!");
-                  }
-                  System.out.println((row++) + ": " + line);
-                }
-              }
+              parser
+                  .parseFile(innerFile)
+                  .forEach(
+                      (directive, script) -> {
+                        System.out.println("Parsed directive: " + directive);
+                        System.out.println("Inner content:");
+                        System.out.println(script);
+                      });
 
               return;
             }
