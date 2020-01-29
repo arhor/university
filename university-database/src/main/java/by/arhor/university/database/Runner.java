@@ -2,7 +2,9 @@ package by.arhor.university.database;
 
 import java.io.File;
 import java.net.URL;
-import java.sql.Connection;
+import java.util.Scanner;
+
+import by.arhor.university.database.parser.Directive;
 
 public class Runner {
 
@@ -18,10 +20,39 @@ public class Runner {
   }
 
   public static void main(String[] args) throws Throwable {
-    final var engine = ConnectionPool.getInstance();
+    final var app = new Runner();
 
-    try (var connection = engine.getConnection()) {
-      System.out.println(connection);
+    for (File file : app.folders) {
+      if (file.isDirectory() && "tables".equals(file.getName())) {
+        final var innerContent = file.listFiles();
+        if (innerContent != null) {
+          for (File innerFile : innerContent) {
+            if (innerFile.isFile()) {
+              System.out.println(innerFile.getName());
+
+              try (var scan = new Scanner(innerFile)) {
+                int row = 0;
+                while (scan.hasNext()) {
+                  final var line = scan.nextLine();
+
+                  if (Directive.DEPENDENCIES.matches(line)) {
+                    System.out.println("dependencies directive!");
+                  } else if (Directive.MAIN.matches(line)) {
+                    System.out.println("main directive!");
+                  } else if (Directive.CREATE.matches(line)) {
+                    System.out.println("create directive!");
+                  } else if (Directive.INIT.matches(line)) {
+                    System.out.println("init directive!");
+                  }
+                  System.out.println((row++) + ": " + line);
+                }
+              }
+
+              return;
+            }
+          }
+        }
+      }
     }
 
 //    init();
