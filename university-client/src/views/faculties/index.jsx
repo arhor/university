@@ -7,7 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Typography from '@material-ui/core/Typography';
 import service from 'services/FacultyService.js';
 
-export default function FacultiesView() {
+const FacultiesView = () => {
   const [faculties, setFaculties] = useState([]);
 
   useEffect(() => {
@@ -40,3 +40,5 @@ export default function FacultiesView() {
     </>
   );
 }
+
+export default FacultiesView;

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,20 +37,19 @@ public class FacultyController {
     this.findPage = paginate(service::findPage);
   }
 
+  @PreAuthorize("hasRole(USER)")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FacultyDTO> getFaculties(
       @RequestParam(required = false) Integer page,
       @RequestParam(required = false) Integer size,
-      WebRequest request
-  ) {
+      WebRequest request) {
     return findPage.apply(page, size);
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public FacultyDTO getFaculty(
       @PathVariable("id") Long id,
-      WebRequest request
-  ) {
+      WebRequest request) {
     return service.findOne(id);
   }
 
@@ -57,9 +57,7 @@ public class FacultyController {
   @ResponseStatus(HttpStatus.ACCEPTED)
   public void deleteFaculty(
       @PathVariable("id") Long id,
-      WebRequest request
-  ) {
+      WebRequest request) {
     service.deleteById(id);
   }
-
 }

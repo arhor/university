@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,31 +19,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import by.arhor.core.function.RichSupplier;
 import by.arhor.university.domain.model.User;
-import by.arhor.university.domain.repository.RoleRepository;
 import by.arhor.university.domain.repository.UserRepository;
 import by.arhor.university.service.UserService;
 import by.arhor.university.service.dto.UserDTO;
 
-@Lazy
 @Service
 @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+  private final UserRepository repository;
   private final PasswordEncoder encoder;
   private final ModelMapper mapper;
-  private final UserRepository repository;
-  private final RoleRepository roleRepository;
 
   @Autowired
   public UserServiceImpl(
-      PasswordEncoder encoder,
-      ModelMapper mapper,
       UserRepository repository,
-      RoleRepository roleRepository) {
+      PasswordEncoder encoder,
+      ModelMapper mapper) {
+    this.repository = repository;
     this.encoder = encoder;
     this.mapper = mapper;
-    this.repository = repository;
-    this.roleRepository = roleRepository;
   }
 
   @Override
@@ -53,14 +47,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     return repository
         .findByEmail(email)
         .map(this::userToUserDetails)
-        .orElseThrow(RuntimeException::new);
+        .orElseThrow(() -> new UsernameNotFoundException("there is no user with email: " + email));
   }
 
   private UserDetails userToUserDetails(User user) {
     return new org.springframework.security.core.userdetails.User(
         user.getEmail(),
         user.getPassword(), // fixme: should I encode password here or just pass it raw?
-        authoritiesFrom(user::getRole));
+        authoritiesFrom(user::getRole)
+    );
   }
 
   private Collection<? extends GrantedAuthority> authoritiesFrom(RichSupplier<?> source) {

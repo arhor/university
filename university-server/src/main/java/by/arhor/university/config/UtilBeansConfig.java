@@ -4,6 +4,9 @@ import by.arhor.university.web.filter.CustomCsrfFilter;
 import by.arhor.university.web.filter.JwtAuthTokenFilter;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@EnableCaching
 public class UtilBeansConfig {
 
   @Bean
@@ -40,11 +44,6 @@ public class UtilBeansConfig {
     registrationBean.setFilter(csrfFilter);
     registrationBean.addUrlPatterns("/api/*");
     return registrationBean;
-  }
-
-  @Bean
-  public JwtAuthTokenFilter authenticationJwtTokenFilter() {
-    return new JwtAuthTokenFilter();
   }
 
 }

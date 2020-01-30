@@ -22,8 +22,13 @@ export default function Signin() {
 
   const onChange = (e) => setUser({...user, [e.target.name]: e.target.value});
 
-  const login = () => {
-    service.signIn(user).then(data => console.debug(data));
+  const login = async () => {
+    try {
+      const data = await service.signIn(user);
+      console.debug(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
