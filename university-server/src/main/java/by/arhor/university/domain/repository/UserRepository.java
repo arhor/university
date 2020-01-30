@@ -11,8 +11,8 @@ import by.arhor.university.domain.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long>, CustomUserRepository {
 
+  @Cacheable(value = "users", key = "#email")
   @Query("SELECT u FROM User u WHERE u.email = :email")
-  @Cacheable("user_details")
   Optional<User> findByEmail(@Param("email") String email);
 
   @Query("SELECT COUNT(u) FROM User u WHERE u.email = :email")
