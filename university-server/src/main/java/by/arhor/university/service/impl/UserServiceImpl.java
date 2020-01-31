@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     return new org.springframework.security.core.userdetails.User(
         user.getEmail(),
         user.getPassword(), // fixme: should I encode password here or just pass it raw?
-        authoritiesFrom(user::getRole)
+        authoritiesFrom(user.getRole()::getTitle)
     );
   }
 

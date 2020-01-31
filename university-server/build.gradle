@@ -28,7 +28,7 @@ task clientCopy(type: Copy, dependsOn: ':university-client:build') {
   into 'build/resources/main/static/.'
 }
 
-compileJava.dependsOn clientCopy
+//compileJava.dependsOn clientCopy
 
 jacocoTestReport {
   afterEvaluate {

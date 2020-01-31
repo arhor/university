@@ -20,7 +20,10 @@ export default function HomeView() {
       {roles}
       <br />
       <Link to="/signin">Sign in</Link>
+      <br />
       <Link to="/signup">Sign up</Link>
+      <br />
+      <Link to="/faculties">Faculties</Link>
     </>
   );
 }

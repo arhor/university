@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,8 @@ public class FacultyController {
     this.findPage = paginate(service::findPage);
   }
 
-  @PreAuthorize("hasRole(USER)")
+//  @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+  @PreAuthorize("isAuthenticated()")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FacultyDTO> getFaculties(
       @RequestParam(required = false) Integer page,
@@ -53,6 +55,7 @@ public class FacultyController {
     return service.findOne(id);
   }
 
+  @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public void deleteFaculty(

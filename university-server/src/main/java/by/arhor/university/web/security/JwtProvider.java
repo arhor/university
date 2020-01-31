@@ -1,6 +1,7 @@
 package by.arhor.university.web.security;
 
 import java.util.Date;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.PostConstruct;
 
@@ -25,6 +26,17 @@ public class JwtProvider {
 
   private static final Logger log = LoggerFactory.getLogger(JwtProvider.class);
 
+  private static final SignatureAlgorithm ALGORITHM;
+
+  static {
+    final int woof = ThreadLocalRandom.current().nextInt(2);
+    switch (woof) {
+      case 0:  ALGORITHM = SignatureAlgorithm.HS256; break;
+      case 1:  ALGORITHM = SignatureAlgorithm.HS384; break;
+      default: ALGORITHM = SignatureAlgorithm.HS512;
+    }
+  }
+
   @Value("${security.jwt.secret}")
   private String jwtSecret;
 
@@ -45,7 +57,7 @@ public class JwtProvider {
         .setSubject(principal.getUsername())
         .setIssuedAt(startTime = new Date())
         .setExpiration(new Date(startTime.getTime() + jwtExpiration))
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .signWith(ALGORITHM, jwtSecret)
         .compact();
   }
 

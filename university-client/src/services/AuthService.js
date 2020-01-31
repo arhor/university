@@ -6,6 +6,10 @@ class AuthService extends BaseService {
     try {
       const { data } = await this.api.post('/auth/signin', { email, password });
       console.log(data);
+
+      this.accessToken = data.accessToken;
+      this.tokenType = data.tokenType;
+
       return true;
     } catch (e) {
       console.error('authentication failed: ', e);

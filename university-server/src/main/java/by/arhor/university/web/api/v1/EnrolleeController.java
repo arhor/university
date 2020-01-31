@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class EnrolleeController {
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAuthority('USER')")
   @ResponseStatus(HttpStatus.CREATED)
   public EnrolleeDTO enroll(@RequestBody EnrolleeDTO dto) {
     return service.create(dto);
@@ -41,6 +43,7 @@ public class EnrolleeController {
   @DeleteMapping(
       path = "/{id}",
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
   @ResponseStatus(HttpStatus.OK)
   public void unroll(@PathVariable Long id) {
     service.deleteById(id);
@@ -49,6 +52,7 @@ public class EnrolleeController {
   @GetMapping(
       path = "/{id}",
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAuthority('ADMIN')")
   public EnrolleeDTO getEnrolleeById(@PathVariable Long id) {
     return service.findOne(id);
   }
@@ -56,6 +60,7 @@ public class EnrolleeController {
   @GetMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAuthority('ADMIN')")
   public List<EnrolleeDTO> getEnrollees(
       @RequestParam(required = false) int page,
       @RequestParam(required = false) int size) {
@@ -68,12 +73,13 @@ public class EnrolleeController {
       path = "/best",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
+  @PreAuthorize("hasAuthority('ADMIN')")
   public List<EnrolleeDTO> getBestEnrollees(
       @RequestParam(required = false) int page,
       @RequestParam(required = false) int size) {
+
     return PageUtils
         .paginate(service::findBestEnrollees)
         .apply(page, size);
   }
-
 }
