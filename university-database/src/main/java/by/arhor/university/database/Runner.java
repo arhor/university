@@ -56,10 +56,6 @@ public class Runner {
         if (matcher.matches()) {
           final var fileNameToExecute = matcher.group(4);
 
-          if (fileNameToExecute.equals("init-faculties.sql")) {
-            System.out.println("debug");
-          }
-
           final var script = Arrays
               .stream(Objects.requireNonNull(folderContent))
               .filter(file -> fileNameToExecute.equals(file.getName()))
@@ -72,7 +68,7 @@ public class Runner {
             final var batches = new ArrayList<String>();
             final var scriptBody = new StringBuilder();
 
-            String line = null;
+            String line;
             while ((line = scriptReader.readLine()) != null) {
               if (line.matches("^( *)GO( *)$")) {
                 batches.add(scriptBody.toString());
@@ -82,13 +78,16 @@ public class Runner {
               scriptBody.append(line).append('\n');
             }
 
-            if (batches.isEmpty() && scriptBody.length() > 0) {
+            if (scriptBody.length() > 0) {
               batches.add(scriptBody.toString());
             }
 
             for (int i = 0; i < batches.size(); i++) {
               try (var statement = connection.createStatement()) {
-                final var result = statement.executeUpdate(batches.get(i));
+
+                final var query = batches.get(i);
+
+                final var result = statement.executeUpdate(query);
 
                 System.out.printf(
                     "-- %d of %d batches processed, status - %s%n",

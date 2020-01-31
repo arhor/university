@@ -10,7 +10,7 @@ description = 'university-database'
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-mainClassName = 'by.arhor.university.database.Main'
+mainClassName = 'by.arhor.university.database.Runner'
 
 test {
     useJUnitPlatform()

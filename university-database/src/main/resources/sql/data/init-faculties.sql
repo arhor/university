@@ -7,7 +7,7 @@ GO
 DECLARE @TempFaculties TABLE
 (
     [id]    [INT],
-    [title] [NVARCHAR](64)
+    [title] [NVARCHAR](128)
 )
 
 INSERT INTO @TempFaculties ([id], [title])

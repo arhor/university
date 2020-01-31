@@ -6,7 +6,7 @@ BEGIN
     CREATE TABLE [faculties]
     (
         [id]               [BIGINT]          NOT NULL IDENTITY(1,1),
-        [default_title]    [NVARCHAR](64)    NOT NULL UNIQUE,
+        [default_title]    [NVARCHAR](128)   NOT NULL UNIQUE,
         [seats_paid]       [SMALLINT]        NOT NULL,
         [seats_budget]     [SMALLINT]        NOT NULL,
 
