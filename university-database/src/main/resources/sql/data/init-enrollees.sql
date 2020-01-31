@@ -71,5 +71,4 @@ WHILE (@counter < @totalUsers)
             END
         SET @counter = @counter + 1
     END
-GO
 -- #init-table: enrollees  <<< END

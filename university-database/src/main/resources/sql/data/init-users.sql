@@ -73,5 +73,4 @@ WHILE (@counter <= 100)
             END
         SET @counter = @counter + 1
     END
-GO
 -- #init-table: users  <<< END

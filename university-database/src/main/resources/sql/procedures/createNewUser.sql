@@ -46,5 +46,4 @@ BEGIN
     FROM [users] [u] WITH (NOLOCK)
     WHERE [u].[email] = @email
 END
-GO
 -- #create-procedure: createNewUser <<< END

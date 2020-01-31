@@ -14,5 +14,4 @@ IF NOT EXISTS (SELECT * FROM [roles] WHERE [title] = 'ADMIN')
     BEGIN
         INSERT INTO [roles] ([title]) VALUES ('ADMIN')
     END
-GO
 -- #init-table: roles  <<< END

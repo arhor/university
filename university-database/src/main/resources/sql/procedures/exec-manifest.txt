@@ -1,0 +1,4 @@
+exec: 'getDefaultLang.sql'
+exec: 'getDefaultRole.sql'
+exec: 'getAdminRole.sql'
+exec: 'createNewUser.sql'

@@ -39,5 +39,4 @@ WHILE (@counter <= 9)
             END
         SET @counter = @counter + 1
     END
-GO
 -- #init-table: faculties  <<< END

@@ -1,12 +1,16 @@
 package by.arhor.university.database;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +20,7 @@ import javax.annotation.Nonnull;
 public class Runner {
 
   private static final Pattern EXEC_STATEMENT =
-      Pattern.compile("^(exec:)( ?)(')(\\w+(\\.sql)*)(')$");
+      Pattern.compile("^(exec:)( ?)(')([a-zA-Z0-9_\\-]+(\\.sql)*)(')$");
 
   private final File[] folders;
 
@@ -29,31 +33,21 @@ public class Runner {
     }
   }
 
-  private void processFolder(String name, Connection connection) throws FileNotFoundException, SQLException {
+  private void processFolder(String name, Connection connection) throws IOException, SQLException {
+    System.out.print("Looking for " + name + " folder");
     final var folder = Arrays.stream(folders)
         .filter(File::isDirectory)
         .filter(file -> name.equals(file.getName()))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException(""));
+        .orElseThrow(() -> new RuntimeException("Folder " + name + " is not found!"));
+    System.out.print(" - DONE\n\n");
     processFolder(folder, connection);
   }
 
-  private void execute() throws Throwable {
-    Connection connection = ConnectionPool.getInstance().getConnection();
-
-    processFolder("tables", connection);
-    processFolder("data", connection);
-
-    connection.close();
-  }
-
-  private void processFolder(File folder, Connection connection) throws FileNotFoundException, SQLException {
+  private void processFolder(File folder, Connection connection) throws IOException, SQLException {
     final var manifest = findManifest(folder);
 
-
-    try (var content = new Scanner(manifest);) {
-
-      System.out.println(content);
+    try (var content = new Scanner(manifest)) {
 
       final var folderContent = folder.listFiles();
 
@@ -61,37 +55,54 @@ public class Runner {
         final var matcher = EXEC_STATEMENT.matcher(content.nextLine());
         if (matcher.matches()) {
           final var fileNameToExecute = matcher.group(4);
-          System.out.println("Line matches! Executing " + fileNameToExecute);
 
-          assert folderContent != null;
+          if (fileNameToExecute.equals("init-faculties.sql")) {
+            System.out.println("debug");
+          }
+
           final var script = Arrays
-              .stream(folderContent)
+              .stream(Objects.requireNonNull(folderContent))
               .filter(file -> fileNameToExecute.equals(file.getName()))
               .findFirst()
               .orElseThrow(() -> new RuntimeException("File " + fileNameToExecute + "not found"));
 
-          try (var scriptScanner = new Scanner(script)) {
+          try (var scriptReader = new BufferedReader(new FileReader(script))) {
+            System.out.println("Processing file '" + fileNameToExecute + "':");
+
+            final var batches = new ArrayList<String>();
             final var scriptBody = new StringBuilder();
 
-            while (scriptScanner.hasNextLine()) {
-              scriptBody.append(scriptScanner.nextLine()).append('\n');
+            String line = null;
+            while ((line = scriptReader.readLine()) != null) {
+              if (line.matches("^( *)GO( *)$")) {
+                batches.add(scriptBody.toString());
+                scriptBody.delete(0, scriptBody.length());
+                continue;
+              }
+              scriptBody.append(line).append('\n');
             }
 
-            final var scriptToExecute = scriptBody.toString();
+            if (batches.isEmpty() && scriptBody.length() > 0) {
+              batches.add(scriptBody.toString());
+            }
 
-            try (var statement = connection.createStatement()) {
+            for (int i = 0; i < batches.size(); i++) {
+              try (var statement = connection.createStatement()) {
+                final var result = statement.executeUpdate(batches.get(i));
 
-              System.out.println("connection acquired: " + connection);
-//              System.out.println("Executing:\n" + scriptToExecute);
+                System.out.printf(
+                    "-- %d of %d batches processed, status - %s%n",
+                    i + 1,
+                    batches.size(),
+                    (result > -1) ? "COMPLETE" : "NOT EXECUTED"
+                );
 
-              final var result = statement.executeUpdate(scriptToExecute);
-
-              System.out.println(fileNameToExecute + " - " + (result > -1 ? "SUCCESS" : "FAILURE"));
-
-              if (result > -1) {
-                connection.commit();
+                if (result > -1) {
+                  connection.commit();
+                }
               }
             }
+            System.out.println();
           }
         }
       }
@@ -121,6 +132,16 @@ public class Runner {
     }
 
     return manifest;
+  }
+
+  private void execute() throws Throwable {
+    Connection connection = ConnectionPool.getInstance().getConnection();
+
+    processFolder("tables", connection);
+    processFolder("procedures", connection);
+    processFolder("data", connection);
+
+    connection.close();
   }
 
   public static void main(String[] args) throws Throwable {

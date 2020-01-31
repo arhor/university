@@ -31,5 +31,4 @@ WHILE (@counter <= 7)
             END
         SET @counter = @counter + 1
     END
-GO
 -- #init-table: subjects  <<< END
