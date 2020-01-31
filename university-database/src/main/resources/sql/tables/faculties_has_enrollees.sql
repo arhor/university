@@ -1,8 +1,7 @@
 -- #dependencies: [faculties, enrollees]
 
 -- #create-table: faculties_has_enrollees  >>> START
-USE [university]
-GO
+USE [university];
 
 IF (OBJECT_ID('faculties_has_enrollees') IS NULL)
 BEGIN
@@ -25,5 +24,4 @@ BEGIN
             ON UPDATE CASCADE
     )
 END
-GO
 -- #create-table: faculties_has_enrollees <<< END

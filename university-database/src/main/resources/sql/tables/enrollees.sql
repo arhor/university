@@ -1,8 +1,7 @@
 --#dependencies: [users]
 
 -- #create-table: enrollees >>> START
-USE [university]
-GO
+USE [university];
 
 IF (OBJECT_ID('enrollees') IS NULL)
 BEGIN
@@ -31,5 +30,4 @@ BEGIN
 
     CREATE NONCLUSTERED INDEX [IDX_enrollees_city] ON [enrollees] ([city] ASC)
 END
-GO
 -- #create-table: enrollees <<< END

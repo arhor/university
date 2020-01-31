@@ -74,13 +74,13 @@ public final class ConnectionPool implements AutoCloseable {
             properties.getProperty(DB_PASSWORD)
         );
 
-        final var proxy = Proxy.newProxyInstance(
-            classLoader,
-            classes,
-            invocationHandlerFor(connection)
-        );
+//        final var proxy = Proxy.newProxyInstance(
+//            classLoader,
+//            classes,
+//            invocationHandlerFor(connection)
+//        );
 
-        freeConnectionsTemp.add((ProxyConnection) proxy);
+        freeConnectionsTemp.add(connection);
       }
 
       errorTemp = null;
@@ -127,8 +127,8 @@ public final class ConnectionPool implements AutoCloseable {
     }
   }
 
-  private InvocationHandler invocationHandlerFor(Connection connection) {
-    return (obj, method, args) -> {
+//  private InvocationHandler invocationHandlerFor(Connection connection) {
+//    return (obj, method, args) -> {
 //      if ("close".equals(method.getName())) {
 //        freeConnections.put(connection);
 //        System.out.println("fake");
@@ -138,17 +138,17 @@ public final class ConnectionPool implements AutoCloseable {
 //        System.out.println("real");
 //        return null;
 //      } else {
-        System.out.println(method);
-        try {
-          return method.invoke(obj, args);
-        } catch (Throwable t) {
-          System.out.println(t);
-          Thread.currentThread().interrupt();
-          return null;
-        }
+//        System.out.println(method);
+//        try {
+//          return method.invoke(obj, args);
+//        } catch (Throwable t) {
+//          System.out.println(t);
+//          Thread.currentThread().interrupt();
+//          return null;
+//        }
 //      }
-    };
-  }
+//    };
+//  }
 
   @Override
   public void close() throws Exception {

@@ -1,8 +1,7 @@
 -- #dependencies: [langs]
 
 -- #create-table: labels >>> START
-USE [university]
-GO
+USE [university];
 
 IF (OBJECT_ID('labels') IS NULL)
 BEGIN
@@ -20,5 +19,4 @@ BEGIN
             ON UPDATE CASCADE
     )
 END
-GO
 -- #create-table: labels <<< END

@@ -1,6 +1,5 @@
 -- #create-table: langs >>> START
-USE [university]
-GO
+USE [university];
 
 IF (OBJECT_ID('langs') IS NULL)
 BEGIN
@@ -17,5 +16,4 @@ BEGIN
         )
     )
 END
-GO
 -- #create-table: langs <<< END

@@ -1,6 +1,5 @@
 -- #create-table: faculties  >>> START
-USE [university]
-GO
+USE [university];
 
 IF (OBJECT_ID('faculties') IS NULL)
 BEGIN
@@ -14,5 +13,4 @@ BEGIN
         CONSTRAINT [PK_faculties] PRIMARY KEY CLUSTERED ([Id] ASC)
     )
 END
-GO
 -- #create-table: faculties <<< END

@@ -1,8 +1,7 @@
 -- #dependencies: [roles, langs]
 
 -- #create-table: users  >>> START
-USE [university]
-GO
+USE [university];
 
 IF (OBJECT_ID('users') IS NULL)
 BEGIN
@@ -31,5 +30,4 @@ BEGIN
 
     CREATE UNIQUE NONCLUSTERED INDEX [IDX_users_email] ON [users] ([email] ASC)
 END
-GO
 -- #create-table: users <<< END

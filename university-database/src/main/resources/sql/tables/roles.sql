@@ -1,6 +1,5 @@
 -- #create-table: roles >>> START
-USE [university]
-GO
+USE [university];
 
 IF (OBJECT_ID('roles') IS NULL)
 BEGIN
@@ -12,5 +11,4 @@ BEGIN
         CONSTRAINT [PK_roles] PRIMARY KEY CLUSTERED ([Id] ASC)
     )
 END
-GO
 -- #create-table: roles <<< END
