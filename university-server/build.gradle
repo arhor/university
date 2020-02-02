@@ -24,11 +24,11 @@ bootRun {
 }
 
 task clientCopy(type: Copy, dependsOn: ':university-client:build') {
-  from '../university-client/build'
+  from '../university-client/dist'
   into 'build/resources/main/static/.'
 }
 
-//compileJava.dependsOn clientCopy
+compileJava.dependsOn clientCopy
 
 jacocoTestReport {
   afterEvaluate {

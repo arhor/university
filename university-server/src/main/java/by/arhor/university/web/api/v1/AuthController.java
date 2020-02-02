@@ -1,10 +1,5 @@
 package by.arhor.university.web.api.v1;
 
-import by.arhor.university.web.security.JwtProvider;
-import by.arhor.university.domain.repository.UserRepository;
-import by.arhor.university.web.security.JwtResponse;
-import by.arhor.university.web.api.model.SignInRequest;
-import by.arhor.university.web.api.model.SignUpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +8,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import by.arhor.university.domain.repository.UserRepository;
+import by.arhor.university.web.api.model.SignInRequest;
+import by.arhor.university.web.api.model.SignUpRequest;
+import by.arhor.university.web.security.JwtProvider;
+import by.arhor.university.web.security.JwtResponse;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -59,7 +63,7 @@ public class AuthController {
       );
     }
 
-    var newUser = userRepository.createNewUser(
+    userRepository.createNewUser(
         signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()),
         signUpRequest.getFirstName(),

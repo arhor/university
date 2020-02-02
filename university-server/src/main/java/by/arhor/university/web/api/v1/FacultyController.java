@@ -38,8 +38,6 @@ public class FacultyController {
     this.findPage = paginate(service::findPage);
   }
 
-//  @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-  @PreAuthorize("isAuthenticated()")
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FacultyDTO> getFaculties(
       @RequestParam(required = false) Integer page,
