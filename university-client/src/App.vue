@@ -38,7 +38,7 @@ export default {
   }),
 
   beforeCreate() {
-    this.$store.dispatch('faculties/load');
+    this.$store.dispatch('faculties/load')
   }
 }
 </script>
