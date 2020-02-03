@@ -13,20 +13,30 @@
         </v-btn>
       </v-toolbar-title>
       <v-spacer/>
+      <v-btn v-if="isAuthenticated" text @click="logout">
+        Logout
+      </v-btn>
+      <v-btn v-else text to="/login">
+        Sign in
+      </v-btn>
     </v-app-bar>
     <v-content>
       <v-container class="fill-height" fluid>
         <router-view/>
       </v-container>
     </v-content>
-    <v-footer color="cyan" dark fixed app>
+    <v-footer color="primary" dark fixed app>
       <v-spacer/>
-      <span class="px-3">Maksim Buryshynets &copy; {{ new Date().getFullYear() }}</span>
+      <span class="px-3">
+        Maksim Buryshynets &copy; {{ new Date().getFullYear() }}
+      </span>
     </v-footer>
   </v-app>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'App',
 
@@ -35,7 +45,16 @@ export default {
 
   data: () => ({
     drawer: false,
+
   }),
+
+  computed: {
+    ...mapGetters('auth', ['isAuthenticated']),
+  },
+
+  methods: {
+    ...mapActions('auth', ['logout']),
+  },
 
   beforeCreate() {
     this.$store.dispatch('faculties/load')

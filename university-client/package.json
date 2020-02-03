@@ -46,10 +46,29 @@
     "rules": {
       "no-console": "off",
       "no-debugger": "off",
-      "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-      "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
-      "no-shadow": ["error", { "allow": ["state"] }],
-      "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+      "no-plusplus": [
+        "error",
+        {
+          "allowForLoopAfterthoughts": true
+        }
+      ],
+      "no-param-reassign": [
+        "error",
+        {
+          "props": true,
+          "ignorePropertyModificationsFor": [
+            "state"
+          ]
+        }
+      ],
+      "no-shadow": [
+        "error",
+        {
+          "allow": [
+            "state"
+          ]
+        }
+      ]
     },
     "parserOptions": {
       "parser": "babel-eslint"

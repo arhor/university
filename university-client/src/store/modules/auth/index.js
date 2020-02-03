@@ -1,44 +1,32 @@
 import axios from 'axios'
 
 const state = {
-  authenticated: false,
-  accessToken: null,
-  tokenType: null,
+  accessToken: localStorage.getItem('accessToken') || '',
+  tokenType: localStorage.getItem('tokenType') || '',
 }
 
 const mutations = {
   SET_AUTH: (state, { accessToken, tokenType }) => {
-    state.authenticated = true
     state.accessToken = accessToken
     state.tokenType = tokenType
+    localStorage.setItem('accessToken', accessToken)
+    localStorage.setItem('tokenType', tokenType)
   },
   INVALIDATE: (state) => {
-    state.authenticated = false
-    state.accessToken = null
-    state.tokenType = null
+    state.accessToken = ''
+    state.tokenType = ''
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('tokenType')
   },
-  PERSIST: (state) => {
-    localStorage.setItem('authenticated', state.authenticated);
-    localStorage.setItem('accessToken', state.accessToken);
-    localStorage.setItem('tokenType', state.tokenType);
-  },
-  RESTORE
 }
 
 const actions = {
-  init: (store) => {
-    const isAuthenticated = !!localStorage.getItem('authenticated')
-    if (isAuthenticated) {
-      store.commit('SET_AUTH', {
-        accessToken: localStorage.getItem('accessToken'),
-        tokenType: localStorage.getItem('tokenType')
-      })
-    }
-  },
-
-  login: async (store, { email, password }) => {
+  login: async (store, payload) => {
     try {
-      const { data } = await axios.post('http://localhost:8080/api/v1/', { email, password })
+      const { email, password } = payload
+      console.log(`try to login with ${email} and ${password}`)
+      const { data } = await axios.post('http://localhost:8080/api/v1/auth/signin', { email, password })
+      console.log(data)
       store.commit('SET_AUTH', { data })
     } catch (error) {
       console.error(error)
@@ -51,6 +39,12 @@ const actions = {
 }
 
 const getters = {
+  authToken: state => `${state.tokenType} ${state.accessToken}`,
+  isAuthenticated: (state) => {
+    const { accessToken, tokenType } = state
+    return accessToken !== ''
+        && tokenType !== ''
+  }
 }
 
 export default {
