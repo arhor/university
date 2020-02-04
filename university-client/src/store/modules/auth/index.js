@@ -26,6 +26,7 @@ const actions = {
     try {
       const { email, password } = payload
       const { data } = await axios.post('http://localhost:8080/api/v1/auth/signin', { email, password })
+      console.log(data)
       commit('SET_AUTH', data)
     } catch (error) {
       console.error(error)

@@ -10,10 +10,17 @@ import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import by.arhor.university.web.filter.CustomCsrfFilter;
 
 @Configuration
 public class UtilBeansConfig {
+
+  @Bean
+  public ObjectMapper objectMapper() {
+    return new ObjectMapper();
+  }
 
   @Bean
   public ModelMapper modelMapper() {
