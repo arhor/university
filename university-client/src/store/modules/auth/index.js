@@ -1,22 +1,23 @@
 import axios from 'axios'
 
 const state = {
-  accessToken: localStorage.getItem('accessToken') || '',
   tokenType: localStorage.getItem('tokenType') || '',
+  accessToken: localStorage.getItem('accessToken') || '',
 }
 
 const mutations = {
-  SET_AUTH: (state, { accessToken, tokenType }) => {
-    state.accessToken = accessToken
+  SET_AUTH: (state, payload) => {
+    const { accessToken, tokenType } = payload
     state.tokenType = tokenType
-    localStorage.setItem('accessToken', accessToken)
+    state.accessToken = accessToken
     localStorage.setItem('tokenType', tokenType)
+    localStorage.setItem('accessToken', accessToken)
   },
   INVALIDATE: (state) => {
-    state.accessToken = ''
     state.tokenType = ''
-    localStorage.removeItem('accessToken')
+    state.accessToken = ''
     localStorage.removeItem('tokenType')
+    localStorage.removeItem('accessToken')
   },
 }
 
@@ -24,27 +25,34 @@ const actions = {
   login: async (store, payload) => {
     try {
       const { email, password } = payload
-      console.log(`try to login with ${email} and ${password}`)
       const { data } = await axios.post('http://localhost:8080/api/v1/auth/signin', { email, password })
-      console.log(data)
-      store.commit('SET_AUTH', { data })
+      store.commit('SET_AUTH', data)
     } catch (error) {
       console.error(error)
     }
   },
-
   logout: (store) => {
     store.commit('INVALIDATE')
-  }
+  },
+  refresh: async (store) => {
+    const { authToken } = store.getters
+    try {
+      const { data } = await axios.get('http://localhost:8080/api/v1/auth/refresh', {
+        headers: {
+          Authorization: authToken
+        }
+      })
+      store.commit('SET_AUTH', data)
+    } catch (error) {
+      console.error(error)
+      store.dispatch('logout')
+    }
+  },
 }
 
 const getters = {
-  authToken: state => `${state.tokenType} ${state.accessToken}`,
-  isAuthenticated: (state) => {
-    const { accessToken, tokenType } = state
-    return accessToken !== ''
-        && tokenType !== ''
-  }
+  authToken: ({ accessToken, tokenType }) => `${tokenType} ${accessToken}`,
+  isAuthenticated: ({ accessToken, tokenType }) => (accessToken !== '' && tokenType !== ''),
 }
 
 export default {

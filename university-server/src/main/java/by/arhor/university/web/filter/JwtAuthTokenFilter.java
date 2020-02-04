@@ -20,15 +20,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebFilter
 @Component
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
-  @Autowired
-  private JwtProvider tokenProvider;
-
-  @Autowired
-  private UserServiceImpl userService;
+  @Autowired private JwtProvider tokenProvider;
+  @Autowired private UserServiceImpl userService;
 
   private static final Logger log = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
 
@@ -36,7 +32,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       @NonNull HttpServletRequest request,
       @NonNull HttpServletResponse response,
-      @NonNull FilterChain filterChain) throws ServletException, IOException {
+      @NonNull FilterChain filterChain)
+      throws ServletException, IOException {
     try {
       String jwt = getJwt(request);
       if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
@@ -44,15 +41,11 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
         UserDetails userDetails = userService.loadUserByUsername(username);
 
-        System.out.println(userDetails);
-
-        final var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
-        System.out.println(authentication);
+        final var authentication =
+            new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
 
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-        System.out.println(authentication);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
@@ -64,10 +57,15 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
   }
 
   private String getJwt(HttpServletRequest request) {
+
+    log.info("request to parse for JWT: {}", request);
+
     String authHeader = request.getHeader("Authorization");
 
+    log.info("auth header: {}", authHeader);
+
     if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      return authHeader.replace("Bearer ","");
+      return authHeader.replace("Bearer ", "");
     }
 
     return null;
