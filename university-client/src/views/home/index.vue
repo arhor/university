@@ -1,8 +1,9 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="@/assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-layout row>
+    <v-flex>
+      Welcome to the University app!
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>

@@ -22,30 +22,29 @@ const mutations = {
 }
 
 const actions = {
-  login: async (store, payload) => {
+  login: async ({ commit }, payload) => {
     try {
       const { email, password } = payload
       const { data } = await axios.post('http://localhost:8080/api/v1/auth/signin', { email, password })
-      store.commit('SET_AUTH', data)
+      commit('SET_AUTH', data)
     } catch (error) {
       console.error(error)
     }
   },
-  logout: (store) => {
-    store.commit('INVALIDATE')
+  logout: ({ commit }) => {
+    commit('INVALIDATE')
   },
-  refresh: async (store) => {
-    const { authToken } = store.getters
+  refresh: async ({ getters, commit, dispatch }) => {
     try {
       const { data } = await axios.get('http://localhost:8080/api/v1/auth/refresh', {
         headers: {
-          Authorization: authToken
+          Authorization: getters.authToken
         }
       })
-      store.commit('SET_AUTH', data)
+      commit('SET_AUTH', data)
     } catch (error) {
       console.error(error)
-      store.dispatch('logout')
+      dispatch('logout')
     }
   },
 }
