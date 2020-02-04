@@ -30,6 +30,7 @@ const actions = {
       commit('SET_AUTH', data)
     } catch (error) {
       console.error(error)
+      throw error
     }
   },
   logout: ({ commit }) => {

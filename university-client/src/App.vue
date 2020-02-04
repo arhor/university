@@ -82,17 +82,22 @@ export default {
     dialog: false,
   }),
   computed: {
-    ...mapGetters('auth', ['isAuthenticated']),
+    ...mapGetters('auth', [
+      'isAuthenticated'
+    ]),
   },
   methods: {
-    ...mapActions('auth', ['logout']),
+    ...mapActions('auth', [
+      'logout',
+      'refresh'
+    ]),
     toggleLoginDialog() {
       this.dialog = !this.dialog
     },
   },
   beforeCreate() {
     if (this.$store.getters['auth/isAuthenticated']) {
-      this.$store.dispatch('auth/refresh')
+      this.refresh()
     }
   }
 }
