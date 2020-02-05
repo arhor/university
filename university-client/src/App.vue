@@ -8,7 +8,7 @@
       overflow
       temporary
       v-model="drawer"
-    ></v-navigation-drawer>
+    />
 
     <!-- navigation -->
     <v-app-bar
@@ -16,13 +16,13 @@
       dark
       fixed
       dense
-      :src="require('@/assets/university-app-bar-bg.jpg')"
+      :src="require('@/assets/img/university-app-bar-bg.jpg')"
     >
       <template v-slot:img="{ props }">
         <v-img
           v-bind="props"
           gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
-        ></v-img>
+        />
       </template>
 
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"/>
@@ -30,6 +30,8 @@
       <v-toolbar-title>University app</v-toolbar-title>
 
       <v-spacer />
+
+      <uni-lang-selector />
 
       <v-btn v-if="isAuthenticated" text @click="logout">
         Logout
@@ -41,8 +43,8 @@
 
       <template v-slot:extension>
         <v-tabs align-with-title>
-          <v-tab to="/">Home</v-tab>
-          <v-tab to="/faculties">Faculties</v-tab>
+          <v-tab to="/">{{ 'home' | translate }}</v-tab>
+          <v-tab to="/faculties">{{ 'faculties' | translate }}</v-tab>
         </v-tabs>
       </template>
     </v-app-bar>
@@ -70,11 +72,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import UniLangSelector from '@/components/UniLangSelector.vue'
 import UniLogin from '@/components/UniLogin.vue'
 
 export default {
   name: 'App',
   components: {
+    UniLangSelector,
     UniLogin
   },
   data: () => ({

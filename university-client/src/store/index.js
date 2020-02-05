@@ -5,18 +5,17 @@ import modules from '@/store/modules'
 Vue.use(Vuex)
 
 const state = {
-  lang: 'RU'
+  currentLang: 'RU'
 }
 
 const mutations = {
   SET_LANG(state, selectedLang) {
-    state.lang = selectedLang
+    state.currentLang = selectedLang
   }
 }
 
 const actions = {
   changeLang({ commit }, payload) {
-    console.log(payload)
     commit('SET_LANG', payload)
   }
 }
