@@ -1,7 +1,13 @@
 <template>
   <v-layout row>
     <v-flex>
-      Welcome to the University app!
+      {{ 'welcome' | translate }} to the University app!
+      <br/>
+      <v-select
+        :items="['RU', 'BY', 'EN']"
+        @change="changeLang"
+        label="Standard"
+      />
     </v-flex>
   </v-layout>
 </template>
@@ -10,6 +16,11 @@
 export default {
   name: 'home',
   components: {
+  },
+  methods: {
+    changeLang(e) {
+      this.$store.dispatch('changeLang', e)
+    }
   }
 }
 </script>

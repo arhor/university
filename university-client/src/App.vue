@@ -88,8 +88,7 @@ export default {
   },
   methods: {
     ...mapActions('auth', [
-      'logout',
-      'refresh'
+      'logout'
     ]),
     toggleLoginDialog() {
       this.dialog = !this.dialog
@@ -97,7 +96,7 @@ export default {
   },
   beforeCreate() {
     if (this.$store.getters['auth/isAuthenticated']) {
-      this.refresh()
+      this.$store.dispatch('auth/refresh')
     }
   }
 }
