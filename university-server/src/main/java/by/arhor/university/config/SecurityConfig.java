@@ -25,17 +25,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
     jsr250Enabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-  @Autowired
-  private UserServiceImpl userService;
-
-  @Autowired
-  private JwtAuthEntryPoint unauthorizedHandler;
-
-  @Autowired
-  private PasswordEncoder encoder;
-
-  @Autowired
-  private JwtAuthTokenFilter jwtAuthTokenFilter;
+  @Autowired private JwtAuthEntryPoint unauthorizedHandler;
+  @Autowired private JwtAuthTokenFilter jwtAuthTokenFilter;
+  @Autowired private PasswordEncoder encoder;
+  @Autowired private UserServiceImpl userService;
 
   @Override
   public void configure(AuthenticationManagerBuilder auth) throws Exception {

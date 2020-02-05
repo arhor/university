@@ -108,6 +108,6 @@ export default {
 
 <style>
 body, html {
-  overflow:hidden;
+  overflow: hidden;
 }
 </style>

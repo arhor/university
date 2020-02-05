@@ -22,12 +22,14 @@ const actions = {
   }
 }
 
-const getters = {}
+const getters = {
+  allFaculties: state => state.all
+}
 
 export default {
   namespaced: true,
   state,
   mutations,
   actions,
-  getters
+  getters,
 }
