@@ -29,9 +29,9 @@
 
       <v-toolbar-title>University app</v-toolbar-title>
 
-      <v-spacer />
+      <v-spacer/>
 
-      <uni-lang-selector />
+      <uni-lang-selector/>
 
       <v-btn v-if="isAuthenticated" text @click="logout">
         Logout
@@ -52,7 +52,7 @@
     <!-- main view -->
     <v-content>
       <v-container class="fill-height" fluid>
-        <router-view />
+        <router-view/>
       </v-container>
     </v-content>
     
@@ -64,7 +64,7 @@
 
     <!-- login modal -->
     <v-dialog v-model="dialog" max-width="800">
-      <uni-login @success="toggleLoginDialog" />
+      <uni-login @success="toggleLoginDialog"/>
     </v-dialog>
 
   </v-app>
