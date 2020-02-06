@@ -36,23 +36,8 @@ public class JwtProvider {
 
   private static final Logger log = LoggerFactory.getLogger(JwtProvider.class);
 
-  private static final SignatureAlgorithm ALGORITHM;
-
-  static {
-    final int woof = ThreadLocalRandom.current().nextInt(2);
-    switch (woof) {
-      case 0:
-        ALGORITHM = SignatureAlgorithm.HS256;
-        break;
-      case 1:
-        ALGORITHM = SignatureAlgorithm.HS384;
-        break;
-      default:
-        ALGORITHM = SignatureAlgorithm.HS512;
-    }
-  }
-
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired private
+  ObjectMapper objectMapper;
 
   @Value("${security.jwt.secret}")
   private String jwtSecret;
@@ -87,7 +72,7 @@ public class JwtProvider {
         .setSubject(payload.toString())
         .setIssuedAt(startTime = new Date())
         .setExpiration(new Date(startTime.getTime() + jwtExpiration))
-        .signWith(ALGORITHM, jwtSecret)
+        .signWith(SignatureAlgorithm.HS512, jwtSecret)
         .compact();
   }
 

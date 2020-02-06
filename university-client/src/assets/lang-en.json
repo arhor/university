@@ -1,5 +1,8 @@
 {
   "home": "Home",
   "faculties": "Faculties",
-  "welcome": "Welcome"
+  "welcome": "Welcome",
+  "title": "Title",
+  "seatsPaid": "Seats paid",
+  "seatsBudget": "Seats budget"
 }

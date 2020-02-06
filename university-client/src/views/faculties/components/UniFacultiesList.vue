@@ -12,16 +12,18 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'UniFacultiesList',
-  data: () => ({
-    headers: [
-      { text: 'Id', value: 'id' },
-      { text: 'Title', value: 'defaultTitle' },
-      { text: 'Seats paid', value: 'seatsPaid' },
-      { text: 'Seats budget', value: 'seatsBudget' },
-    ]
-  }),
+  data() {
+    return {
+      headers: [
+        { text: this.$options.filters.translate('title'), value: 'defaultTitle' },
+        { text: this.$options.filters.translate('seatsPaid'), value: 'seatsPaid' },
+        { text: this.$options.filters.translate('seatsBudget'), value: 'seatsBudget' },
+      ]
+    }
+  },
   computed: {
-    ...mapGetters('faculties', ['allFaculties'])
+    ...mapGetters('faculties', ['allFaculties']),
+    ...mapGetters('auth', ['role'])
   },
   beforeCreate() {
     this.$store.dispatch('faculties/load')
