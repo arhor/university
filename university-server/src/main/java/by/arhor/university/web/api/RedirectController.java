@@ -1,4 +1,4 @@
-package by.arhor.university.web.api.v1;
+package by.arhor.university.web.api;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
