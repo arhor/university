@@ -1,5 +1,7 @@
 package by.arhor.university.web.api.v1;
 
+import static by.arhor.university.web.api.v1.Root.API_V_1;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ import by.arhor.university.service.dto.EnrolleeDTO;
 import by.arhor.university.web.api.util.PageUtils;
 
 @RestController
-@RequestMapping(path = "/api/v1/enrollees")
+@RequestMapping(path = API_V_1 + "/enrollees")
 public class EnrolleeController {
 
   private final EnrolleeService service;

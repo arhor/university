@@ -1,5 +1,7 @@
 package by.arhor.university.web.api.v1;
 
+import static by.arhor.university.web.api.v1.Root.API_V_1;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
 import by.arhor.university.domain.repository.UserRepository;
 import by.arhor.university.web.api.model.SignInRequest;
@@ -23,7 +24,7 @@ import by.arhor.university.web.security.JwtProvider;
 import by.arhor.university.web.security.JwtResponse;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping(path = API_V_1 + "/auth")
 public class AuthController {
 
   private final AuthenticationManager authManager;

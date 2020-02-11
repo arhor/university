@@ -1,6 +1,7 @@
 package by.arhor.university.web.api.v1;
 
 import static by.arhor.university.web.api.util.PageUtils.paginate;
+import static by.arhor.university.web.api.v1.Root.API_V_1;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,13 +20,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import by.arhor.core.function.IntBiFunction;
 import by.arhor.university.service.FacultyService;
 import by.arhor.university.service.dto.FacultyDTO;
 
 @Lazy
 @RestController
-@RequestMapping(path = "/api/v1/faculties")
+@RequestMapping(path = API_V_1 + "/faculties")
 public class FacultyController {
 
   private final FacultyService service;

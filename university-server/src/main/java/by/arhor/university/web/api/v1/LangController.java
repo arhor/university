@@ -1,5 +1,7 @@
 package by.arhor.university.web.api.v1;
 
+import static by.arhor.university.web.api.v1.Root.API_V_1;
+
 import by.arhor.university.domain.model.Lang;
 import by.arhor.university.domain.repository.LangRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import java.util.List;
 
 @Lazy
 @RestController
-@RequestMapping(path = "/api/v1/langs")
+@RequestMapping(path = API_V_1 + "/langs")
 public class LangController {
 
   private final LangRepository repository;

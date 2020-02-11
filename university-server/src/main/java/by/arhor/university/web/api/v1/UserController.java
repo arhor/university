@@ -1,5 +1,7 @@
 package by.arhor.university.web.api.v1;
 
+import static by.arhor.university.web.api.v1.Root.API_V_1;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -19,7 +21,7 @@ import by.arhor.university.service.dto.UserDTO;
 
 @Lazy
 @RestController
-@RequestMapping(path = "/api/v1/users")
+@RequestMapping(path = API_V_1 + "/users")
 public class UserController {
 
   private final UserService service;
