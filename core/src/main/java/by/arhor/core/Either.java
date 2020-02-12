@@ -27,6 +27,9 @@ public final class Either<T, E> {
   }
 
   public final T getItem() {
+    if (hasError()) {
+      throw new IllegalStateException("Must not extract item if error occurred");
+    }
     return item;
   }
 
@@ -35,10 +38,6 @@ public final class Either<T, E> {
   }
 
   public <R> Either<R, E> map(@Nonnull Function<T, R> mapper) {
-    return new Either<>(
-        hasError()
-            ? null
-            : mapper.apply(item),
-        error);
+    return new Either<>(hasError() ? null : mapper.apply(item), error);
   }
 }

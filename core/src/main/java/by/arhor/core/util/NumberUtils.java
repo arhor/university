@@ -28,7 +28,7 @@ public final class NumberUtils {
   public static
   <N extends Number> ToIntFunction<N> minBound(final int bound) {
     return (arg) ->
-        ((arg == null) || (arg.intValue() <= bound))
+        ((arg == null) || (arg.longValue() <= bound))
             ? bound
             : arg.intValue();
   }
@@ -46,7 +46,7 @@ public final class NumberUtils {
   public static
   <N extends Number> ToIntFunction<N> maxBound(final int bound) {
     return (arg) ->
-        ((arg == null) || (arg.intValue() >= bound))
+        ((arg == null) || (arg.longValue() >= bound))
             ? bound
             : arg.intValue();
   }

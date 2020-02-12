@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
-  public Either<UserDTO, ServiceError> update(UserDTO item) {
+  public Either<UserDTO, ServiceError> update(UserDTO userDto) {
     return null;
   }
 
