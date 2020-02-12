@@ -14,7 +14,7 @@ import by.arhor.university.service.dto.SubjectDTO;
 @Lazy
 @RestController
 @RequestMapping(path = "/api/v1/subjects")
-public class SubjectController {
+public class SubjectController extends ApiController {
 
   private final SubjectService service;
 

@@ -1,6 +1,6 @@
 package by.arhor.university.web.api.v1;
 
-import static by.arhor.university.web.api.v1.Root.API_V_1;
+import static by.arhor.university.web.api.v1.ApiController.API_V_1;
 
 import by.arhor.university.domain.model.Role;
 import by.arhor.university.domain.repository.RoleRepository;
@@ -17,7 +17,7 @@ import java.util.List;
 @Lazy
 @RestController
 @RequestMapping(path = API_V_1 + "/roles")
-public class RoleController {
+public class RoleController extends ApiController {
 
   private final RoleRepository repository;
 

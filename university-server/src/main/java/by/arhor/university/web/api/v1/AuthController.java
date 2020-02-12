@@ -1,6 +1,6 @@
 package by.arhor.university.web.api.v1;
 
-import static by.arhor.university.web.api.v1.Root.API_V_1;
+import static by.arhor.university.web.api.v1.ApiController.API_V_1;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ import by.arhor.university.web.security.JwtResponse;
 
 @RestController
 @RequestMapping(path = API_V_1 + "/auth")
-public class AuthController {
+public class AuthController extends ApiController {
 
   private final AuthenticationManager authManager;
   private final UserRepository userRepository;

@@ -17,11 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import by.arhor.core.Either;
 import by.arhor.core.function.RichSupplier;
 import by.arhor.university.domain.model.User;
 import by.arhor.university.domain.repository.UserRepository;
 import by.arhor.university.service.UserService;
 import by.arhor.university.service.dto.UserDTO;
+import by.arhor.university.service.error.ErrorLabel;
+import by.arhor.university.service.error.ServiceError;
 
 @Service
 @Transactional
@@ -67,8 +70,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
-  public UserDTO create(UserDTO userDto) {
-    checkForDuplicates(userDto.getEmail());
+  public Either<UserDTO, ServiceError> create(UserDTO userDto) {
+    if (emailAlreadyTaken(userDto.getEmail())) {
+      return Either.error(new ServiceError(ErrorLabel.UNKNOWN, "email", userDto.getEmail()));
+    }
 
     final var newUser = repository.createNewUser(
         userDto.getEmail(),
@@ -77,12 +82,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userDto.getLastName()
     );
 
-    return mapper.map(newUser, UserDTO.class);
+    return Either.success(mapper.map(newUser, UserDTO.class));
   }
 
-  private void checkForDuplicates(String email) {
-    if (repository.countByEmail(email) > 0)
-      throw new RuntimeException();
+  private boolean emailAlreadyTaken(String email) {
+    return repository.countByEmail(email) > 0;
   }
 
   @Override

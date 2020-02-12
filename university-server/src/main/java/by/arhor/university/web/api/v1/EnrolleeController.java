@@ -1,12 +1,13 @@
 package by.arhor.university.web.api.v1;
 
-import static by.arhor.university.web.api.v1.Root.API_V_1;
+import static by.arhor.university.web.api.v1.ApiController.API_V_1;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.WebRequest;
 
 import by.arhor.university.service.EnrolleeService;
 import by.arhor.university.service.dto.EnrolleeDTO;
@@ -24,7 +26,7 @@ import by.arhor.university.web.api.util.PageUtils;
 
 @RestController
 @RequestMapping(path = API_V_1 + "/enrollees")
-public class EnrolleeController {
+public class EnrolleeController extends ApiController {
 
   private final EnrolleeService service;
 
@@ -38,8 +40,8 @@ public class EnrolleeController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasAuthority('USER')")
   @ResponseStatus(HttpStatus.CREATED)
-  public EnrolleeDTO enroll(@RequestBody EnrolleeDTO dto) {
-    return service.create(dto);
+  public ResponseEntity<?> enroll(@RequestBody EnrolleeDTO dto, WebRequest req) {
+    return handle(service.create(dto), req.getLocale());
   }
 
   @DeleteMapping(

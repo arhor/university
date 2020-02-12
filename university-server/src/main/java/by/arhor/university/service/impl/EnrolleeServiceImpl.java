@@ -6,8 +6,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import by.arhor.core.Either;
 import by.arhor.university.service.EnrolleeService;
 import by.arhor.university.service.dto.EnrolleeDTO;
+import by.arhor.university.service.error.ServiceError;
 
 @Lazy
 @Service
@@ -15,7 +17,7 @@ import by.arhor.university.service.dto.EnrolleeDTO;
 public class EnrolleeServiceImpl implements EnrolleeService {
 
   @Override
-  public EnrolleeDTO create(EnrolleeDTO item) {
+  public Either<EnrolleeDTO, ServiceError> create(EnrolleeDTO item) {
     return null;
   }
 

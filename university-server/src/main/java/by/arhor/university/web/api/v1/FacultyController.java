@@ -1,7 +1,7 @@
 package by.arhor.university.web.api.v1;
 
 import static by.arhor.university.web.api.util.PageUtils.paginate;
-import static by.arhor.university.web.api.v1.Root.API_V_1;
+import static by.arhor.university.web.api.v1.ApiController.API_V_1;
 
 import java.util.List;
 import java.util.function.BiFunction;
@@ -26,7 +26,7 @@ import by.arhor.university.service.dto.FacultyDTO;
 @Lazy
 @RestController
 @RequestMapping(path = API_V_1 + "/faculties")
-public class FacultyController {
+public class FacultyController extends ApiController {
 
   private final FacultyService service;
   private final BiFunction<Integer, Integer, List<FacultyDTO>> findPage;

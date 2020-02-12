@@ -1,9 +1,11 @@
 package by.arhor.university.service.trait;
 
+import by.arhor.core.Either;
 import by.arhor.university.service.dto.DTO;
+import by.arhor.university.service.error.ServiceError;
 
-public interface Creator<T extends DTO> {
+public interface Creator<T extends DTO<?>> {
 
-  T create(T item);
+  Either<T, ServiceError> create(T item);
 
 }

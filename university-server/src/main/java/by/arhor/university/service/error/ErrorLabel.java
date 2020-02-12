@@ -2,6 +2,8 @@ package by.arhor.university.service.error;
 
 public enum ErrorLabel {
 
+  UNKNOWN(""),
+
   NOT_FOUND_USER     ("error.not.found.user"),
   NOT_FOUND_ENROLLEE ("error.not.found.enrollee"),
   NOT_FOUND_SUBJECT  ("error.not.found.subject"),

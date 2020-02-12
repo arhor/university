@@ -6,10 +6,13 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import by.arhor.core.Either;
 import by.arhor.university.domain.model.Faculty;
 import by.arhor.university.domain.repository.FacultyRepository;
 import by.arhor.university.service.FacultyService;
 import by.arhor.university.service.dto.FacultyDTO;
+import by.arhor.university.service.error.ErrorLabel;
+import by.arhor.university.service.error.ServiceError;
 
 @Service
 @Transactional
@@ -21,14 +24,14 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
   }
 
   @Override
-  public FacultyDTO create(FacultyDTO dto) {
+  public Either<FacultyDTO, ServiceError> create(FacultyDTO dto) {
     boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
-      throw new RuntimeException("");
+      return Either.error(new ServiceError(ErrorLabel.UNKNOWN, "title", dto.getDefaultTitle()));
     }
     var newFaculty = mapper.map(dto, Faculty.class);
     var createdFaculty = repository.save(newFaculty);
-    return toDto(createdFaculty);
+    return Either.success(toDto(createdFaculty));
   }
 
   @Override
