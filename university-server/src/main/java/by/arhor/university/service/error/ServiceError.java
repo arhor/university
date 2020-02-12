@@ -12,6 +12,10 @@ public class ServiceError {
     this.fieldValue = fieldValue;
   }
 
+  public static ServiceError notFound() {
+    return null;
+  }
+
   public ErrorLabel getErrorLabel() {
     return errorLabel;
   }
