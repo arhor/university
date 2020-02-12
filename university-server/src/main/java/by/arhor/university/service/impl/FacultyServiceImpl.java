@@ -35,17 +35,17 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
   }
 
   @Override
-  public FacultyDTO update(FacultyDTO dto) {
+  public Either<FacultyDTO, ServiceError> update(FacultyDTO dto) {
     boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
-      throw new RuntimeException("Faculty with the same name already exists");
+      return Either.error(new ServiceError(ErrorLabel.UNKNOWN, "title", dto.getDefaultTitle()));
     }
     var faculty = repository.findById(dto.getId()).orElseThrow(RuntimeException::new);
     faculty.setDefaultTitle(dto.getDefaultTitle());
     faculty.setSeatsBudget(dto.getSeatsBudget());
     faculty.setSeatsPaid(dto.getSeatsPaid());
     var savedFaculty = repository.save(faculty);
-    return toDto(savedFaculty);
+    return Either.success(toDto(savedFaculty));
   }
 
   private FacultyRepository facultyRepository() {

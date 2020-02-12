@@ -2,11 +2,15 @@ package by.arhor.university.service.impl;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import by.arhor.core.Either;
+import by.arhor.university.domain.model.Enrollee;
+import by.arhor.university.domain.repository.EnrolleeRepository;
 import by.arhor.university.service.EnrolleeService;
 import by.arhor.university.service.dto.EnrolleeDTO;
 import by.arhor.university.service.error.ServiceError;
@@ -14,7 +18,13 @@ import by.arhor.university.service.error.ServiceError;
 @Lazy
 @Service
 @Transactional
-public class EnrolleeServiceImpl implements EnrolleeService {
+public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, Long>
+    implements EnrolleeService {
+
+  @Autowired
+  public EnrolleeServiceImpl(EnrolleeRepository repository, ModelMapper mapper) {
+    super(EnrolleeDTO.class, repository, mapper);
+  }
 
   @Override
   public Either<EnrolleeDTO, ServiceError> create(EnrolleeDTO item) {
@@ -22,19 +32,10 @@ public class EnrolleeServiceImpl implements EnrolleeService {
   }
 
   @Override
-  public void delete(EnrolleeDTO item) {
-
-  }
+  public void delete(EnrolleeDTO item) {}
 
   @Override
-  public void deleteById(Long id) {
-
-  }
-
-  @Override
-  public EnrolleeDTO findOne(Long id) {
-    return null;
-  }
+  public void deleteById(Long id) {}
 
   @Override
   public List<EnrolleeDTO> findAll() {
@@ -47,7 +48,7 @@ public class EnrolleeServiceImpl implements EnrolleeService {
   }
 
   @Override
-  public EnrolleeDTO update(EnrolleeDTO item) {
+  public Either<EnrolleeDTO, ServiceError> update(EnrolleeDTO item) {
     return null;
   }
 

@@ -104,11 +104,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   @Transactional(readOnly = true)
-  public UserDTO findOne(Long id) {
+  public Either<UserDTO, ServiceError> findOne(Long id) {
     return repository
         .findById(id)
         .map(user -> mapper.map(user, UserDTO.class))
-        .orElseThrow(RuntimeException::new);
+        .map(Either::<UserDTO, ServiceError>success)
+        .orElseGet(() -> Either.error(new ServiceError(ErrorLabel.NOT_FOUND, "id", id)));
   }
 
   @Override
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
-  public UserDTO update(UserDTO item) {
+  public Either<UserDTO, ServiceError> update(UserDTO item) {
     return null;
   }
 

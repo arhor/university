@@ -2,11 +2,13 @@ package by.arhor.university.service.trait;
 
 import java.util.List;
 
+import by.arhor.core.Either;
 import by.arhor.university.service.dto.DTO;
+import by.arhor.university.service.error.ServiceError;
 
-public interface Reader<T extends DTO, K> {
+public interface Reader<T extends DTO<?>, K> {
 
-  T findOne(K id);
+  Either<T, ServiceError> findOne(K id);
 
   List<T> findAll();
 
