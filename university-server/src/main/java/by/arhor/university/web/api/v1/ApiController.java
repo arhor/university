@@ -22,6 +22,9 @@ public class ApiController {
   @Autowired private MessageSource messageSource;
 
   protected <T> ResponseEntity<?> handle(Either<T, ServiceError> either, Locale locale) {
+    if (either == null) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("null");
+    }
     return either.hasError()
         ? handleError(either.getError(), locale)
         : handleSuccess(either.getItem());

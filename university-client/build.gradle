@@ -28,4 +28,6 @@ task clientStart (type: NpmTask, dependsOn: clientBuild) {
   args = ['run', 'serve']
 }
 
-assemble.dependsOn clientBuild
+assemble {
+  dependsOn clientBuild
+}

@@ -36,8 +36,8 @@ public class UserController extends ApiController {
   @GetMapping(
       path = "/{id}",
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserDTO getUser(@PathVariable Long id) {
-    return service.findOne(id);
+  public ResponseEntity<?> getUser(@PathVariable Long id, WebRequest req) {
+    return handle(service.findOne(id), req.getLocale());
   }
 
   @PostMapping(
@@ -52,8 +52,8 @@ public class UserController extends ApiController {
       path = "/{id}",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserDTO update(@RequestBody UserDTO dto) {
-    return service.update(dto);
+  public ResponseEntity<?> update(@RequestBody UserDTO dto, WebRequest req) {
+    return handle(service.update(dto), req.getLocale());
   }
 
   @DeleteMapping(path = "/{id}")

@@ -7,17 +7,12 @@ version = '0.0.1-SNAPSHOT'
 
 description = 'university-database'
 
+mainClassName = 'by.arhor.university.database.Runner'
+
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-mainClassName = 'by.arhor.university.database.Runner'
-
-test {
-    useJUnitPlatform()
-}
-
 repositories {
-    jcenter()
     mavenCentral()
 }
 
@@ -29,4 +24,8 @@ dependencies {
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
+}
+
+test {
+    useJUnitPlatform()
 }

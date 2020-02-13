@@ -33,6 +33,10 @@
 
       <uni-lang-selector/>
 
+      <v-btn v-if="isAuthenticated" text @click="toggleEnrollDialog">
+        Enroll
+      </v-btn>
+
       <v-btn v-if="isAuthenticated" text @click="logout">
         Logout
       </v-btn>
@@ -62,6 +66,11 @@
       <span class="px-3">Maksim Buryshynets &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
 
+    <!-- enroll modal -->
+    <v-dialog v-model="enrollDialog" max-width="800">
+      <uni-enroll @success="toggleEnrollDialog"/>
+    </v-dialog>
+
     <!-- login modal -->
     <v-dialog v-model="dialog" max-width="800">
       <uni-login @success="toggleLoginDialog"/>
@@ -73,17 +82,20 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import UniLangSelector from '@/components/UniLangSelector.vue'
+import UniEnroll from '@/components/UniEnroll.vue'
 import UniLogin from '@/components/UniLogin.vue'
 
 export default {
   name: 'App',
   components: {
     UniLangSelector,
-    UniLogin
+    UniEnroll,
+    UniLogin,
   },
   data: () => ({
     drawer: false,
     dialog: false,
+    enrollDialog: false,
   }),
   computed: {
     ...mapGetters('auth', [
@@ -97,6 +109,9 @@ export default {
     toggleLoginDialog() {
       this.dialog = !this.dialog
     },
+    toggleEnrollDialog() {
+      this.enrollDialog = !this.enrollDialog
+    }
   },
   beforeCreate() {
     if (this.$store.getters['auth/isAuthenticated']) {
