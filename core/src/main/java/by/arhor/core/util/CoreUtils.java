@@ -15,7 +15,9 @@ import by.arhor.core.function.ShortConsumer;
 
 public final class CoreUtils {
 
-  private CoreUtils() {}
+  private CoreUtils() {
+    throw new UnsupportedOperationException("Must not be instantiated");
+  }
 
   @Nonnull
   public static

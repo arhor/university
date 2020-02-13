@@ -13,7 +13,9 @@ import java.util.function.ToIntFunction;
  */
 public final class NumberUtils {
 
-  private NumberUtils() {}
+  private NumberUtils() {
+    throw new UnsupportedOperationException("Must not be instantiated");
+  }
 
   /**
    * Method supposed to be used for creation number bounding function,

@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.2.2.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'org.springframework.boot' version '2.2.4.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
     id 'jacoco'
 }
@@ -13,40 +13,8 @@ description = 'university-server'
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-bootRun {
-    args = ['--spring.profiles.active=dev']
-}
-
-task clientCopy(type: Copy, dependsOn: ':university-client:build') {
-    from '../university-client/dist'
-    into 'build/resources/main/static/.'
-}
-
-compileJava { dependsOn clientCopy }
-
-test { finalizedBy jacocoTestReport }
-
-jacocoTestReport {
-    afterEvaluate {
-        getClassDirectories() from classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    '**/domain/**',
-                    '**/dto/**',
-                    '**/error/**',
-                    '**/config/**',
-            ])
-        }
-    }
-}
-
 repositories {
     mavenCentral()
-}
-
-configurations {
-    implementation {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
-    }
 }
 
 dependencies {
@@ -67,4 +35,44 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+}
+
+configurations {
+    implementation {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    testImplementation {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+task clientCopy(type: Copy, dependsOn: ':university-client:build') {
+    from '../university-client/dist'
+    into 'build/resources/main/static/.'
+}
+
+bootRun {
+    args = ['--spring.profiles.active=dev']
+}
+
+compileJava {
+    dependsOn clientCopy
+}
+
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    afterEvaluate {
+        getClassDirectories() from classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    '**/domain/**',
+                    '**/dto/**',
+                    '**/error/**',
+                    '**/config/**',
+            ])
+        }
+    }
 }
