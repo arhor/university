@@ -1,7 +1,10 @@
 package by.arhor.university.service.impl;
 
+import static by.arhor.core.Either.error;
+import static by.arhor.university.service.error.ServiceError.alreadyExists;
+import static by.arhor.university.service.error.ServiceError.notFound;
+
 import java.util.List;
-import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import by.arhor.core.Either;
 import by.arhor.university.domain.model.Enrollee;
-import by.arhor.university.domain.model.User;
 import by.arhor.university.domain.repository.EnrolleeRepository;
 import by.arhor.university.domain.repository.UserRepository;
 import by.arhor.university.service.EnrolleeService;
 import by.arhor.university.service.dto.EnrolleeDTO;
-import by.arhor.university.service.error.ErrorLabel;
 import by.arhor.university.service.error.ServiceError;
 
 @Service
@@ -23,8 +24,7 @@ import by.arhor.university.service.error.ServiceError;
 public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, Long>
     implements EnrolleeService {
 
-  @Autowired
-  private UserRepository userRepository;
+  @Autowired private UserRepository userRepository;
 
   @Autowired
   public EnrolleeServiceImpl(EnrolleeRepository repository, ModelMapper mapper) {
@@ -37,7 +37,6 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
     if (userOptional.isPresent()) {
       var user = userOptional.get();
       var enrollee = user.getEnrollee();
-      System.out.println(enrollee);
       if (enrollee == null) {
         var newEnrollee = mapper.map(dto, Enrollee.class);
         newEnrollee.setUser(user);
@@ -45,10 +44,10 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
         user.setEnrollee(savedEnrollee);
         return Either.success(toDto(savedEnrollee));
       } else {
-        return Either.error(new ServiceError(ErrorLabel.ALREADY_ENROLLED, "enrollee", userEmail));
+        return error(alreadyExists("Enrollee", "user", userEmail));
       }
     } else {
-      return Either.error(new ServiceError(ErrorLabel.NOT_FOUND_USER, "email", userEmail));
+      return error(notFound("User", "email", userEmail));
     }
   }
 

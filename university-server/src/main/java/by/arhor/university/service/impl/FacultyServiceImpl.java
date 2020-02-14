@@ -2,7 +2,6 @@ package by.arhor.university.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +11,7 @@ import by.arhor.university.domain.repository.FacultyRepository;
 import by.arhor.university.service.FacultyService;
 import by.arhor.university.service.dto.FacultyDTO;
 import by.arhor.university.service.error.ErrorLabel;
-import by.arhor.university.service.error.ServiceError;
+import by.arhor.university.service.error.ServiceErrorImpl;
 
 @Service
 @Transactional
@@ -24,10 +23,10 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
   }
 
   @Override
-  public Either<FacultyDTO, ServiceError> create(FacultyDTO dto) {
+  public Either<FacultyDTO, ServiceErrorImpl> create(FacultyDTO dto) {
     boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
-      return Either.error(new ServiceError(ErrorLabel.UNKNOWN, "title", dto.getDefaultTitle()));
+      return Either.error(new ServiceErrorImpl(ErrorLabel.UNKNOWN, "title", dto.getDefaultTitle()));
     }
     var newFaculty = mapper.map(dto, Faculty.class);
     var createdFaculty = repository.save(newFaculty);
@@ -35,10 +34,10 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
   }
 
   @Override
-  public Either<FacultyDTO, ServiceError> update(FacultyDTO dto) {
+  public Either<FacultyDTO, ServiceErrorImpl> update(FacultyDTO dto) {
     boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
-      return Either.error(new ServiceError(ErrorLabel.UNKNOWN, "title", dto.getDefaultTitle()));
+      return Either.error(new ServiceErrorImpl(ErrorLabel.UNKNOWN, "title", dto.getDefaultTitle()));
     }
     var faculty = repository.findById(dto.getId()).orElseThrow(RuntimeException::new);
     faculty.setDefaultTitle(dto.getDefaultTitle());

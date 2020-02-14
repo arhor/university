@@ -6,6 +6,7 @@ import java.util.StringJoiner;
 
 public final class ApiError implements Serializable {
 
+  public static final String UNEXPECTED           = "10001";
   public static final String NOT_FOUND            = "10001";
   public static final String WRONG_METHOD_PARAMS  = "10002";
   public static final String TYPE_UNSUPPORTED     = "10003";

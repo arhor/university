@@ -24,7 +24,7 @@ import by.arhor.university.domain.repository.UserRepository;
 import by.arhor.university.service.UserService;
 import by.arhor.university.service.dto.UserDTO;
 import by.arhor.university.service.error.ErrorLabel;
-import by.arhor.university.service.error.ServiceError;
+import by.arhor.university.service.error.ServiceErrorImpl;
 
 @Service
 @Transactional
@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
-  public Either<UserDTO, ServiceError> create(UserDTO userDto) {
+  public Either<UserDTO, ServiceErrorImpl> create(UserDTO userDto) {
     if (emailAlreadyTaken(userDto.getEmail())) {
-      return Either.error(new ServiceError(ErrorLabel.UNKNOWN, "email", userDto.getEmail()));
+      return Either.error(new ServiceErrorImpl(ErrorLabel.UNKNOWN, "email", userDto.getEmail()));
     }
 
     final var newUser = repository.createNewUser(
@@ -104,12 +104,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   @Transactional(readOnly = true)
-  public Either<UserDTO, ServiceError> findOne(Long id) {
+  public Either<UserDTO, ServiceErrorImpl> findOne(Long id) {
     return repository
         .findById(id)
         .map(user -> mapper.map(user, UserDTO.class))
-        .map(Either::<UserDTO, ServiceError>success)
-        .orElseGet(() -> Either.error(new ServiceError(ErrorLabel.NOT_FOUND, "id", id)));
+        .map(Either::<UserDTO, ServiceErrorImpl>success)
+        .orElseGet(() -> Either.error(new ServiceErrorImpl(ErrorLabel.NOT_FOUND, "id", id)));
   }
 
   @Override
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
-  public Either<UserDTO, ServiceError> update(UserDTO userDto) {
+  public Either<UserDTO, ServiceErrorImpl> update(UserDTO userDto) {
     return null;
   }
 

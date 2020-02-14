@@ -2,18 +2,9 @@ package by.arhor.university.service.error;
 
 public enum ErrorLabel {
 
-  UNKNOWN            (""),
-
+  UNKNOWN            ("error.unexpected"),
   NOT_FOUND          ("error.not.found"),
-
-  NOT_FOUND_USER     ("error.not.found.user"),
-  NOT_FOUND_ENROLLEE ("error.not.found.enrollee"),
-  NOT_FOUND_SUBJECT  ("error.not.found.subject"),
-  NOT_FOUND_FACULTY  ("error.not.found.faculty"),
-  NOT_FOUND_LANG     ("error.not.found.lang"),
-  NOT_FOUND_ROLE     ("error.not.found.role"),
-
-  ALREADY_ENROLLED   ("error.already.enrolled");
+  ALREADY_EXISTS     ("error.already.exists");
 
   private final String value;
 
