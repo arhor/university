@@ -15,7 +15,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -36,7 +35,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
       throws ServletException, IOException {
     try {
       String jwt = getJwt(request);
-      if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
+      if (jwt != null && tokenProvider.tokenIsValid(jwt)) {
         String username = tokenProvider.getUserNameFromJwtToken(jwt);
 
         UserDetails userDetails = userService.loadUserByUsername(username);

@@ -85,7 +85,7 @@ public class JwtProvider {
         .asText();
   }
 
-  public boolean validateJwtToken(String authToken) {
+  public boolean tokenIsValid(String authToken) {
     try {
       jwtParser.parseClaimsJws(authToken);
       return true;

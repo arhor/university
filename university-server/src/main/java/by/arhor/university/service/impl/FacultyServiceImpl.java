@@ -10,8 +10,7 @@ import by.arhor.university.domain.model.Faculty;
 import by.arhor.university.domain.repository.FacultyRepository;
 import by.arhor.university.service.FacultyService;
 import by.arhor.university.service.dto.FacultyDTO;
-import by.arhor.university.service.error.ErrorLabel;
-import by.arhor.university.service.error.ServiceErrorImpl;
+import by.arhor.university.service.error.ServiceError;
 
 @Service
 @Transactional
@@ -23,10 +22,10 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
   }
 
   @Override
-  public Either<FacultyDTO, ServiceErrorImpl> create(FacultyDTO dto) {
+  public Either<FacultyDTO, ServiceError> create(FacultyDTO dto) {
     boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
-      return Either.error(new ServiceErrorImpl(ErrorLabel.UNKNOWN, "title", dto.getDefaultTitle()));
+      return Either.error(null);
     }
     var newFaculty = mapper.map(dto, Faculty.class);
     var createdFaculty = repository.save(newFaculty);
@@ -34,10 +33,10 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
   }
 
   @Override
-  public Either<FacultyDTO, ServiceErrorImpl> update(FacultyDTO dto) {
+  public Either<FacultyDTO, ServiceError> update(FacultyDTO dto) {
     boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
-      return Either.error(new ServiceErrorImpl(ErrorLabel.UNKNOWN, "title", dto.getDefaultTitle()));
+      return Either.error(null);
     }
     var faculty = repository.findById(dto.getId()).orElseThrow(RuntimeException::new);
     faculty.setDefaultTitle(dto.getDefaultTitle());

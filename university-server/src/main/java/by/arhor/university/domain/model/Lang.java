@@ -61,7 +61,6 @@ public class Lang extends AbstractModelObject<Short> {
   }
 
   public enum Value {
-    BY ("Belarusian"),
     RU ("Russian"),
     EN ("English");
 

@@ -8,7 +8,6 @@ GO
 DECLARE @Password NVARCHAR(512) = N'$2y$05$wc9f6o/gGJyoagNZfHkHJerFc0tIJAmdCQmabJCtXs0uOJhUAGICa'
 
 DECLARE @RU BIGINT = (SELECT [id] FROM [langs] WITH(NOLOCK) WHERE [label] = 'RU')
-DECLARE @BY BIGINT = (SELECT [id] FROM [langs] WITH(NOLOCK) WHERE [label] = 'BY')
 DECLARE @EN BIGINT = (SELECT [id] FROM [langs] WITH(NOLOCK) WHERE [label] = 'EN')
 
 IF NOT EXISTS (SELECT * FROM [users] WHERE [email] = N'admin@gmail.com')
@@ -27,7 +26,6 @@ BEGIN
     DECLARE @LangToUse BIGINT = (
         CASE
             WHEN @Lang = 0 THEN @RU
-            WHEN @Lang = 1 THEN @BY
             WHEN @Lang = 2 THEN @EN
             ELSE @RU
         END

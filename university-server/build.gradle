@@ -22,14 +22,14 @@ dependencies {
 
     implementation project(':core')
 
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'org.modelmapper:modelmapper:2.3.6'
+
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-jetty'
-
-    implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'org.modelmapper:modelmapper:2.3.6'
 
     testImplementation 'com.h2database:h2'
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
