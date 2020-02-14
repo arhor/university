@@ -32,43 +32,43 @@ EXEC @Admin = [dbo].[getAdminRole]
 DECLARE @counter    INT = 0
 DECLARE @totalUsers INT = (SELECT COUNT(*) FROM [users] [u] WITH(NOLOCK) WHERE [u].[role_id] != @Admin)
 WHILE (@counter < @totalUsers)
-    BEGIN
-        DECLARE @userId BIGINT
-
-        SELECT   @userId = id
+BEGIN
+    DECLARE @userId BIGINT = (
+        SELECT   [u].[id]
         FROM     [users] [u] WITH(NOLOCK)
         WHERE    [u].[role_id] != @Admin
         ORDER BY [u].[id] ASC
         OFFSET @counter ROWS
         FETCH NEXT 1 ROWS ONLY
+    )
 
-        IF NOT EXISTS (SELECT * FROM [enrollees] [e] WITH(NOLOCK) WHERE [e].[user_id] = @userId)
-            BEGIN
-                DECLARE @countryId INT = CEILING (4 * RAND())
-                DECLARE @cityNum   INT = CEILING (4 * RAND())
+    IF NOT EXISTS (SELECT * FROM [enrollees] [e] WITH(NOLOCK) WHERE [e].[user_id] = @userId)
+    BEGIN
+        DECLARE @countryId INT = CEILING (4 * RAND())
+        DECLARE @cityNum   INT = CEILING (4 * RAND())
 
-                DECLARE @countryName NVARCHAR(64) = (
-                    SELECT [name]
-                    FROM @Countries
-                    WHERE [id] = @countryId
-                )
+        DECLARE @countryName NVARCHAR(64) = (
+            SELECT [name]
+            FROM @Countries
+            WHERE [id] = @countryId
+        )
 
-                DECLARE @cityName NVARCHAR(64) = (
-                    SELECT [name]
-                    FROM @Cities
-                    WHERE [countryId] = @countryId
-                      AND [num] = @cityNum
-                )
+        DECLARE @cityName NVARCHAR(64) = (
+            SELECT [name]
+            FROM @Cities
+            WHERE [countryId] = @countryId
+            AND [num] = @cityNum
+        )
 
-                INSERT INTO [enrollees] ([country], [city], [school_score], [user_id])
-                VALUES
-                (
-                    @countryName,
-                    @cityName,
-                    CEILING(100 * RAND()),
-                    @userId
-                )
-            END
-        SET @counter = @counter + 1
+        INSERT INTO [enrollees] ([country], [city], [school_score], [user_id])
+        VALUES
+        (
+            @countryName,
+            @cityName,
+            CEILING(100 * RAND()),
+            @userId
+        )
     END
+    SET @counter = @counter + 1
+END
 -- #init-table: enrollees  <<< END

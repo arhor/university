@@ -17,13 +17,13 @@ VALUES (0, 'BY')
 
 DECLARE @counter INT = 0
 WHILE (@counter <= 2)
-    BEGIN
-        DECLARE @label CHAR(2) = (SELECT [label] FROM @TempLangs WHERE [id] = @counter)
+BEGIN
+   DECLARE @label CHAR(2) = (SELECT [label] FROM @TempLangs WHERE [id] = @counter)
 
-        IF NOT EXISTS (SELECT * FROM [langs] WHERE [label] = @label)
-            BEGIN
-                INSERT INTO [langs] ([label]) VALUES (@label)
-            END
-        SET @counter = @counter + 1
-    END
+   IF NOT EXISTS (SELECT * FROM [langs] WHERE [label] = @label)
+   BEGIN
+       INSERT INTO [langs] ([label]) VALUES (@label)
+   END
+   SET @counter = @counter + 1
+END
 -- #init-table: langs  <<< END

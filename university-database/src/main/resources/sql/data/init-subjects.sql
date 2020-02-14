@@ -22,13 +22,13 @@ VALUES (0, N'Русский язык')
 
 DECLARE @counter INT = 0
 WHILE (@counter <= 7)
-    BEGIN
-        DECLARE @title NVARCHAR(64) = (SELECT [title] FROM @TempSubjects WHERE [id] = @counter)
+BEGIN
+    DECLARE @title NVARCHAR(64) = (SELECT [title] FROM @TempSubjects WHERE [id] = @counter)
 
-        IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = @title)
-            BEGIN
-                INSERT INTO [subjects] ([default_title]) VALUES (@title)
-            END
-        SET @counter = @counter + 1
+    IF NOT EXISTS (SELECT * FROM [subjects] WHERE [default_title] = @title)
+    BEGIN
+        INSERT INTO [subjects] ([default_title]) VALUES (@title)
     END
+    SET @counter = @counter + 1
+END
 -- #init-table: subjects  <<< END
