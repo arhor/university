@@ -43,8 +43,7 @@ public class UtilBeansConfig {
   @Profile({"!dev"})
   public FilterRegistrationBean<CustomCsrfFilter> csrfFilter() {
     final var registrationBean = new FilterRegistrationBean<CustomCsrfFilter>();
-    final var csrfFilter = new CustomCsrfFilter();
-    registrationBean.setFilter(csrfFilter);
+    registrationBean.setFilter(new CustomCsrfFilter());
     registrationBean.addUrlPatterns("/api/*");
     return registrationBean;
   }

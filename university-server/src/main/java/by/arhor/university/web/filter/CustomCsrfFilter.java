@@ -1,11 +1,10 @@
 package by.arhor.university.web.filter;
 
 import by.arhor.core.Lazy;
-import org.springframework.context.annotation.Profile;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -25,8 +24,6 @@ import java.util.regex.Pattern;
   * @author Maksim Buryshynets
   * @version 1.0 11 March 2019
   */
-//@Component
-//@Profile({"!dev"})
 public class CustomCsrfFilter extends OncePerRequestFilter {
 
   private static final String ERROR_MSG = "CSRF token is missing or not matching";
@@ -43,9 +40,9 @@ public class CustomCsrfFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest req,
-      HttpServletResponse res,
-      FilterChain filterChain) throws IOException, ServletException {
+      @NonNull HttpServletRequest req,
+      @NonNull HttpServletResponse res,
+      @NonNull FilterChain filterChain) throws IOException, ServletException {
 
     final var method = req.getMethod();
     final var isTokenRequired = safeMethod.get().matcher(method).matches();
