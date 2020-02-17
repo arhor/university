@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="university">
+
+    <queries>
+        <query context="master">
+            <![CDATA[
+            IF (DB_ID('university') IS NULL)
+            BEGIN
+                CREATE DATABASE university
+                ON
+                (
+                    NAME = university_db,
+                    FILENAME = 'C:\database\university_db.mdf',
+                    SIZE = 128MB,
+                    MAXSIZE = UNLIMITED,
+                    FILEGROWTH = 15%
+                )
+                LOG ON
+                (
+                    NAME = university_log,
+                    FILENAME = 'C:\database\university_db.ldf',
+                    SIZE = 128MB,
+                    MAXSIZE = UNLIMITED,
+                    FILEGROWTH = 15%
+                )
+            END
+            ]]>
+        </query>
+
+        <query context="university">
+            <![CDATA[
+            IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
+            BEGIN
+                CREATE LOGIN UniversitySA WITH PASSWORD = '1university@SECRET!', DEFAULT_DATABASE = university
+                CREATE USER UniversitySA FOR LOGIN UniversitySA
+            END
+            ]]>
+        </query>
+
+        <query context="university">
+            <![CDATA[
+            GRANT CONTROL ON DATABASE::university TO UniversitySA
+            ]]>
+        </query>
+    </queries>
+
+</module>

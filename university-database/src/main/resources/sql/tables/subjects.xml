@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="subjects">
+
+    <queries context="university">
+        <query>
+            <![CDATA[
+            IF (OBJECT_ID('subjects') IS NULL)
+            BEGIN
+                CREATE TABLE subjects
+                (
+                    id               BIGINT          NOT NULL IDENTITY(1,1),
+                    default_title    NVARCHAR(50)    NOT NULL UNIQUE,
+
+                    CONSTRAINT PK_subjects PRIMARY KEY CLUSTERED (id ASC)
+                )
+            END
+            ]]>
+        </query>
+    </queries>
+
+</module>

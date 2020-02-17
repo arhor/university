@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="users">
+
+    <dependencies>
+        <dependency name="roles"/>
+        <dependency name="langs"/>
+    </dependencies>
+
+    <queries context="university">
+        <query>
+            <![CDATA[
+            IF (OBJECT_ID('users') IS NULL)
+            BEGIN
+                CREATE TABLE users
+                (
+                    id            BIGINT           NOT NULL IDENTITY(1,1),
+                    email         NVARCHAR(255)    NOT NULL,
+                    password      NVARCHAR(512)    NOT NULL,
+                    first_name    NVARCHAR(50)     NOT NULL,
+                    last_name     NVARCHAR(50)     NOT NULL,
+                    role_id       BIGINT           NOT NULL,
+                    lang_id       BIGINT           NOT NULL,
+
+                    CONSTRAINT PK_users PRIMARY KEY CLUSTERED (id ASC),
+
+                    CONSTRAINT FK_users_role_id FOREIGN KEY (role_id)
+                    REFERENCES roles (id)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE,
+
+                    CONSTRAINT FK_users_langs_id FOREIGN KEY (lang_id)
+                    REFERENCES langs (id)
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE
+                )
+                CREATE UNIQUE NONCLUSTERED INDEX IDX_users_email ON users (email ASC)
+            END
+            ]]>
+        </query>
+    </queries>
+
+</module>

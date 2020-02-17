@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="langs">
+
+    <queries context="university">
+        <query>
+            <![CDATA[
+            IF (OBJECT_ID('langs') IS NULL)
+            BEGIN
+            CREATE TABLE langs
+                (
+                    id       BIGINT     NOT NULL IDENTITY(1,1),
+                    label    CHAR(2)    NOT NULL,
+
+                    CONSTRAINT PK_langs PRIMARY KEY CLUSTERED (id ASC),
+
+                    CONSTRAINT CHK_langs_label CHECK
+                    (
+                        label LIKE '[A-Z][A-Z]'
+                    )
+                )
+            END
+            ]]>
+        </query>
+    </queries>
+
+</module>

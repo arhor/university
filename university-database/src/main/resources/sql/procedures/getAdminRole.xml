@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="getAdminRole">
+
+    <dependencies>
+        <dependency name="roles"/>
+    </dependencies>
+
+    <queries context="university">
+        <query>
+            <![CDATA[
+            IF (OBJECT_ID('getAdminRole') IS NOT NULL)
+            BEGIN
+                DROP PROCEDURE getAdminRole
+            END
+            ]]>
+        </query>
+
+        <query>
+            <![CDATA[
+            CREATE PROCEDURE dbo.getAdminRole
+            AS
+            BEGIN
+                DECLARE @adminRole NVARCHAR(10) = N'ADMIN'
+                DECLARE @id AS BIGINT
+
+                SELECT @id = roles.id
+                FROM  roles WITH(NOLOCK)
+                WHERE roles.title = @adminRole
+
+                IF (@id IS NULL)
+                BEGIN
+                    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+                    BEGIN TRANSACTION
+                        SELECT @id = roles.id
+                        FROM  roles
+                        WHERE roles.title = @adminRole
+
+                        IF (@id IS NULL)
+                        BEGIN
+                            INSERT INTO roles (title) VALUES (@adminRole)
+                            SELECT @id = SCOPE_IDENTITY()
+                        END
+                    COMMIT TRANSACTION
+                END
+
+                SELECT @id
+                RETURN @id
+            END
+            ]]>
+        </query>
+    </queries>
+
+</module>

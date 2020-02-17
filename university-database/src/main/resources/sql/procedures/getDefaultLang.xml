@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="getDefaultLang">
+
+    <dependencies>
+        <dependency name="langs"/>
+    </dependencies>
+
+    <queries context="university">
+        <query>
+            <![CDATA[
+            IF (OBJECT_ID('getDefaultLang') IS NOT NULL)
+            BEGIN
+                DROP PROCEDURE getDefaultLang
+            END
+            ]]>
+        </query>
+
+        <query>
+            <![CDATA[
+            CREATE PROCEDURE dbo.getDefaultLang
+            AS
+            BEGIN
+                DECLARE @defaultLang CHAR(2) = 'RU'
+                DECLARE @id AS BIGINT
+
+                SELECT @id = langs.id
+                FROM  langs WITH(NOLOCK)
+                WHERE langs.label = @defaultLang
+
+                IF (@id IS NULL)
+                BEGIN
+                    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+                    BEGIN TRANSACTION
+                        SELECT @id = langs.id
+                        FROM  langs
+                        WHERE langs.label = @defaultLang
+
+                        IF (@id IS NULL)
+                        BEGIN
+                            INSERT INTO langs (label) VALUES (@defaultLang)
+                            SELECT @id = SCOPE_IDENTITY()
+                        END
+                    COMMIT TRANSACTION
+                END
+
+                SELECT @id
+                RETURN @id
+            END
+            ]]>
+        </query>
+    </queries>
+
+</module>
