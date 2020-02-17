@@ -1,14 +1,15 @@
 -- #create-table: roles >>> START
-USE [university];
+USE university
+GO
 
 IF (OBJECT_ID('roles') IS NULL)
 BEGIN
-    CREATE TABLE [roles]
+    CREATE TABLE roles
     (
-        [id]       [BIGINT]         NOT NULL IDENTITY(1,1),
-        [title]    [NVARCHAR](15)   NOT NULL,
+        id       BIGINT         NOT NULL IDENTITY(1,1),
+        title    NVARCHAR(15)   NOT NULL,
 
-        CONSTRAINT [PK_roles] PRIMARY KEY CLUSTERED ([Id] ASC)
+        CONSTRAINT PK_roles PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 -- #create-table: roles <<< END

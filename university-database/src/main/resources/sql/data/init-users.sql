@@ -1,20 +1,20 @@
 -- #dependencies: [langs, users, getAdminRole, createNewUser]
 
 -- #init-table: users  >>> START
-USE [university]
+USE university
 GO
 
 -- password to use: `password` encrypted with BCrypt (strength 5)
 DECLARE @Password NVARCHAR(512) = N'$2y$05$wc9f6o/gGJyoagNZfHkHJerFc0tIJAmdCQmabJCtXs0uOJhUAGICa'
 
-DECLARE @RU BIGINT = (SELECT [id] FROM [langs] WITH(NOLOCK) WHERE [label] = 'RU')
-DECLARE @EN BIGINT = (SELECT [id] FROM [langs] WITH(NOLOCK) WHERE [label] = 'EN')
+DECLARE @RU BIGINT = (SELECT id FROM langs WITH(NOLOCK) WHERE label = 'RU')
+DECLARE @EN BIGINT = (SELECT id FROM langs WITH(NOLOCK) WHERE label = 'EN')
 
-IF NOT EXISTS (SELECT * FROM [users] WHERE [email] = N'admin@gmail.com')
+IF NOT EXISTS (SELECT * FROM users WHERE email = N'admin@gmail.com')
 BEGIN
     DECLARE @Admin BIGINT
-    EXECUTE @Admin = [dbo].[getAdminRole]
-    EXECUTE [dbo].[createNewUser] N'admin@gmail.com', @Password, N'Максим', N'Буришинец', @Admin,  @RU
+    EXECUTE @Admin = dbo.getAdminRole
+    EXECUTE dbo.createNewUser N'admin@gmail.com', @Password, N'Максим', N'Буришинец', @Admin,  @RU
 END
 
 DECLARE @counter INT = 1
@@ -65,9 +65,9 @@ BEGIN
         END
     )
 
-    IF NOT EXISTS (SELECT * FROM [users] WHERE [email] = @Email)
+    IF NOT EXISTS (SELECT * FROM users WHERE email = @Email)
     BEGIN
-        EXECUTE [dbo].[createNewUser] @Email, @Password, @FirstName, @LastName, null, @LangToUse
+        EXECUTE dbo.createNewUser @Email, @Password, @FirstName, @LastName, null, @LangToUse
     END
     SET @counter = @counter + 1
 END

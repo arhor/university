@@ -1,16 +1,16 @@
 -- #dependencies: [faculties]
 
 -- #init-table: faculties  >>> START
-USE [university]
+USE university
 GO
 
 DECLARE @TempFaculties TABLE
 (
-    [id]    [INT],
-    [title] [NVARCHAR](128)
+    id       INT,
+    title    NVARCHAR(128)
 )
 
-INSERT INTO @TempFaculties ([id], [title])
+INSERT INTO @TempFaculties (id, title)
 VALUES (0, N'Биологический факультет')
      , (1, N'Исторический факультет')
      , (2, N'Химический факультет')
@@ -25,11 +25,11 @@ VALUES (0, N'Биологический факультет')
 DECLARE @counter INT = 0
 WHILE (@counter <= 9)
 BEGIN
-    DECLARE @title NVARCHAR(64) = (SELECT [title] FROM @TempFaculties WHERE [id] = @counter)
+    DECLARE @title NVARCHAR(64) = (SELECT title FROM @TempFaculties WHERE id = @counter)
 
-    IF NOT EXISTS (SELECT * FROM [faculties] WHERE [default_title] = @title)
+    IF NOT EXISTS (SELECT * FROM faculties WHERE default_title = @title)
     BEGIN
-        INSERT INTO [faculties] ([default_title], [seats_budget], [seats_paid])
+        INSERT INTO faculties (default_title, seats_budget, seats_paid)
         VALUES
         (
             @title,

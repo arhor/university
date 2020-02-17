@@ -1,12 +1,12 @@
 -- #main
 
 -- #create-database: university >>> START
-USE [master]
+USE master
 GO
 
 IF (DB_ID('university') IS NULL)
     BEGIN
-        CREATE DATABASE [university]
+        CREATE DATABASE university
         ON
         (
             NAME = university_db,
@@ -28,13 +28,13 @@ GO
 -- #create-database: university <<< END
 
 -- #create-user >>> START
-USE [university]
+USE university
 GO
 
 IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
     BEGIN
         CREATE LOGIN UniversitySA
-        WITH PASSWORD = '1university@SECRET!', DEFAULT_DATABASE = [university]
+        WITH PASSWORD = '1university@SECRET!', DEFAULT_DATABASE = university
 
         CREATE USER UniversitySA
         FOR LOGIN UniversitySA

@@ -1,18 +1,19 @@
 -- #create-table: langs >>> START
-USE [university];
+USE university
+GO
 
 IF (OBJECT_ID('langs') IS NULL)
 BEGIN
-    CREATE TABLE [langs]
+    CREATE TABLE langs
     (
-        [id]       [BIGINT]     NOT NULL IDENTITY(1,1),
-        [label]    [CHAR](2)    NOT NULL,
+        id       BIGINT     NOT NULL IDENTITY(1,1),
+        label    CHAR(2)    NOT NULL,
 
-        CONSTRAINT [PK_langs] PRIMARY KEY CLUSTERED ([Id] ASC),
+        CONSTRAINT PK_langs PRIMARY KEY CLUSTERED (id ASC),
 
-        CONSTRAINT [CHK_langs_label] CHECK
+        CONSTRAINT CHK_langs_label CHECK
         (
-            [label] LIKE '[A-Z][A-Z]'
+            label LIKE '[A-Z][A-Z]'
         )
     )
 END
