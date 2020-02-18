@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -43,7 +44,7 @@ public final class DBProjectModel {
               return null;
             }
 
-            Connection connection = null;
+            Connection connection;
 
             try {
               properties.load(configFile);
@@ -89,6 +90,14 @@ public final class DBProjectModel {
 
   public void executeScripts() {
     modules.keySet().forEach(this::resolveDependency);
+  }
+
+  public String convertToString() {
+    final var text = new StringBuilder();
+
+    modules.keySet().forEach(name -> writeModule(name, text));
+
+    return text.toString();
   }
 
   private void handleContext(String context) {
@@ -164,6 +173,77 @@ public final class DBProjectModel {
         }
       }
       module.setResolved(true);
+    }
+  }
+
+  private void writeModule(@Nonnull String name, @Nonnull StringBuilder text) {
+    final var module = modules.get(name);
+    if (module != null && !module.isResolved()) {
+
+      final var dependencies = module.getDependencies();
+      if (dependencies != null) {
+        dependencies.forEach(dependency -> writeModule(dependency.getName(), text));
+      }
+
+      final var queries = module.getQueries();
+
+      final var queryList = queries.getQueries();
+
+      if (queryList != null) {
+        for (final var query : queryList) {
+
+          if (query.getContext() != null) {
+            writeContext(query.getContext(), text);
+          } else if (queries.getContext() != null) {
+            writeContext(queries.getContext(), text);
+          }
+
+          final var content = query.getContent();
+          if (content != null) {
+            try (var reader = new BufferedReader(new StringReader(content))) {
+              String line;
+              int leadingSpaces = 0;
+              boolean firstLineProcessed = false;
+
+              while ((line = reader.readLine()) != null) {
+                if (!firstLineProcessed) {
+                  if (line.isEmpty()) {
+                    continue;
+                  }
+                  for (char c : line.toCharArray()) {
+                    if (c == ' ') {
+                      leadingSpaces++;
+                      continue;
+                    }
+                    break;
+                  }
+                  firstLineProcessed = true;
+                }
+
+                if (!line.isBlank()) {
+                  text.append(line.substring(leadingSpaces));
+                  text.append('\n');
+                }
+              }
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+
+            text.append("GO").append('\n');
+            text.append('\n');
+          }
+        }
+      }
+      module.setResolved(true);
+    }
+  }
+
+  private void writeContext(String context, StringBuilder text) {
+    if (context != null && !context.equals(currentContext)) {
+      currentContext = context;
+      text.append("USE ").append(currentContext).append('\n');
+      text.append("GO").append('\n');
+      text.append('\n');
     }
   }
 

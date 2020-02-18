@@ -10,9 +10,12 @@ public class Runner {
     if (resource == null) {
       throw new IllegalArgumentException("`sql` folder is not found!");
     } else {
-      DBProjectModel
-          .fromRootDirectory(new File(resource.getFile()))
-          .executeScripts();
+      final var dbProjectModel = DBProjectModel.fromRootDirectory(new File(resource.getFile()));
+
+//      dbProjectModel.executeScripts();
+
+      final var s = dbProjectModel.convertToString();
+      System.out.println(s);
     }
   }
 }
