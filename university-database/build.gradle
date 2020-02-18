@@ -19,6 +19,10 @@ repositories {
 dependencies {
     implementation project(':core')
 
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.2'
+    implementation 'jakarta.activation:jakarta.activation-api:1.2.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
+
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.microsoft.sqlserver:mssql-jdbc:8.1.1.jre11-preview'
 
