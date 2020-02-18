@@ -27,6 +27,9 @@ public final class Module implements Serializable {
   @XmlTransient
   private boolean resolved;
 
+  @XmlTransient
+  private int executionCost;
+
   public String getName() {
     return name;
   }
@@ -59,20 +62,27 @@ public final class Module implements Serializable {
     this.resolved = resolved;
   }
 
+  public int getExecutionCost() {
+    return executionCost;
+  }
+
+  public void setExecutionCost(int executionCost) {
+    this.executionCost = executionCost;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Module module = (Module) o;
-    return resolved == module.resolved
-        && Objects.equals(name, module.name)
+    return Objects.equals(name, module.name)
         && Objects.equals(dependencies, module.dependencies)
         && Objects.equals(queries, module.queries);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, dependencies, queries, resolved);
+    return Objects.hash(name, dependencies, queries);
   }
 
   @Override
@@ -81,7 +91,6 @@ public final class Module implements Serializable {
         .add("name='" + name + "'")
         .add("dependencies=" + dependencies)
         .add("queries=" + queries)
-        .add("resolved=" + resolved)
         .toString();
   }
 }

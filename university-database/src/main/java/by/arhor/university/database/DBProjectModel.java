@@ -8,11 +8,10 @@ import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.xml.bind.JAXBContext;
@@ -22,7 +21,10 @@ import javax.xml.stream.XMLInputFactory;
 
 import by.arhor.core.Either;
 import by.arhor.core.Lazy;
+import by.arhor.university.database.model.*;
 import by.arhor.university.database.model.Module;
+
+import static java.util.stream.Collectors.toList;
 
 public final class DBProjectModel {
 
@@ -95,9 +97,54 @@ public final class DBProjectModel {
   public String convertToString() {
     final var text = new StringBuilder();
 
-    modules.keySet().forEach(name -> writeModule(name, text));
+    modules.forEach((name, module) -> {
+      final var cost = computeExecutionCost(name);
+      module.setExecutionCost(cost);
+    });
+
+    final var modulesByExecutionCost = modules.keySet().stream().map(modules::get).sorted(Comparator.comparingInt(Module::getExecutionCost)).collect(toList());
+
+    modulesByExecutionCost.forEach(module -> writeModule(module.getName(), text));
 
     return text.toString();
+  }
+
+  private int computeExecutionCost(String name) {
+    int executionCost = 1;
+
+    final var module = modules.get(name);
+    if (module != null) {
+      final var dependencies = module.getDependencies();
+      if (dependencies != null) {
+        final var dependencyList = dependencies.getDependencies();
+        if (dependencyList != null) {
+          for (var dependency : dependencyList) {
+            executionCost += computeExecutionCost(dependency.getName());
+          }
+        }
+      }
+
+      final var queries = module.getQueries();
+      if (queries != null) {
+        final var queryList = queries.getQueries();
+        if (queryList != null) {
+          for (var query : queryList) {
+            if (query instanceof CreateQuery) {
+              final var target = ((CreateQuery) query).getTarget();
+              switch (target) {
+                case "table":
+                  executionCost += 1;
+                  break;
+                case "procedure":
+                  executionCost += 10;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return executionCost;
   }
 
   private void handleContext(String context) {
