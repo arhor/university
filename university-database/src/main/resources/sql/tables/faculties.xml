@@ -5,7 +5,7 @@
         name="faculties">
 
     <queries context="university">
-        <create-query target="table">
+        <create target="table">
             <![CDATA[
             IF (OBJECT_ID('faculties') IS NULL)
             BEGIN
@@ -20,7 +20,7 @@
                 )
             END
             ]]>
-        </create-query>
+        </create>
     </queries>
 
 </module>

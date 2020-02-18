@@ -9,16 +9,16 @@
     </dependencies>
 
     <queries context="university">
-        <drop-query target="procedure">
+        <drop target="procedure">
             <![CDATA[
             IF (OBJECT_ID('getDefaultRole') IS NOT NULL)
             BEGIN
                 DROP PROCEDURE getDefaultRole
             END
             ]]>
-        </drop-query>
+        </drop>
 
-        <create-query target="procedure">
+        <create target="procedure">
             <![CDATA[
             CREATE PROCEDURE dbo.getDefaultRole
             AS
@@ -50,7 +50,7 @@
                 RETURN @id
             END
             ]]>
-        </create-query>
+        </create>
     </queries>
 
 </module>

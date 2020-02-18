@@ -1,20 +1,11 @@
 package by.arhor.university.database.model;
 
-import static java.util.stream.Collectors.toList;
-
+import javax.xml.bind.annotation.*;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
-import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "queries")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -24,9 +15,9 @@ public final class Queries implements Serializable {
   private String context;
 
   @XmlElements({
-      @XmlElement(name = "drop-query",   type = DropQuery.class),
-      @XmlElement(name = "create-query", type = CreateQuery.class),
-      @XmlElement(name = "util-query",   type = UtilQuery.class)
+      @XmlElement(name = "drop",   type = DropQuery.class),
+      @XmlElement(name = "create", type = CreateQuery.class),
+      @XmlElement(name = "util",   type = UtilQuery.class)
   })
   private List<Query> queries;
 

@@ -9,7 +9,7 @@
     </dependencies>
 
     <queries context="university">
-        <create-query target="table">
+        <create target="table">
             <![CDATA[
             IF (OBJECT_ID('enrollees') IS NULL)
             BEGIN
@@ -37,7 +37,7 @@
                 CREATE NONCLUSTERED INDEX IDX_enrollees_city ON enrollees (city ASC)
             END
             ]]>
-        </create-query>
+        </create>
     </queries>
 
 </module>

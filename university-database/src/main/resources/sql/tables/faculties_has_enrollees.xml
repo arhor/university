@@ -10,7 +10,7 @@
     </dependencies>
 
     <queries>
-        <create-query context="university" target="table">
+        <create context="university" target="table">
             <![CDATA[
             IF (OBJECT_ID('faculties_has_enrollees') IS NULL)
             BEGIN
@@ -34,7 +34,7 @@
                 )
             END
             ]]>
-        </create-query>
+        </create>
     </queries>
 
 </module>

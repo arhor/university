@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "create-query")
+@XmlRootElement(name = "create")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class CreateQuery extends Query {
 

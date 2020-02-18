@@ -10,7 +10,7 @@
     </dependencies>
 
     <queries context="university">
-        <create-query target="table">
+        <create target="table">
             <![CDATA[
             IF (OBJECT_ID('users') IS NULL)
             BEGIN
@@ -39,7 +39,7 @@
                 CREATE UNIQUE NONCLUSTERED INDEX IDX_users_email ON users (email ASC)
             END
             ]]>
-        </create-query>
+        </create>
     </queries>
 
 </module>

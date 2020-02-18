@@ -35,10 +35,10 @@
     </xsd:complexType>
 
     <!-- Query hierarchy -->
-    <xsd:element name="query"        type="tns:query"        abstract="true"/>
-    <xsd:element name="drop-query"   type="tns:drop-query"   substitutionGroup="tns:query"/>
-    <xsd:element name="create-query" type="tns:create-query" substitutionGroup="tns:query"/>
-    <xsd:element name="util-query"   type="tns:util-query"   substitutionGroup="tns:query"/>
+    <xsd:element name="query"  type="tns:query"        abstract="true"/>
+    <xsd:element name="drop"   type="tns:drop-query"   substitutionGroup="tns:query"/>
+    <xsd:element name="create" type="tns:create-query" substitutionGroup="tns:query"/>
+    <xsd:element name="util"   type="tns:util-query"   substitutionGroup="tns:query"/>
 
     <!-- Abstract query -->
     <xsd:complexType name="query">

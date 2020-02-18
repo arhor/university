@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "drop-query")
+@XmlRootElement(name = "drop")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class DropQuery extends Query {
 
