@@ -7,12 +7,12 @@ import java.util.StringJoiner;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlValue;
 
-@XmlRootElement(name = "query")
+@XmlTransient
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Query implements Serializable {
+public abstract class Query implements Serializable {
 
   @XmlAttribute
   private String context;

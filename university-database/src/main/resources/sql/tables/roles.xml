@@ -5,7 +5,7 @@
         name="roles">
 
     <queries context="university">
-        <query>
+        <create-query target="table">
             <![CDATA[
             IF (OBJECT_ID('roles') IS NULL)
             BEGIN
@@ -18,7 +18,7 @@
                 )
             END
             ]]>
-        </query>
+        </create-query>
     </queries>
 
 </module>

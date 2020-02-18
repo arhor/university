@@ -9,7 +9,7 @@
     </dependencies>
 
     <queries context="university">
-        <query>
+        <create-query target="table">
             <![CDATA[
             IF (OBJECT_ID('labels') IS NULL)
             BEGIN
@@ -28,7 +28,7 @@
                 )
             END
             ]]>
-        </query>
+        </create-query>
     </queries>
 
 </module>

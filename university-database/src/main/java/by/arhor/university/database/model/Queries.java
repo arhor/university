@@ -13,6 +13,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "queries")
@@ -22,7 +23,11 @@ public final class Queries implements Serializable {
   @XmlAttribute
   private String context;
 
-  @XmlElement(name = "query")
+  @XmlElements({
+      @XmlElement(name = "drop-query",   type = DropQuery.class),
+      @XmlElement(name = "create-query", type = CreateQuery.class),
+      @XmlElement(name = "util-query",   type = UtilQuery.class)
+  })
   private List<Query> queries;
 
   public String getContext() {

@@ -4,10 +4,10 @@
             xmlns:tns="http://www.arhor.by/sql-module"
             elementFormDefault="qualified">
 
-    <!--  Root element declaration  -->
+    <!-- Root element declaration -->
     <xsd:element name="module" type="tns:module"/>
 
-    <!--  Root element structure  -->
+    <!-- Root element structure -->
     <xsd:complexType name="module">
         <xsd:sequence>
             <xsd:element name="dependencies" type="tns:dependencies" minOccurs="0"/>
@@ -26,18 +26,67 @@
         <xsd:attribute name="name" type="xsd:string" use="required"/>
     </xsd:complexType>
 
+    <!-- Queries container -->
     <xsd:complexType name="queries">
         <xsd:sequence>
-            <xsd:element name="query" type="tns:query" maxOccurs="unbounded"/>
+            <xsd:element ref="tns:query" maxOccurs="unbounded"/>
         </xsd:sequence>
         <xsd:attribute name="context" type="xsd:string"/>
     </xsd:complexType>
 
+    <!-- Query hierarchy -->
+    <xsd:element name="query"        type="tns:query"        abstract="true"/>
+    <xsd:element name="drop-query"   type="tns:drop-query"   substitutionGroup="tns:query"/>
+    <xsd:element name="create-query" type="tns:create-query" substitutionGroup="tns:query"/>
+    <xsd:element name="util-query"   type="tns:util-query"   substitutionGroup="tns:query"/>
+
+    <!-- Abstract query -->
     <xsd:complexType name="query">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
                 <xsd:attribute name="context" type="xsd:string"/>
             </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="drop-query">
+        <xsd:complexContent>
+            <xsd:extension base="tns:query">
+                <xsd:attribute name="target" use="required">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="database"/>
+                            <xsd:enumeration value="table"/>
+                            <xsd:enumeration value="procedure"/>
+                            <xsd:enumeration value="function"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="create-query">
+        <xsd:complexContent>
+            <xsd:extension base="tns:query">
+                <xsd:attribute name="target" use="required">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="database"/>
+                            <xsd:enumeration value="user"/>
+                            <xsd:enumeration value="table"/>
+                            <xsd:enumeration value="procedure"/>
+                            <xsd:enumeration value="function"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="util-query">
+        <xsd:simpleContent>
+            <xsd:extension base="tns:query"/>
         </xsd:simpleContent>
     </xsd:complexType>
 

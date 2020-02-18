@@ -5,7 +5,7 @@
         name="university">
 
     <queries>
-        <query context="master">
+        <create-query context="master" target="database">
             <![CDATA[
             IF (DB_ID('university') IS NULL)
             BEGIN
@@ -28,9 +28,9 @@
                 )
             END
             ]]>
-        </query>
+        </create-query>
 
-        <query context="university">
+        <create-query context="university" target="user">
             <![CDATA[
             IF (DATABASE_PRINCIPAL_ID('UniversitySA') IS NULL)
             BEGIN
@@ -38,13 +38,13 @@
                 CREATE USER UniversitySA FOR LOGIN UniversitySA
             END
             ]]>
-        </query>
+        </create-query>
 
-        <query context="university">
+        <util-query context="university">
             <![CDATA[
             GRANT CONTROL ON DATABASE::university TO UniversitySA
             ]]>
-        </query>
+        </util-query>
     </queries>
 
 </module>

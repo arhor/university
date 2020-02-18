@@ -13,16 +13,16 @@
     </dependencies>
 
     <queries context="university">
-        <query>
+        <drop-query target="procedure">
             <![CDATA[
             IF (OBJECT_ID('createNewUser') IS NOT NULL)
             BEGIN
                 DROP PROCEDURE createNewUser
             END
             ]]>
-        </query>
+        </drop-query>
 
-        <query>
+        <create-query target="procedure">
              <![CDATA[
              CREATE PROCEDURE dbo.createNewUser
                  @email         NVARCHAR(255),
@@ -61,7 +61,7 @@
                  WHERE u.email = @email
              END
              ]]>
-        </query>
+        </create-query>
     </queries>
 
 </module>
