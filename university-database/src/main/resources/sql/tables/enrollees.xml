@@ -23,10 +23,8 @@
 
                     CONSTRAINT PK_enrollees PRIMARY KEY CLUSTERED (id ASC),
 
-                    CONSTRAINT CK_enrollees_school_score CHECK
-                    (
-                        school_score >= 0 AND school_score <= 100
-                    ),
+                    CONSTRAINT CHK_enrollees_school_score
+                    CHECK (school_score >= 0 AND school_score <= 100),
 
                     CONSTRAINT FK_enrollees_user_id FOREIGN KEY (user_id)
                     REFERENCES users (id)
