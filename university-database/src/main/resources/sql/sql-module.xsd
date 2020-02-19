@@ -59,6 +59,7 @@
                             <xsd:enumeration value="table"/>
                             <xsd:enumeration value="procedure"/>
                             <xsd:enumeration value="function"/>
+                            <xsd:enumeration value="trigger"/>
                         </xsd:restriction>
                     </xsd:simpleType>
                 </xsd:attribute>

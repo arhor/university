@@ -54,7 +54,7 @@
                     first_name       NVARCHAR(50)     NOT NULL,
                     last_name        NVARCHAR(50)     NOT NULL,
                     role_id          BIGINT           NOT NULL,
-                    modified_by      DATETIME         NOT NULL,
+                    modified_by      VARCHAR(128)     NOT NULL,
                     modified_date    DATETIME         NOT NULL,
                     operation        VARCHAR(20)      NOT NULL,
 
@@ -66,6 +66,15 @@
             END
             ]]>
         </create>
+
+        <drop target="trigger">
+            <![CDATA[
+            IF OBJECT_ID('TR_users_audit','TR') IS NOT NULL
+            BEGIN
+                DROP TRIGGER TR_users_audit
+            END
+            ]]>
+        </drop>
 
         <create target="trigger">
             <![CDATA[
@@ -141,10 +150,10 @@
                 (
                     id            BIGINT        NOT NULL IDENTITY(1, 1),
                     user_id       BIGINT        NOT NULL,
-                    field_name      VARCHAR(64)   NOT NULL,
-                    old_value      NVARCHAR(512) NULL,
-                    new_value      NVARCHAR(512) NULL,
-                    modified_by   DATETIME      NOT NULL,
+                    field_name    VARCHAR(64)   NOT NULL,
+                    old_value     NVARCHAR(512) NULL,
+                    new_value     NVARCHAR(512) NULL,
+                    modified_by   VARCHAR(128)  NOT NULL,
                     modified_date DATETIME      NOT NULL
 
                     CONSTRAINT PK_users_audit_modification PRIMARY KEY CLUSTERED (id ASC)
@@ -153,9 +162,193 @@
             ]]>
         </create>
 
+        <drop target="trigger">
+            <![CDATA[
+            IF OBJECT_ID('TR_users_audit_modification','TR') IS NOT NULL
+            BEGIN
+                DROP TRIGGER TR_users_audit_modification
+            END
+            ]]>
+        </drop>
+
         <create target="trigger">
             <![CDATA[
+            CREATE TRIGGER TR_users_audit_modification ON users
+                FOR UPDATE
+            AS
+            BEGIN
+                DECLARE @login_name VARCHAR(128) = (
+                    SELECT login_name
+                    FROM sys.dm_exec_sessions
+                    WHERE session_id = @@SPID
+                )
 
+                DECLARE @field_name VARCHAR(64)
+                      , @old_value  NVARCHAR(512)
+                      , @new_value  NVARCHAR(512)
+
+                IF UPDATE(email)
+                BEGIN
+                    SET @field_name = 'email'
+            		SELECT @old_value = CAST(email AS NVARCHAR(512)) FROM deleted
+                    SELECT @new_value = CAST(email AS NVARCHAR(512)) FROM inserted
+
+            		IF (@old_value != @new_value)
+            		BEGIN
+            			INSERT INTO users_audit_modification
+                        (
+                            user_id,
+                            field_name,
+                            old_value,
+                            new_value,
+                            modified_by,
+                            modified_date
+                        )
+                        SELECT id
+	            	         , @field_name
+	            		     , @old_value
+	            		     , @new_value
+	            		     , @login_name
+	            		     , GETDATE()
+                        FROM inserted
+	            	END
+                END
+
+                IF UPDATE(password)
+                BEGIN
+                    SET @field_name = 'password'
+            		SELECT @old_value = CAST(password AS NVARCHAR(512)) FROM deleted
+                    SELECT @new_value = CAST(password AS NVARCHAR(512)) FROM inserted
+
+                    IF (@old_value != @new_value)
+            		BEGIN
+            			INSERT INTO users_audit_modification
+                        (
+                            user_id,
+                            field_name,
+                            old_value,
+                            new_value,
+                            modified_by,
+                            modified_date
+                        )
+                        SELECT id
+            		         , @field_name
+            			     , @old_value
+            			     , @new_value
+            			     , @login_name
+            			     , GETDATE()
+                        FROM inserted
+            		END
+                END
+
+                IF UPDATE(first_name)
+                BEGIN
+                    SET @field_name = 'first_name'
+            		SELECT @old_value = CAST(first_name AS NVARCHAR(512)) FROM deleted
+                    SELECT @new_value = CAST(first_name AS NVARCHAR(512)) FROM inserted
+
+                    IF (@old_value != @new_value)
+            		BEGIN
+            			INSERT INTO users_audit_modification
+                        (
+                            user_id,
+                            field_name,
+                            old_value,
+                            new_value,
+                            modified_by,
+                            modified_date
+                        )
+                        SELECT id
+            		         , @field_name
+            			     , @old_value
+	            		     , @new_value
+            			     , @login_name
+            			     , GETDATE()
+                        FROM inserted
+            		END
+                END
+
+                IF UPDATE(last_name)
+                BEGIN
+                    SET @field_name = 'last_name'
+            		SELECT @old_value = CAST(last_name AS NVARCHAR(512)) FROM deleted
+                    SELECT @new_value = CAST(last_name AS NVARCHAR(512)) FROM inserted
+
+                    IF (@old_value != @new_value)
+            		BEGIN
+            			INSERT INTO users_audit_modification
+                        (
+                            user_id,
+                            field_name,
+                            old_value,
+                            new_value,
+                            modified_by,
+                            modified_date
+                        )
+                        SELECT id
+            		         , @field_name
+            			     , @old_value
+            			     , @new_value
+            			     , @login_name
+            			     , GETDATE()
+                        FROM inserted
+            		END
+                END
+
+                IF UPDATE(role_id)
+                BEGIN
+                    SET @field_name = 'role_id'
+            		SELECT @old_value = CAST(role_id AS NVARCHAR(512)) FROM deleted
+                    SELECT @new_value = CAST(role_id AS NVARCHAR(512)) FROM inserted
+
+                    IF (@old_value != @new_value)
+	            	BEGIN
+	            		INSERT INTO users_audit_modification
+                        (
+                            user_id,
+                            field_name,
+                            old_value,
+                            new_value,
+                            modified_by,
+                            modified_date
+                        )
+                        SELECT id
+            		         , @field_name
+	            		     , @old_value
+	            		     , @new_value
+            			     , @login_name
+            			     , GETDATE()
+                        FROM inserted
+	            	END
+                END
+
+                IF UPDATE(lang_id)
+                BEGIN
+                    SET @field_name = 'lang_id'
+            		SELECT @old_value = CAST(lang_id AS NVARCHAR(512)) FROM deleted
+                    SELECT @new_value = CAST(lang_id AS NVARCHAR(512)) FROM inserted
+
+                    IF (@old_value != @new_value)
+            		BEGIN
+            			INSERT INTO users_audit_modification
+                        (
+                            user_id,
+                            field_name,
+                            old_value,
+                            new_value,
+                            modified_by,
+                            modified_date
+                        )
+                        SELECT id
+            		         , @field_name
+            			     , @old_value
+            			     , @new_value
+            			     , @login_name
+            			     , GETDATE()
+                        FROM inserted
+            		END
+                END
+            END
             ]]>
         </create>
     </queries>
