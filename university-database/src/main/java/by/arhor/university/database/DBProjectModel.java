@@ -94,7 +94,7 @@ public final class DBProjectModel {
     modules.keySet().forEach(this::resolveDependency);
   }
 
-  public String convertToString() {
+  public String materialize() {
     final var text = new StringBuilder();
 
     modules.forEach((name, module) -> {
@@ -102,7 +102,11 @@ public final class DBProjectModel {
       module.setExecutionCost(cost);
     });
 
-    final var modulesByExecutionCost = modules.keySet().stream().map(modules::get).sorted(Comparator.comparingInt(Module::getExecutionCost)).collect(toList());
+    final var modulesByExecutionCost =
+        modules.keySet().stream()
+            .map(modules::get)
+            .sorted(Comparator.comparingInt(Module::getExecutionCost))
+            .collect(toList());
 
     modulesByExecutionCost.forEach(module -> writeModule(module.getName(), text));
 

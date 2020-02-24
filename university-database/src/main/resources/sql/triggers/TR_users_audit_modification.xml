@@ -5,7 +5,6 @@
         name="TR_users_audit_modification">
 
     <dependencies>
-        <dependency name="users"/>
         <dependency name="users_audit_modification"/>
         <dependency name="logChanges"/>
     </dependencies>
@@ -35,7 +34,7 @@
                 IF UPDATE(email)
                 BEGIN
                     SET @field_name = 'email'
-            		SELECT @old_value = CAST(email AS NVARCHAR(512)) FROM deleted
+                    SELECT @old_value = CAST(email AS NVARCHAR(512)) FROM deleted
                     SELECT @new_value = CAST(email AS NVARCHAR(512)) FROM inserted
 
                     EXECUTE dbo.logChanges @field_name, @old_value, @new_value, @id
@@ -44,7 +43,7 @@
                 IF UPDATE(password)
                 BEGIN
                     SET @field_name = 'password'
-            		SELECT @old_value = CAST(password AS NVARCHAR(512)) FROM deleted
+                    SELECT @old_value = CAST(password AS NVARCHAR(512)) FROM deleted
                     SELECT @new_value = CAST(password AS NVARCHAR(512)) FROM inserted
 
                     EXECUTE dbo.logChanges @field_name, @old_value, @new_value, @id
@@ -53,7 +52,7 @@
                 IF UPDATE(first_name)
                 BEGIN
                     SET @field_name = 'first_name'
-            		SELECT @old_value = CAST(first_name AS NVARCHAR(512)) FROM deleted
+                    SELECT @old_value = CAST(first_name AS NVARCHAR(512)) FROM deleted
                     SELECT @new_value = CAST(first_name AS NVARCHAR(512)) FROM inserted
 
                     EXECUTE dbo.logChanges @field_name, @old_value, @new_value, @id
@@ -62,7 +61,7 @@
                 IF UPDATE(last_name)
                 BEGIN
                     SET @field_name = 'last_name'
-            		SELECT @old_value = CAST(last_name AS NVARCHAR(512)) FROM deleted
+                    SELECT @old_value = CAST(last_name AS NVARCHAR(512)) FROM deleted
                     SELECT @new_value = CAST(last_name AS NVARCHAR(512)) FROM inserted
 
                     EXECUTE dbo.logChanges @field_name, @old_value, @new_value, @id
@@ -71,7 +70,7 @@
                 IF UPDATE(role_id)
                 BEGIN
                     SET @field_name = 'role_id'
-            		SELECT @old_value = CAST(role_id AS NVARCHAR(512)) FROM deleted
+                    SELECT @old_value = CAST(role_id AS NVARCHAR(512)) FROM deleted
                     SELECT @new_value = CAST(role_id AS NVARCHAR(512)) FROM inserted
 
                     EXECUTE dbo.logChanges @field_name, @old_value, @new_value, @id
@@ -80,7 +79,7 @@
                 IF UPDATE(lang_id)
                 BEGIN
                     SET @field_name = 'lang_id'
-            		SELECT @old_value = CAST(lang_id AS NVARCHAR(512)) FROM deleted
+                    SELECT @old_value = CAST(lang_id AS NVARCHAR(512)) FROM deleted
                     SELECT @new_value = CAST(lang_id AS NVARCHAR(512)) FROM inserted
 
                     EXECUTE dbo.logChanges @field_name, @old_value, @new_value, @id
