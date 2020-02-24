@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="init-roles">
+
+    <dependencies>
+        <dependency name="roles"/>
+    </dependencies>
+
+    <queries context="university">
+        <insert>
+            <![CDATA[
+            IF NOT EXISTS (SELECT * FROM roles WHERE title = 'USER')
+            BEGIN
+                INSERT INTO roles (title) VALUES ('USER')
+            END
+            ]]>
+        </insert>
+
+        <insert>
+            <![CDATA[
+            IF NOT EXISTS (SELECT * FROM roles WHERE title = 'ADMIN')
+            BEGIN
+                INSERT INTO roles (title) VALUES ('ADMIN')
+            END
+            ]]>
+        </insert>
+    </queries>
+
+</module>

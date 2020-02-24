@@ -17,7 +17,8 @@ public final class Queries implements Serializable {
   @XmlElements({
       @XmlElement(name = "drop",   type = DropQuery.class),
       @XmlElement(name = "create", type = CreateQuery.class),
-      @XmlElement(name = "util",   type = UtilQuery.class)
+      @XmlElement(name = "util",   type = UtilQuery.class),
+      @XmlElement(name = "insert",   type = InsertQuery.class),
   })
   private List<Query> list;
 

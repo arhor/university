@@ -39,6 +39,7 @@
     <xsd:element name="drop"   type="tns:drop-query"   substitutionGroup="tns:query"/>
     <xsd:element name="create" type="tns:create-query" substitutionGroup="tns:query"/>
     <xsd:element name="util"   type="tns:util-query"   substitutionGroup="tns:query"/>
+    <xsd:element name="insert" type="tns:insert-query" substitutionGroup="tns:query"/>
 
     <!-- Abstract query -->
     <xsd:complexType name="query">
@@ -87,6 +88,12 @@
     </xsd:complexType>
 
     <xsd:complexType name="util-query">
+        <xsd:simpleContent>
+            <xsd:extension base="tns:query"/>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="insert-query">
         <xsd:simpleContent>
             <xsd:extension base="tns:query"/>
         </xsd:simpleContent>

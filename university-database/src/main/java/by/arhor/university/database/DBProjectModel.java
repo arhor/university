@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -27,6 +28,9 @@ import static java.util.stream.Collectors.toList;
 
 public final class DBProjectModel {
 
+  private static final String BLOCK_START = ">>>";
+  private static final String BLOCK_END   = "<<<";
+
   private static final String DB_URL      = "db.url";
   private static final String DB_DRIVER   = "db.driver";
   private static final String DB_USERNAME = "db.username";
@@ -36,9 +40,7 @@ public final class DBProjectModel {
       Lazy.evalSafe(
           () -> {
             final var classLoader = Runner.class.getClassLoader();
-
             final var properties = new Properties();
-
             final var configFile = classLoader.getResourceAsStream("database.properties");
 
             if (configFile == null) {
@@ -81,8 +83,9 @@ public final class DBProjectModel {
             }
           });
 
-  private final Map<String, Module> modules = new HashMap<>();
+  private static final Lazy<Pattern> XML_FILE_PATTERN = Lazy.evalSafe(() -> Pattern.compile(".+(-.+)*(\\.xml)"));
 
+  private final Map<String, Module> modules = new HashMap<>();
   private String currentContext;
 
   private DBProjectModel(Map<String, Module> modules) {
@@ -140,7 +143,10 @@ public final class DBProjectModel {
                   break;
                 case "procedure":
                   cost.addAndGet(10);
+                  break;
               }
+            } else if (query instanceof InsertQuery) {
+              cost.addAndGet(100);
             }
           }
         }
@@ -240,7 +246,10 @@ public final class DBProjectModel {
       final var queryList = queries.getList();
 
       if (queryList != null) {
-        for (final var query : queryList) {
+        text.append("-- module: ").append(name).append(" ").append(BLOCK_START).append(" START\n");
+
+        int counter = 0;
+        for (var query : queryList) {
 
           if (query.getContext() != null) {
             writeContext(query.getContext(), text);
@@ -280,10 +289,13 @@ public final class DBProjectModel {
             }
 
             text.append("GO").append('\n');
-            text.append('\n');
+            if (++counter < queryList.size()) {
+              text.append('\n');
+            }
           }
         }
       }
+      text.append("-- module: ").append(name).append(" ").append(BLOCK_END).append(" END\n\n");
       module.setResolved(true);
     }
   }
@@ -304,9 +316,6 @@ public final class DBProjectModel {
     final var modules = handleDirectory(rootDirectory);
     return new DBProjectModel(modules);
   }
-
-  private static final Lazy<Pattern> XML_FILE_PATTERN =
-      Lazy.evalSafe(() -> Pattern.compile("(.+)(\\.xml)"));
 
   private static Map<String, Module> handleDirectory(@Nonnull File directory) throws Throwable {
     final var modules = new HashMap<String, Module>();
@@ -335,7 +344,7 @@ public final class DBProjectModel {
       throw lazyUnmarshaller.getError();
     }
 
-    try (var br = new BufferedReader(new FileReader(xmlDocument))) {
+    try (var br = new BufferedReader(new FileReader(xmlDocument, StandardCharsets.UTF_8))) {
       final var xmlStreamReader = XML_INPUT_FACTORY.get().createXMLStreamReader(br);
 
       return (Module) lazyUnmarshaller.getItem().unmarshal(xmlStreamReader);

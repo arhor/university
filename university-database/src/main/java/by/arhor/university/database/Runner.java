@@ -6,6 +6,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -55,7 +57,7 @@ public class Runner {
     Files.deleteIfExists(path);
     Files.createFile(path);
 
-    try (var writer = new BufferedWriter(new FileWriter(path.toFile()))) {
+    try (var writer = new BufferedWriter(new FileWriter(path.toFile(), StandardCharsets.UTF_8))) {
       writer.write(script);
       writer.flush();
     }
