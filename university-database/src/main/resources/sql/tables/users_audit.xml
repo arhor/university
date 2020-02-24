@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="users_audit">
+
+    <dependencies>
+        <dependency name="users"/>
+    </dependencies>
+
+    <queries context="university">
+        <create target="table">
+            <![CDATA[
+            IF (OBJECT_ID('users_audit') IS NULL)
+            BEGIN
+                CREATE TABLE users_audit
+                (
+                    id               BIGINT           NOT NULL IDENTITY(1, 1),
+                    user_id          BIGINT           NOT NULL,
+                    email            NVARCHAR(255)    NOT NULL,
+                    password         NVARCHAR(512)    NOT NULL,
+                    first_name       NVARCHAR(50)     NOT NULL,
+                    last_name        NVARCHAR(50)     NOT NULL,
+                    role_id          BIGINT           NOT NULL,
+                    modified_by      VARCHAR(128)     NOT NULL,
+                    modified_date    DATETIME         NOT NULL,
+                    operation        VARCHAR(20)      NOT NULL,
+
+                    CONSTRAINT PK_users_audit PRIMARY KEY CLUSTERED (id ASC),
+
+                    CONSTRAINT CHK_users_audit_operation
+                    CHECK (operation in ('CREATED', 'DELETED'))
+                )
+            END
+            ]]>
+        </create>
+    </queries>
+
+</module>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="logChanges">
+
+    <dependencies>
+        <dependency name="users_audit_modification"/>
+    </dependencies>
+
+    <queries context="university">
+        <drop target="procedure">
+            <![CDATA[
+            IF (OBJECT_ID('logChanges') IS NOT NULL)
+            BEGIN
+                DROP PROCEDURE logChanges
+            END
+            ]]>
+        </drop>
+
+        <create target="procedure">
+            <![CDATA[
+            CREATE PROCEDURE dbo.logChanges
+                @field      VARCHAR(64),
+                @old_val    VARCHAR(512),
+                @new_val    VARCHAR(512),
+                @id         BIGINT
+            AS
+            BEGIN
+                IF (@old_val != @new_val)
+                BEGIN
+                    DECLARE @login_name VARCHAR(128) = (
+                        SELECT login_name
+                        FROM sys.dm_exec_sessions
+                        WHERE session_id = @@SPID
+                    )
+
+                    INSERT INTO users_audit_modification
+                    (
+                        user_id,
+                        field_name,
+                        old_value,
+                        new_value,
+                        modified_by,
+                        modified_date
+                    )
+                    VALUES
+                    (
+                        @id,
+                        @field,
+                        @old_val,
+                        @new_val,
+                        @login_name,
+                       GETDATE()
+                    )
+                END
+            END
+            ]]>
+        </create>
+    </queries>
+
+</module>
