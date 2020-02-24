@@ -37,7 +37,7 @@
 
                     WHILE (@subjectsCount < 3)
                     BEGIN
-            		    DECLARE @subjectNum INT = CEILING((@totalSubjects - @subjectsCount) * RAND())
+            		    DECLARE @subjectNum INT = FLOOR((@totalSubjects - @subjectsCount) * RAND())
 
                         DECLARE @subjectId BIGINT = (
                             SELECT sub.id
