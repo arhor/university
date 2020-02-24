@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="init-faculties_has_subjects">
+
+    <dependencies>
+        <dependency name="faculties"/>
+        <dependency name="subjects"/>
+        <dependency name="faculties_has_subjects"/>
+    </dependencies>
+
+    <queries context="university">
+        <insert>
+            <![CDATA[
+            DECLARE @facultyId BIGINT
+            DECLARE @subjectId BIGINT
+
+            --------------------------- Биологический факультет ---------------------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Биологический факультет'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Биология'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык')
+
+            ---------------------------- Исторический факультет ---------------------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Исторический факультет'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+
+            -------------------------- Химический факультет -------------------------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Химический факультет'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика')
+
+            ---------------- Факультет прикладной математики и информатики ----------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Факультет прикладной математики и информатики'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика')
+
+            ------------- Факультет радиофизики и компьютерных технологий -----------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Факультет радиофизики и компьютерных технологий'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия')
+
+            ------------------------- Экономический факультет -----------------------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Экономический факультет'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика')
+
+            -------------------------- Юридический факультет ------------------------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Юридический факультет'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+
+            ---------------------------- Военный факультет --------------------------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Военный факультет'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+
+            ------------------------ Филологический факультет -----------------------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Филологический факультет'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык')
+
+            ------------ Республиканский институт китаеведения имени Конфуция -------------
+            SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Республиканский институт китаеведения имени Конфуция'
+
+            INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+            VALUES
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'),
+            (@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Биология')
+            ]]>
+        </insert>
+    </queries>
+
+</module>

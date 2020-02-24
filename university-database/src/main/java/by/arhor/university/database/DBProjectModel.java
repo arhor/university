@@ -246,7 +246,18 @@ public final class DBProjectModel {
       final var queryList = queries.getList();
 
       if (queryList != null) {
-        text.append("-- module: ").append(name).append(" ").append(BLOCK_START).append(" START\n");
+        text.append("-- #module: ").append(name).append(" ").append(BLOCK_START).append(" START\n");
+
+        if (dependencies != null) {
+          var dependencyList = dependencies.getList();
+          if (dependencyList != null) {
+            var deps = new StringJoiner(", ", "[", "]\n\n");
+            for (var dependency : dependencyList) {
+              deps.add(dependency.getName());
+            }
+            text.append("-- #dependencies: ").append(deps.toString());
+          }
+        }
 
         int counter = 0;
         for (var query : queryList) {
@@ -295,7 +306,7 @@ public final class DBProjectModel {
           }
         }
       }
-      text.append("-- module: ").append(name).append(" ").append(BLOCK_END).append(" END\n\n");
+      text.append("-- #module: ").append(name).append(" ").append(BLOCK_END).append(" END\n\n");
       module.setResolved(true);
     }
   }

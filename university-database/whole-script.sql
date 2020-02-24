@@ -1,4 +1,4 @@
--- module: university >>> START
+-- #module: university >>> START
 USE master
 GO
 
@@ -36,9 +36,9 @@ GO
 
 GRANT CONTROL ON DATABASE::university TO UniversitySA
 GO
--- module: university <<< END
+-- #module: university <<< END
 
--- module: roles >>> START
+-- #module: roles >>> START
 IF (OBJECT_ID('roles') IS NULL)
 BEGIN
     CREATE TABLE roles
@@ -49,9 +49,9 @@ BEGIN
     )
 END
 GO
--- module: roles <<< END
+-- #module: roles <<< END
 
--- module: langs >>> START
+-- #module: langs >>> START
 IF (OBJECT_ID('langs') IS NULL)
 BEGIN
 CREATE TABLE langs
@@ -64,9 +64,9 @@ CREATE TABLE langs
     )
 END
 GO
--- module: langs <<< END
+-- #module: langs <<< END
 
--- module: subjects >>> START
+-- #module: subjects >>> START
 IF (OBJECT_ID('subjects') IS NULL)
 BEGIN
     CREATE TABLE subjects
@@ -77,9 +77,9 @@ BEGIN
     )
 END
 GO
--- module: subjects <<< END
+-- #module: subjects <<< END
 
--- module: faculties >>> START
+-- #module: faculties >>> START
 IF (OBJECT_ID('faculties') IS NULL)
 BEGIN
     CREATE TABLE faculties
@@ -92,9 +92,11 @@ BEGIN
     )
 END
 GO
--- module: faculties <<< END
+-- #module: faculties <<< END
 
--- module: labels >>> START
+-- #module: labels >>> START
+-- #dependencies: [langs]
+
 IF (OBJECT_ID('labels') IS NULL)
 BEGIN
     CREATE TABLE labels
@@ -110,9 +112,11 @@ BEGIN
     )
 END
 GO
--- module: labels <<< END
+-- #module: labels <<< END
 
--- module: faculties_has_subjects >>> START
+-- #module: faculties_has_subjects >>> START
+-- #dependencies: [faculties, subjects]
+
 IF (OBJECT_ID('faculties_has_subjects') IS NULL)
 BEGIN
     CREATE TABLE faculties_has_subjects
@@ -131,9 +135,11 @@ BEGIN
     )
 END
 GO
--- module: faculties_has_subjects <<< END
+-- #module: faculties_has_subjects <<< END
 
--- module: users >>> START
+-- #module: users >>> START
+-- #dependencies: [roles, langs]
+
 IF (OBJECT_ID('users') IS NULL)
 BEGIN
     CREATE TABLE users
@@ -158,9 +164,11 @@ BEGIN
     CREATE UNIQUE NONCLUSTERED INDEX IDX_users_email ON users (email ASC)
 END
 GO
--- module: users <<< END
+-- #module: users <<< END
 
--- module: users_audit_modification >>> START
+-- #module: users_audit_modification >>> START
+-- #dependencies: [users]
+
 IF (OBJECT_ID('users_audit_modification') IS NULL)
 BEGIN
     CREATE TABLE users_audit_modification
@@ -176,9 +184,11 @@ BEGIN
     )
 END
 GO
--- module: users_audit_modification <<< END
+-- #module: users_audit_modification <<< END
 
--- module: enrollees >>> START
+-- #module: enrollees >>> START
+-- #dependencies: [users]
+
 IF (OBJECT_ID('enrollees') IS NULL)
 BEGIN
     CREATE TABLE enrollees
@@ -200,9 +210,11 @@ BEGIN
     CREATE NONCLUSTERED INDEX IDX_enrollees_city ON enrollees (city ASC)
 END
 GO
--- module: enrollees <<< END
+-- #module: enrollees <<< END
 
--- module: users_audit >>> START
+-- #module: users_audit >>> START
+-- #dependencies: [users]
+
 IF (OBJECT_ID('users_audit') IS NULL)
 BEGIN
     CREATE TABLE users_audit
@@ -223,9 +235,11 @@ BEGIN
     )
 END
 GO
--- module: users_audit <<< END
+-- #module: users_audit <<< END
 
--- module: TR_users_audit >>> START
+-- #module: TR_users_audit >>> START
+-- #dependencies: [users_audit]
+
 IF OBJECT_ID('TR_users_audit','TR') IS NOT NULL
 BEGIN
     DROP TRIGGER TR_users_audit
@@ -293,9 +307,11 @@ BEGIN
     END
 END
 GO
--- module: TR_users_audit <<< END
+-- #module: TR_users_audit <<< END
 
--- module: enrollees_has_subjects >>> START
+-- #module: enrollees_has_subjects >>> START
+-- #dependencies: [subjects, enrollees]
+
 IF (OBJECT_ID('enrollees_has_subjects') IS NULL)
 BEGIN
     CREATE TABLE enrollees_has_subjects
@@ -317,9 +333,11 @@ BEGIN
     )
 END
 GO
--- module: enrollees_has_subjects <<< END
+-- #module: enrollees_has_subjects <<< END
 
--- module: faculties_has_enrollees >>> START
+-- #module: faculties_has_enrollees >>> START
+-- #dependencies: [faculties, enrollees]
+
 IF (OBJECT_ID('faculties_has_enrollees') IS NULL)
 BEGIN
     CREATE TABLE faculties_has_enrollees
@@ -339,9 +357,11 @@ BEGIN
     )
 END
 GO
--- module: faculties_has_enrollees <<< END
+-- #module: faculties_has_enrollees <<< END
 
--- module: getAdminRole >>> START
+-- #module: getAdminRole >>> START
+-- #dependencies: [roles]
+
 IF (OBJECT_ID('getAdminRole') IS NOT NULL)
 BEGIN
     DROP PROCEDURE getAdminRole
@@ -374,9 +394,11 @@ BEGIN
     RETURN @id
 END
 GO
--- module: getAdminRole <<< END
+-- #module: getAdminRole <<< END
 
--- module: getDefaultLang >>> START
+-- #module: getDefaultLang >>> START
+-- #dependencies: [langs]
+
 IF (OBJECT_ID('getDefaultLang') IS NOT NULL)
 BEGIN
     DROP PROCEDURE getDefaultLang
@@ -409,9 +431,11 @@ BEGIN
     RETURN @id
 END
 GO
--- module: getDefaultLang <<< END
+-- #module: getDefaultLang <<< END
 
--- module: getDefaultRole >>> START
+-- #module: getDefaultRole >>> START
+-- #dependencies: [roles]
+
 IF (OBJECT_ID('getDefaultRole') IS NOT NULL)
 BEGIN
     DROP PROCEDURE getDefaultRole
@@ -444,9 +468,11 @@ BEGIN
     RETURN @id
 END
 GO
--- module: getDefaultRole <<< END
+-- #module: getDefaultRole <<< END
 
--- module: logChanges >>> START
+-- #module: logChanges >>> START
+-- #dependencies: [users_audit_modification]
+
 IF (OBJECT_ID('logChanges') IS NOT NULL)
 BEGIN
     DROP PROCEDURE logChanges
@@ -488,9 +514,11 @@ BEGIN
     END
 END
 GO
--- module: logChanges <<< END
+-- #module: logChanges <<< END
 
--- module: TR_users_audit_modification >>> START
+-- #module: TR_users_audit_modification >>> START
+-- #dependencies: [users_audit_modification, logChanges]
+
 IF OBJECT_ID('TR_users_audit_modification','TR') IS NOT NULL
 BEGIN
     DROP TRIGGER TR_users_audit_modification
@@ -549,9 +577,11 @@ BEGIN
     END
 END
 GO
--- module: TR_users_audit_modification <<< END
+-- #module: TR_users_audit_modification <<< END
 
--- module: createNewUser >>> START
+-- #module: createNewUser >>> START
+-- #dependencies: [roles, langs, users, getDefaultRole, getDefaultLang]
+
 IF (OBJECT_ID('createNewUser') IS NOT NULL)
 BEGIN
     DROP PROCEDURE createNewUser
@@ -592,9 +622,11 @@ BEGIN
     WHERE u.email = @email
 END
 GO
--- module: createNewUser <<< END
+-- #module: createNewUser <<< END
 
--- module: init-langs >>> START
+-- #module: init-langs >>> START
+-- #dependencies: [langs]
+
 DECLARE @TempLangs TABLE
 (
     id       INT,
@@ -614,9 +646,11 @@ BEGIN
     SET @counter = @counter + 1
 END
 GO
--- module: init-langs <<< END
+-- #module: init-langs <<< END
 
--- module: init-faculties >>> START
+-- #module: init-faculties >>> START
+-- #dependencies: [faculties]
+
 DECLARE @TempFaculties TABLE
 (
     id       INT,
@@ -650,9 +684,11 @@ BEGIN
     SET @counter = @counter + 1
 END
 GO
--- module: init-faculties <<< END
+-- #module: init-faculties <<< END
 
--- module: init-subjects >>> START
+-- #module: init-subjects >>> START
+-- #dependencies: [subjects]
+
 DECLARE @TempSubjects TABLE
 (
     id       INT,
@@ -678,9 +714,144 @@ BEGIN
     SET @counter = @counter + 1
 END
 GO
--- module: init-subjects <<< END
+-- #module: init-subjects <<< END
 
--- module: init-enrollees >>> START
+-- #module: init-faculties_has_subjects >>> START
+-- #dependencies: [faculties, subjects, faculties_has_subjects]
+
+DECLARE @facultyId BIGINT
+DECLARE @subjectId BIGINT
+--------------------------- Биологический факультет ---------------------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Биологический факультет'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Биология'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык')
+---------------------------- Исторический факультет ---------------------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Исторический факультет'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+-------------------------- Химический факультет -------------------------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Химический факультет'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика')
+---------------- Факультет прикладной математики и информатики ----------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Факультет прикладной математики и информатики'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика')
+------------- Факультет радиофизики и компьютерных технологий -----------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Факультет радиофизики и компьютерных технологий'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия')
+------------------------- Экономический факультет -----------------------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Экономический факультет'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика')
+-------------------------- Юридический факультет ------------------------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Юридический факультет'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+---------------------------- Военный факультет --------------------------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Военный факультет'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+------------------------ Филологический факультет -----------------------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Филологический факультет'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык')
+------------ Республиканский институт китаеведения имени Конфуция -------------
+SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Республиканский институт китаеведения имени Конфуция'
+INSERT INTO faculties_has_subjects (faculty_id, subject_id)
+VALUES
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'),
+(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Биология')
+GO
+-- #module: init-faculties_has_subjects <<< END
+
+-- #module: init-enrollees_has_subjects >>> START
+-- #dependencies: [enrollees, subjects, enrollees_has_subjects]
+
+DECLARE @totalSubjects  INT = (SELECT COUNT(*) FROM subjects WITH(NOLOCK))
+DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))
+DECLARE @counter INT = 0
+WHILE (@counter < @totalEnrollees)
+BEGIN
+    DECLARE @enrolleeId BIGINT = (
+        SELECT   e.id
+        FROM     enrollees e WITH(NOLOCK)
+        ORDER BY e.id ASC
+        OFFSET @counter ROWS
+        FETCH NEXT 1 ROWS ONLY
+    )
+	PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
+    DECLARE @subjectsCount INT = (SELECT COUNT(*) FROM enrollees_has_subjects es WITH(NOLOCK) WHERE es.enrollee_id = @enrolleeId)
+    IF (@subjectsCount < 3)
+    BEGIN
+		PRINT CAST((3 - @subjectsCount) AS NVARCHAR(30)) + N' subjects will be generated'
+        WHILE (@subjectsCount < 3)
+        BEGIN
+		    DECLARE @subjectNum INT = CEILING((@totalSubjects - @subjectsCount) * RAND())
+            DECLARE @subjectId BIGINT = (
+                SELECT sub.id
+                FROM subjects sub WITH(NOLOCK)
+                WHERE sub.id NOT IN (
+                    SELECT es.subject_id
+                    FROM enrollees_has_subjects es WITH(NOLOCK)
+                    WHERE es.enrollee_id = @enrolleeId
+                )
+                ORDER BY sub.id ASC
+                OFFSET @subjectNum ROWS
+                FETCH NEXT 1 ROWS ONLY
+            )
+            INSERT INTO enrollees_has_subjects (subject_id, enrollee_id, score)
+            VALUES
+            (
+                @subjectId,
+                @enrolleeId,
+                CEILING(100 * RAND())
+            )
+            SET @subjectsCount = @subjectsCount + 1
+			PRINT N'Success' + (CHAR(13) + CHAR(10)) -- line-break CR + LF
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT N'There are ' + CAST(@subjectsCount AS NVARCHAR(30)) + N' subjects already exists'
+    END
+    SET @counter = @counter + 1
+END
+GO
+-- #module: init-enrollees_has_subjects <<< END
+
+-- #module: init-enrollees >>> START
+-- #dependencies: [users, enrollees, getAdminRole]
+
 DECLARE @Countries TABLE
 (
     id      BIGINT,
@@ -740,9 +911,11 @@ BEGIN
     SET @counter = @counter + 1
 END
 GO
--- module: init-enrollees <<< END
+-- #module: init-enrollees <<< END
 
--- module: init-users >>> START
+-- #module: init-users >>> START
+-- #dependencies: [langs, users, getAdminRole, createNewUser]
+
 -- password to use: `password` encrypted with BCrypt (strength 5)
 DECLARE @Password NVARCHAR(512) = N'$2y$05$wc9f6o/gGJyoagNZfHkHJerFc0tIJAmdCQmabJCtXs0uOJhUAGICa'
 DECLARE @RU BIGINT = (SELECT id FROM langs WITH(NOLOCK) WHERE label = 'RU')
@@ -804,9 +977,11 @@ BEGIN
     SET @counter = @counter + 1
 END
 GO
--- module: init-users <<< END
+-- #module: init-users <<< END
 
--- module: init-roles >>> START
+-- #module: init-roles >>> START
+-- #dependencies: [roles]
+
 IF NOT EXISTS (SELECT * FROM roles WHERE title = 'USER')
 BEGIN
     INSERT INTO roles (title) VALUES ('USER')
@@ -818,5 +993,5 @@ BEGIN
     INSERT INTO roles (title) VALUES ('ADMIN')
 END
 GO
--- module: init-roles <<< END
+-- #module: init-roles <<< END
 
