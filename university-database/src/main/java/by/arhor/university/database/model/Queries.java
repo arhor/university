@@ -19,7 +19,7 @@ public final class Queries implements Serializable {
       @XmlElement(name = "create", type = CreateQuery.class),
       @XmlElement(name = "util",   type = UtilQuery.class)
   })
-  private List<Query> queries;
+  private List<Query> list;
 
   public String getContext() {
     return context;
@@ -29,17 +29,17 @@ public final class Queries implements Serializable {
     this.context = context;
   }
 
-  public List<Query> getQueries() {
-    return queries;
+  public List<Query> getList() {
+    return list;
   }
 
-  public void setQueries(List<Query> queries) {
-    this.queries = queries;
+  public void setList(List<Query> list) {
+    this.list = list;
   }
 
   public void forEach(Consumer<Query> queryConsumer) {
-    if (queries != null) {
-      queries.forEach(queryConsumer);
+    if (list != null) {
+      list.forEach(queryConsumer);
     }
   }
 
@@ -49,19 +49,19 @@ public final class Queries implements Serializable {
     if (o == null || getClass() != o.getClass()) return false;
     Queries queries1 = (Queries) o;
     return Objects.equals(context, queries1.context)
-        && Objects.equals(queries, queries1.queries);
+        && Objects.equals(list, queries1.list);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(context, queries);
+    return Objects.hash(context, list);
   }
 
   @Override
   public String toString() {
     return new StringJoiner(", ", Queries.class.getSimpleName() + "[", "]")
         .add("context='" + context + "'")
-        .add("queries=" + queries)
+        .add("queries=" + list)
         .toString();
   }
 }

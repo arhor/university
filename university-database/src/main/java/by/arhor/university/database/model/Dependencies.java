@@ -16,19 +16,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 public final class Dependencies implements Serializable {
 
   @XmlElement(name = "dependency")
-  private List<Dependency> dependencies;
+  private List<Dependency> list;
 
-  public List<Dependency> getDependencies() {
-    return dependencies;
+  public List<Dependency> getList() {
+    return list;
   }
 
-  public void setDependencies(List<Dependency> dependencies) {
-    this.dependencies = dependencies;
+  public void setList(List<Dependency> list) {
+    this.list = list;
   }
 
   public void forEach(Consumer<Dependency> dependencyConsumer) {
-    if (dependencies != null) {
-      dependencies.forEach(dependencyConsumer);
+    if (list != null) {
+      list.forEach(dependencyConsumer);
     }
   }
 
@@ -37,18 +37,18 @@ public final class Dependencies implements Serializable {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     Dependencies that = (Dependencies) o;
-    return Objects.equals(dependencies, that.dependencies);
+    return Objects.equals(list, that.list);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(dependencies);
+    return Objects.hash(list);
   }
 
   @Override
   public String toString() {
     return new StringJoiner(", ", Dependencies.class.getSimpleName() + "[", "]")
-        .add("dependencies=" + dependencies)
+        .add("dependencies=" + list)
         .toString();
   }
 }

@@ -9,9 +9,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.xml.bind.JAXBContext;
@@ -114,33 +113,33 @@ public final class DBProjectModel {
   }
 
   private int computeExecutionCost(String name) {
-    int executionCost = 1;
+    final var cost = new AtomicInteger(1);
 
     final var module = modules.get(name);
     if (module != null) {
       final var dependencies = module.getDependencies();
       if (dependencies != null) {
-        final var dependencyList = dependencies.getDependencies();
+        final var dependencyList = dependencies.getList();
         if (dependencyList != null) {
           for (var dependency : dependencyList) {
-            executionCost += computeExecutionCost(dependency.getName());
+            cost.addAndGet(computeExecutionCost(dependency.getName()));
           }
         }
       }
 
       final var queries = module.getQueries();
       if (queries != null) {
-        final var queryList = queries.getQueries();
+        final var queryList = queries.getList();
         if (queryList != null) {
           for (var query : queryList) {
             if (query instanceof CreateQuery) {
               final var target = ((CreateQuery) query).getTarget();
               switch (target) {
                 case "table":
-                  executionCost += 1;
+                  cost.incrementAndGet();
                   break;
                 case "procedure":
-                  executionCost += 10;
+                  cost.addAndGet(10);
               }
             }
           }
@@ -148,7 +147,7 @@ public final class DBProjectModel {
       }
     }
 
-    return executionCost;
+    return cost.get();
   }
 
   private void handleContext(String context) {
@@ -189,7 +188,7 @@ public final class DBProjectModel {
 
       final var queries = module.getQueries();
 
-      final var queryList = queries.getQueries();
+      final var queryList = queries.getList();
 
       if (queryList != null) {
         for (int i = 0; i < queryList.size(); i++) {
@@ -238,7 +237,7 @@ public final class DBProjectModel {
 
       final var queries = module.getQueries();
 
-      final var queryList = queries.getQueries();
+      final var queryList = queries.getList();
 
       if (queryList != null) {
         for (final var query : queryList) {
