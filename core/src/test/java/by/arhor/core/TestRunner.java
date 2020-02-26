@@ -3,6 +3,9 @@ package by.arhor.core;
 
 import org.junit.jupiter.api.Test;
 
+import by.arhor.core.pattern.visitor.Visitable;
+import by.arhor.core.pattern.visitor.Visitor;
+
 public class TestRunner {
 
   private static abstract class AbstractVisitable<T> implements Visitable<T> {
