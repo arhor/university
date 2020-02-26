@@ -3,7 +3,9 @@ package by.arhor.core.pattern.observer;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 final class ObservableFactory {
 
@@ -44,8 +46,21 @@ final class ObservableFactory {
       }
 
       @Override
+      public <V> Consumer<V> buildMutator(BiConsumer<T, V> setter) {
+        return (value) -> {
+          setter.accept(observable, value);
+          noticeObservers();
+        };
+      }
+
+      @Override
       public <V> V access(Function<T, V> getter) {
         return getter.apply(observable);
+      }
+
+      @Override
+      public <V> Supplier<V> buildAccessor(Function<T, V> getter) {
+        return () -> getter.apply(observable);
       }
     }
     return new _Observable(value);

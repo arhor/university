@@ -2,6 +2,7 @@ package by.arhor.core.pattern.observer;
 
 import java.util.Objects;
 import java.util.StringJoiner;
+import java.util.function.Consumer;
 
 import org.junit.jupiter.api.Test;
 
@@ -65,16 +66,14 @@ public class ObserverTest {
   public void test_object() {
     var observable = Observable.of(new User());
 
-    observable.subscribe(value -> System.out.println("first observer:  " + value));
-    observable.subscribe(value -> System.out.println("second observer: " + value));
-    observable.subscribe(value -> System.out.println("third observer:  " + value));
-
+    observable.subscribe(value -> System.out.println("observer noticed: " + value));
 
     observable.mutate(User::setUsername, "Max");
-    System.out.println();
     observable.mutate(User::setUsername, "Jeremy");
-    System.out.println();
-    observable.mutate(User::setUsername, "Rishi");
+
+    var mutator = observable.buildMutator(User::setUsername);
+
+    mutator.accept("Rishi");
 
     var username = observable.access(User::getUsername);
 
