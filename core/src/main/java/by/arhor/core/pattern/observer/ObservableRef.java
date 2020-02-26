@@ -9,9 +9,9 @@ public interface ObservableRef<T> extends Observable<T> {
 
   <V> void mutate(BiConsumer<T, V> setter, V value);
 
-  <V> Consumer<V> buildMutator(BiConsumer<T, V> setter);
-
   <V> V access(Function<T, V> getter);
 
-  <V> Supplier<V> buildAccessor(Function<T, V> getter);
+  <V> Consumer<V> buildSetter(BiConsumer<T, V> setter);
+
+  <V> Supplier<V> buildGetter(Function<T, V> getter);
 }

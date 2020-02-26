@@ -30,7 +30,7 @@ final class ObservableFactory {
       }
 
       @Override
-      public <V> Consumer<V> buildMutator(BiConsumer<T, V> setter) {
+      public <V> Consumer<V> buildSetter(BiConsumer<T, V> setter) {
         return (value) -> {
           setter.accept(observable, value);
           noticeObservers();
@@ -43,7 +43,7 @@ final class ObservableFactory {
       }
 
       @Override
-      public <V> Supplier<V> buildAccessor(Function<T, V> getter) {
+      public <V> Supplier<V> buildGetter(Function<T, V> getter) {
         return () -> getter.apply(observable);
       }
     }
