@@ -13,24 +13,8 @@ final class ObservableFactory {
     throw new UnsupportedOperationException("Must not be instantiated");
   }
 
-  static <N extends Number> ObservableNum<N> observableNumber(N number) {
-    class _Observable extends AbstractObservable<N> implements ObservableNum<N> {
-      _Observable(N observable) {
-        super(observable);
-      }
-
-      @Override
-      public void set(N value) {
-        observable = value;
-        noticeObservers();
-      }
-
-      @Override
-      public N get() {
-        return observable;
-      }
-    }
-    return new _Observable(number);
+  static <T> ObservableVal<T> observableValue(T value) {
+    return new AbstractObservableVal<>(value) {};
   }
 
   static <T> ObservableRef<T> observableReference(T value) {
@@ -88,6 +72,25 @@ final class ObservableFactory {
 
     protected void noticeObservers() {
       observers.forEach(observer -> observer.notice(observable));
+    }
+  }
+
+  private abstract static class AbstractObservableVal<T> extends AbstractObservable<T>
+      implements ObservableVal<T> {
+
+    AbstractObservableVal(T observable) {
+      super(observable);
+    }
+
+    @Override
+    public void set(T value) {
+      observable = value;
+      noticeObservers();
+    }
+
+    @Override
+    public T get() {
+      return observable;
     }
   }
 }

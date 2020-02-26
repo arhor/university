@@ -55,7 +55,7 @@ public class ObserverTest {
 
   @Test
   public void test_number() {
-    var observable1 = Observable.of(1);
+    var observable1 = Observable.of("1");
     var observable2 = Observable.of(2);
 
     System.out.println(observable1.getClass());
