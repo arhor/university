@@ -35,8 +35,9 @@ final class CompositeFactory {
     }
 
     @Override
-    public void add(@Nonnull Composite<T> child) {
+    public Node<T> add(@Nonnull Composite<T> child) {
       children.add(child);
+      return this;
     }
 
     @Override
