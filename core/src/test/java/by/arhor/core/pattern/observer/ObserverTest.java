@@ -65,7 +65,7 @@ public class ObserverTest {
   public void test_object() {
     var observable = Observable.of(new User());
 
-    observable.subscribe(value -> System.out.println("observer noticed: " + value));
+    observable.subscribe(user -> System.out.println("observer noticed: " + user));
 
     observable.mutate(User::setUsername, "Max");
     observable.mutate(User::setPassword, "secret");
