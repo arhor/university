@@ -28,15 +28,15 @@ final class DBProjectModel(modules: Map[String, Module]) {
   def materialize(): String = {
     val text = new StringBuilder()
 
-    modules.foreach { case (name, module) => module.setExecutionCost(computeExecutionCost(name)) }
+    println(modules)
 
-    modules.values
-      .toSeq
-      .sortWith {
-        _.getExecutionCost < _.getExecutionCost
-      }
-      .foreach { module => writeModule(module.getName, text) }
+    modules.foreach { case (name, module) => module.executionCost = computeExecutionCost(name) }
 
+    println(modules)
+
+    modules.values.toSeq
+      .sortWith { _.executionCost < _.executionCost }
+      .foreach { module => writeModule(module.name, text) }
 
     text.toString()
   }
@@ -46,27 +46,21 @@ final class DBProjectModel(modules: Map[String, Module]) {
 
     modules.get(name) match {
       case Some(module) =>
-        val dependencies = module.getDependencies
+        val dependencies = module.dependencies
         if (dependencies != null) {
-          val dependencyList = dependencies.getList
-          if (dependencyList != null) {
-            dependencyList.forEach { dependency => cost.addAndGet(computeExecutionCost(dependency.getName)) }
-          }
+          dependencies.forEach { dependency => cost.addAndGet(computeExecutionCost(dependency.name)) }
         }
 
-        val queries = module.getQueries
+        val queries = module.queries
         if (queries != null) {
-          val queryList = queries.getList
-          if (queryList != null) {
-            queryList.forEach {
-              case query: CreateQuery => query.getTarget match {
-                case "table" => cost.incrementAndGet()
-                case "procedure" => cost.addAndGet(10)
-                case _ =>
-              }
-              case _: InsertQuery => cost.addAndGet(100)
+          queries.list.forEach {
+            case query: CreateQuery => query.target match {
+              case "table" => cost.incrementAndGet()
+              case "procedure" => cost.addAndGet(10)
               case _ =>
             }
+            case _: InsertQuery => cost.addAndGet(100)
+            case _ =>
           }
         }
       case _ =>
@@ -97,14 +91,14 @@ final class DBProjectModel(modules: Map[String, Module]) {
 
   private def resolveDependency(name: String): Unit = {
     modules.get(name) match {
-      case Some(module) if !module.isResolved =>
+      case Some(module) if !module.resolved =>
 
         println(s"processing module: $name")
 
-        val dependencies = module.getDependencies
+        val dependencies = module.dependencies
 
         if (dependencies != null) {
-          dependencies.forEach(dependency => resolveDependency(dependency.getName))
+          dependencies.forEach { dependency => resolveDependency(dependency.name) }
         }
 
         val lazyConnection = CONNECTION.get()
@@ -113,26 +107,25 @@ final class DBProjectModel(modules: Map[String, Module]) {
           return
         }
 
-        val queries = module.getQueries
-        val queryList = queries.getList
+        val queries = module.queries
 
-        if (queryList != null) {
-          for (i <- 0 to queryList.size()) {
-            val query = queryList.get(i)
+        if (queries.list != null) {
+          for (i <- 0 to queries.list.size()) {
+            val query = queries.list.get(i)
 
             Using(lazyConnection.getItem.createStatement()) { statement =>
-              if (query.getContext != null) {
-                handleContext(query.getContext)
-              } else if (queries.getContext != null) {
-                handleContext(queries.getContext)
+              if (query.context != null) {
+                handleContext(query.context)
+              } else if (queries.context != null) {
+                handleContext(queries.context)
               }
 
-              if (query.getContent != null) {
+              if (query.content != null) {
 
-                val result = statement.executeUpdate(query.getContent)
+                val result = statement.executeUpdate(query.content)
 
                 println(
-                  s"\t-- ${i + 1} of ${queryList.size()} queries processed, status - ${if (result > -1) "COMPLETE" else "NOT EXECUTED"}")
+                  s"\t-- ${i + 1} of ${queries.list.size()} queries processed, status - ${if (result > -1) "COMPLETE" else "NOT EXECUTED"}")
 
                 if (result > -1) {
                   lazyConnection.getItem.commit()
@@ -145,54 +138,50 @@ final class DBProjectModel(modules: Map[String, Module]) {
             }
           }
         }
-        module.setResolved(true)
+        module.resolved = true
     }
   }
 
   private def writeModule(@Nonnull name: String, @Nonnull text: StringBuilder): Unit = {
     modules.get(name) match {
-      case Some(module) if !module.isResolved =>
-        val dependencies = module.getDependencies
+      case Some(module) if !module.resolved =>
+        val dependencies = module.dependencies
         if (dependencies != null) {
-          dependencies.forEach(dependency => writeModule(dependency.getName, text))
+          dependencies.forEach { dependency => writeModule(dependency.name, text) }
         }
 
-        val queries = module.getQueries
-        val queryList = queries.getList
+        val queries = module.queries
 
-        if (queryList != null) {
+        if (queries.list != null) {
           text.append("-- #module: ").append(name).append(" ").append(BLOCK_START).append(" START\n")
 
           if (dependencies != null) {
-            val dependencyList = dependencies.getList
-            if (dependencyList != null) {
+            if (dependencies.list != null) {
               val deps = new StringJoiner(", ", "[", "]\n\n")
-              dependencyList.forEach(dependency => deps.add(dependency.getName))
+              dependencies.forEach(dependency => deps.add(dependency.name))
               text.append("-- #dependencies: ").append(deps.toString)
             }
           }
 
           var counter = 0
 
-          queryList.forEach { query =>
-            if (query.getContext != null) {
-              writeContext(query.getContext, text)
-            } else if (queries.getContext != null) {
-              writeContext(queries.getContext, text)
+          queries.forEach { query =>
+            if (query.context != null) {
+              writeContext(query.context, text)
+            } else if (queries.context != null) {
+              writeContext(queries.context, text)
             }
 
-            val content = query.getContent
-            if (content != null) {
-              Using(new BufferedReader(new StringReader(content))) { reader =>
+            if (query.content != null) {
+              Using(new BufferedReader(new StringReader(query.content))) { reader =>
 
                 var leadingSpaces = 0
                 var firstLineProcessed = false
 
                 reader.lines
                   .filter(line => !(line.isBlank || line.isEmpty))
-                  .forEach { line: String =>
+                  .forEach { line =>
                     if (!firstLineProcessed) {
-                      println(s"processing first line: $leadingSpaces")
                       for (c <- line.toCharArray) {
                         if (!firstLineProcessed && c == ' ') {
                           leadingSpaces += 1
@@ -200,10 +189,8 @@ final class DBProjectModel(modules: Map[String, Module]) {
                           firstLineProcessed = true
                         }
                       }
-                      println(s"first line counted: $leadingSpaces")
                     }
 
-                    println(s"[DEBUG] $line ## leading spaces: $leadingSpaces")
                     text.append(line.substring(leadingSpaces))
                     text.append("\n")
                   }
@@ -215,14 +202,14 @@ final class DBProjectModel(modules: Map[String, Module]) {
               counter += 1
 
               text.append("GO").append('\n')
-              if (counter < queryList.size()) {
+              if (counter < queries.list.size()) {
                 text.append('\n')
               }
             }
           }
         }
         text.append("-- #module: ").append(name).append(" ").append(BLOCK_END).append(" END\n\n")
-        module.setResolved(true)
+        module.resolved = true
       case _ =>
     }
   }
@@ -308,7 +295,7 @@ object DBProjectModel {
           modules ++= nestedModules
         } else if (XML_FILE_PATTERN.get().matcher(file.getName).matches()) {
           val module = parseModule(file)
-          modules += (module.getName -> module)
+          modules += (module.name -> module)
         }
       }
     }

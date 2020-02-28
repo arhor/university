@@ -809,14 +809,14 @@ BEGIN
         OFFSET @counter ROWS
         FETCH NEXT 1 ROWS ONLY
     )
-	  PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
+  	PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
     DECLARE @subjectsCount INT = (SELECT COUNT(*) FROM enrollees_has_subjects es WITH(NOLOCK) WHERE es.enrollee_id = @enrolleeId)
     IF (@subjectsCount < 3)
     BEGIN
 		PRINT CAST((3 - @subjectsCount) AS NVARCHAR(30)) + N' subjects will be generated'
         WHILE (@subjectsCount < 3)
         BEGIN
-		    DECLARE @subjectNum INT = FLOOR((@totalSubjects - @subjectsCount) * RAND())
+		        DECLARE @subjectNum INT = FLOOR((@totalSubjects - @subjectsCount) * RAND())
             DECLARE @subjectId BIGINT = (
                 SELECT sub.id
                 FROM subjects sub WITH(NOLOCK)
