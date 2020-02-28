@@ -38,18 +38,18 @@ GRANT CONTROL ON DATABASE::university TO UniversitySA
 GO
 -- #module: university <<< END
 
--- #module: roles >>> START
-IF (OBJECT_ID('roles') IS NULL)
+-- #module: subjects >>> START
+IF (OBJECT_ID('subjects') IS NULL)
 BEGIN
-    CREATE TABLE roles
+    CREATE TABLE subjects
     (
-        id       BIGINT         NOT NULL IDENTITY(1,1),
-        title    NVARCHAR(15)   NOT NULL,
-        CONSTRAINT PK_roles PRIMARY KEY CLUSTERED (id ASC)
+        id               BIGINT          NOT NULL IDENTITY(1,1),
+        default_title    NVARCHAR(50)    NOT NULL UNIQUE,
+        CONSTRAINT PK_subjects PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
--- #module: roles <<< END
+-- #module: subjects <<< END
 
 -- #module: langs >>> START
 IF (OBJECT_ID('langs') IS NULL)
@@ -66,19 +66,6 @@ END
 GO
 -- #module: langs <<< END
 
--- #module: subjects >>> START
-IF (OBJECT_ID('subjects') IS NULL)
-BEGIN
-    CREATE TABLE subjects
-    (
-        id               BIGINT          NOT NULL IDENTITY(1,1),
-        default_title    NVARCHAR(50)    NOT NULL UNIQUE,
-        CONSTRAINT PK_subjects PRIMARY KEY CLUSTERED (id ASC)
-    )
-END
-GO
--- #module: subjects <<< END
-
 -- #module: faculties >>> START
 IF (OBJECT_ID('faculties') IS NULL)
 BEGIN
@@ -93,6 +80,19 @@ BEGIN
 END
 GO
 -- #module: faculties <<< END
+
+-- #module: roles >>> START
+IF (OBJECT_ID('roles') IS NULL)
+BEGIN
+    CREATE TABLE roles
+    (
+        id       BIGINT         NOT NULL IDENTITY(1,1),
+        title    NVARCHAR(15)   NOT NULL,
+        CONSTRAINT PK_roles PRIMARY KEY CLUSTERED (id ASC)
+    )
+END
+GO
+-- #module: roles <<< END
 
 -- #module: labels >>> START
 -- #dependencies: [langs]
@@ -166,6 +166,31 @@ END
 GO
 -- #module: users <<< END
 
+-- #module: users_audit >>> START
+-- #dependencies: [users]
+
+IF (OBJECT_ID('users_audit') IS NULL)
+BEGIN
+    CREATE TABLE users_audit
+    (
+        id               BIGINT           NOT NULL IDENTITY(1, 1),
+        user_id          BIGINT           NOT NULL,
+        email            NVARCHAR(255)    NOT NULL,
+        password         NVARCHAR(512)    NOT NULL,
+        first_name       NVARCHAR(50)     NOT NULL,
+        last_name        NVARCHAR(50)     NOT NULL,
+        role_id          BIGINT           NOT NULL,
+        modified_by      VARCHAR(128)     NOT NULL,
+        modified_date    DATETIME         NOT NULL,
+        operation        VARCHAR(20)      NOT NULL,
+        CONSTRAINT PK_users_audit PRIMARY KEY CLUSTERED (id ASC),
+        CONSTRAINT CHK_users_audit_operation
+        CHECK (operation in ('CREATED', 'DELETED'))
+    )
+END
+GO
+-- #module: users_audit <<< END
+
 -- #module: users_audit_modification >>> START
 -- #dependencies: [users]
 
@@ -211,31 +236,6 @@ BEGIN
 END
 GO
 -- #module: enrollees <<< END
-
--- #module: users_audit >>> START
--- #dependencies: [users]
-
-IF (OBJECT_ID('users_audit') IS NULL)
-BEGIN
-    CREATE TABLE users_audit
-    (
-        id               BIGINT           NOT NULL IDENTITY(1, 1),
-        user_id          BIGINT           NOT NULL,
-        email            NVARCHAR(255)    NOT NULL,
-        password         NVARCHAR(512)    NOT NULL,
-        first_name       NVARCHAR(50)     NOT NULL,
-        last_name        NVARCHAR(50)     NOT NULL,
-        role_id          BIGINT           NOT NULL,
-        modified_by      VARCHAR(128)     NOT NULL,
-        modified_date    DATETIME         NOT NULL,
-        operation        VARCHAR(20)      NOT NULL,
-        CONSTRAINT PK_users_audit PRIMARY KEY CLUSTERED (id ASC),
-        CONSTRAINT CHK_users_audit_operation
-        CHECK (operation in ('CREATED', 'DELETED'))
-    )
-END
-GO
--- #module: users_audit <<< END
 
 -- #module: TR_users_audit >>> START
 -- #dependencies: [users_audit]
@@ -309,6 +309,30 @@ END
 GO
 -- #module: TR_users_audit <<< END
 
+-- #module: faculties_has_enrollees >>> START
+-- #dependencies: [faculties, enrollees]
+
+IF (OBJECT_ID('faculties_has_enrollees') IS NULL)
+BEGIN
+    CREATE TABLE faculties_has_enrollees
+    (
+        faculty_id     BIGINT      NOT NULL,
+        enrollee_id    BIGINT      NOT NULL,
+        filing_date    DATETIME    NOT NULL,
+        CONSTRAINT PK_faculties_has_enrollees PRIMARY KEY CLUSTERED (faculty_id, enrollee_id),
+        CONSTRAINT FK_faculties_has_enrollees_faculty_id FOREIGN KEY (faculty_id)
+        REFERENCES faculties (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+        CONSTRAINT FK_faculties_has_enrollees_enrollee_id FOREIGN KEY (enrollee_id)
+        REFERENCES enrollees (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+    )
+END
+GO
+-- #module: faculties_has_enrollees <<< END
+
 -- #module: enrollees_has_subjects >>> START
 -- #dependencies: [subjects, enrollees]
 
@@ -334,30 +358,6 @@ BEGIN
 END
 GO
 -- #module: enrollees_has_subjects <<< END
-
--- #module: faculties_has_enrollees >>> START
--- #dependencies: [faculties, enrollees]
-
-IF (OBJECT_ID('faculties_has_enrollees') IS NULL)
-BEGIN
-    CREATE TABLE faculties_has_enrollees
-    (
-        faculty_id     BIGINT      NOT NULL,
-        enrollee_id    BIGINT      NOT NULL,
-        filing_date    DATETIME    NOT NULL,
-        CONSTRAINT PK_faculties_has_enrollees PRIMARY KEY CLUSTERED (faculty_id, enrollee_id),
-        CONSTRAINT FK_faculties_has_enrollees_faculty_id FOREIGN KEY (faculty_id)
-        REFERENCES faculties (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-        CONSTRAINT FK_faculties_has_enrollees_enrollee_id FOREIGN KEY (enrollee_id)
-        REFERENCES enrollees (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
-    )
-END
-GO
--- #module: faculties_has_enrollees <<< END
 
 -- #module: getAdminRole >>> START
 -- #dependencies: [roles]
@@ -396,43 +396,6 @@ END
 GO
 -- #module: getAdminRole <<< END
 
--- #module: getDefaultLang >>> START
--- #dependencies: [langs]
-
-IF (OBJECT_ID('getDefaultLang') IS NOT NULL)
-BEGIN
-    DROP PROCEDURE getDefaultLang
-END
-GO
-
-CREATE PROCEDURE dbo.getDefaultLang
-AS
-BEGIN
-    DECLARE @defaultLang CHAR(2) = 'RU'
-    DECLARE @id AS BIGINT
-    SELECT @id = langs.id
-    FROM  langs WITH(NOLOCK)
-    WHERE langs.label = @defaultLang
-    IF (@id IS NULL)
-    BEGIN
-        SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
-        BEGIN TRANSACTION
-            SELECT @id = langs.id
-            FROM  langs
-            WHERE langs.label = @defaultLang
-            IF (@id IS NULL)
-            BEGIN
-                INSERT INTO langs (label) VALUES (@defaultLang)
-                SELECT @id = SCOPE_IDENTITY()
-            END
-        COMMIT TRANSACTION
-    END
-    SELECT @id
-    RETURN @id
-END
-GO
--- #module: getDefaultLang <<< END
-
 -- #module: getDefaultRole >>> START
 -- #dependencies: [roles]
 
@@ -469,6 +432,43 @@ BEGIN
 END
 GO
 -- #module: getDefaultRole <<< END
+
+-- #module: getDefaultLang >>> START
+-- #dependencies: [langs]
+
+IF (OBJECT_ID('getDefaultLang') IS NOT NULL)
+BEGIN
+    DROP PROCEDURE getDefaultLang
+END
+GO
+
+CREATE PROCEDURE dbo.getDefaultLang
+AS
+BEGIN
+    DECLARE @defaultLang CHAR(2) = 'RU'
+    DECLARE @id AS BIGINT
+    SELECT @id = langs.id
+    FROM  langs WITH(NOLOCK)
+    WHERE langs.label = @defaultLang
+    IF (@id IS NULL)
+    BEGIN
+        SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
+        BEGIN TRANSACTION
+            SELECT @id = langs.id
+            FROM  langs
+            WHERE langs.label = @defaultLang
+            IF (@id IS NULL)
+            BEGIN
+                INSERT INTO langs (label) VALUES (@defaultLang)
+                SELECT @id = SCOPE_IDENTITY()
+            END
+        COMMIT TRANSACTION
+    END
+    SELECT @id
+    RETURN @id
+END
+GO
+-- #module: getDefaultLang <<< END
 
 -- #module: logChanges >>> START
 -- #dependencies: [users_audit_modification]
@@ -624,30 +624,6 @@ END
 GO
 -- #module: createNewUser <<< END
 
--- #module: init-langs >>> START
--- #dependencies: [langs]
-
-DECLARE @TempLangs TABLE
-(
-    id       INT,
-    label    CHAR(2)
-)
-INSERT INTO @TempLangs (id, label)
-VALUES (1, 'RU')
-     , (2, 'EN')
-DECLARE @counter INT = 0
-WHILE (@counter < 2)
-BEGIN
-    DECLARE @label CHAR(2) = (SELECT label FROM @TempLangs WHERE id = @counter)
-    IF NOT EXISTS (SELECT * FROM langs WHERE label = @label)
-    BEGIN
-        INSERT INTO langs (label) VALUES (@label)
-    END
-    SET @counter = @counter + 1
-END
-GO
--- #module: init-langs <<< END
-
 -- #module: init-faculties >>> START
 -- #dependencies: [faculties]
 
@@ -685,6 +661,30 @@ BEGIN
 END
 GO
 -- #module: init-faculties <<< END
+
+-- #module: init-langs >>> START
+-- #dependencies: [langs]
+
+DECLARE @TempLangs TABLE
+(
+    id       INT,
+    label    CHAR(2)
+)
+INSERT INTO @TempLangs (id, label)
+VALUES (1, 'RU')
+     , (2, 'EN')
+DECLARE @counter INT = 0
+WHILE (@counter < 2)
+BEGIN
+    DECLARE @label CHAR(2) = (SELECT label FROM @TempLangs WHERE id = @counter)
+    IF NOT EXISTS (SELECT * FROM langs WHERE label = @label)
+    BEGIN
+        INSERT INTO langs (label) VALUES (@label)
+    END
+    SET @counter = @counter + 1
+END
+GO
+-- #module: init-langs <<< END
 
 -- #module: init-subjects >>> START
 -- #dependencies: [subjects]
@@ -809,14 +809,14 @@ BEGIN
         OFFSET @counter ROWS
         FETCH NEXT 1 ROWS ONLY
     )
-	PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
+	  PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
     DECLARE @subjectsCount INT = (SELECT COUNT(*) FROM enrollees_has_subjects es WITH(NOLOCK) WHERE es.enrollee_id = @enrolleeId)
     IF (@subjectsCount < 3)
     BEGIN
 		PRINT CAST((3 - @subjectsCount) AS NVARCHAR(30)) + N' subjects will be generated'
         WHILE (@subjectsCount < 3)
         BEGIN
-		    DECLARE @subjectNum INT = CEILING((@totalSubjects - @subjectsCount) * RAND())
+		    DECLARE @subjectNum INT = FLOOR((@totalSubjects - @subjectsCount) * RAND())
             DECLARE @subjectId BIGINT = (
                 SELECT sub.id
                 FROM subjects sub WITH(NOLOCK)
