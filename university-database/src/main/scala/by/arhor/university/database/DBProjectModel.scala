@@ -9,7 +9,6 @@ import java.util.regex.Pattern
 
 import by.arhor.core.{Either, Lazy}
 import by.arhor.university.database.model.{CreateQuery, InsertQuery, Module}
-import javax.annotation.Nonnull
 import javax.xml.bind.{JAXBContext, JAXBException, Unmarshaller}
 import javax.xml.stream.XMLInputFactory
 
@@ -21,6 +20,16 @@ final class DBProjectModel(modules: Map[String, Module]) {
 
   private var currentContext: String = _
 
+  def connection(): Connection = {
+    val lazyConnection = CONNECTION.get()
+
+    if (lazyConnection.hasError) {
+      throw lazyConnection.getError
+    } else {
+      lazyConnection.getItem
+    }
+  }
+
   def executeScripts(): Unit = {
     modules.keys.foreach(key => resolveDependency(key))
   }
@@ -28,11 +37,7 @@ final class DBProjectModel(modules: Map[String, Module]) {
   def materialize(): String = {
     val text = new StringBuilder()
 
-    println(modules)
-
     modules.foreach { case (name, module) => module.executionCost = computeExecutionCost(name) }
-
-    println(modules)
 
     modules.values.toSeq
       .sortWith { _.executionCost < _.executionCost }
@@ -70,21 +75,14 @@ final class DBProjectModel(modules: Map[String, Module]) {
   }
 
   private def handleContext(context: String): Unit = {
-    if (context != null) {
-      val lazyConnection = CONNECTION.get()
-      if (lazyConnection.hasError) {
-        lazyConnection.getError.printStackTrace()
-        return
-      }
-      if (!context.equals(currentContext)) {
-        Using(lazyConnection.getItem.createStatement()) { statement =>
-          currentContext = context
-          statement.execute("USE " + currentContext)
-          System.out.printf("context changed to to [%s]%n", currentContext)
-        } match {
-          case Failure(exception) => throw exception
-          case _ =>
-        }
+    if (context != null && !context.equals(currentContext)) {
+      Using(connection().createStatement()) { statement =>
+        currentContext = context
+        statement.execute("USE " + currentContext)
+        println(s"context changed to to [$currentContext]")
+      } match {
+        case Failure(exception) => throw exception
+        case _ =>
       }
     }
   }
@@ -101,19 +99,13 @@ final class DBProjectModel(modules: Map[String, Module]) {
           dependencies.forEach { dependency => resolveDependency(dependency.name) }
         }
 
-        val lazyConnection = CONNECTION.get()
-        if (lazyConnection.hasError) {
-          lazyConnection.getError.printStackTrace()
-          return
-        }
-
         val queries = module.queries
 
         if (queries.list != null) {
           for (i <- 0 to queries.list.size()) {
             val query = queries.list.get(i)
 
-            Using(lazyConnection.getItem.createStatement()) { statement =>
+            Using(connection().createStatement()) { statement =>
               if (query.context != null) {
                 handleContext(query.context)
               } else if (queries.context != null) {
@@ -128,7 +120,7 @@ final class DBProjectModel(modules: Map[String, Module]) {
                   s"\t-- ${i + 1} of ${queries.list.size()} queries processed, status - ${if (result > -1) "COMPLETE" else "NOT EXECUTED"}")
 
                 if (result > -1) {
-                  lazyConnection.getItem.commit()
+                  connection().commit()
                 }
               }
 
@@ -142,7 +134,7 @@ final class DBProjectModel(modules: Map[String, Module]) {
     }
   }
 
-  private def writeModule(@Nonnull name: String, @Nonnull text: StringBuilder): Unit = {
+  private def writeModule(name: String, text: StringBuilder): Unit = {
     modules.get(name) match {
       case Some(module) if !module.resolved =>
         val dependencies = module.dependencies
@@ -183,7 +175,7 @@ final class DBProjectModel(modules: Map[String, Module]) {
                   .forEach { line =>
                     if (!firstLineProcessed) {
                       for (c <- line.toCharArray) {
-                        if (!firstLineProcessed && c == ' ') {
+                        if (!firstLineProcessed && (c == ' ')) {
                           leadingSpaces += 1
                         } else {
                           firstLineProcessed = true
@@ -275,7 +267,7 @@ object DBProjectModel {
 
   private val XML_FILE_PATTERN: Lazy[Pattern] = Lazy.evalSafe { () => Pattern.compile(".+(-.+)*(\\.xml)") }
 
-  def fromRootDirectory(@Nonnull rootDirectory: File): DBProjectModel = {
+  def fromRootDirectory(rootDirectory: File): DBProjectModel = {
     if (!rootDirectory.isDirectory) {
       throw new IllegalArgumentException("Passed file `rootDirectory` must be a `directory`...")
     }
@@ -283,7 +275,7 @@ object DBProjectModel {
     new DBProjectModel(modules)
   }
 
-  private def handleDirectory(@Nonnull directory: File): Map[String, Module] = {
+  private def handleDirectory(directory: File): Map[String, Module] = {
     var modules = Map[String, Module]()
 
     val files = directory.listFiles()
@@ -309,7 +301,7 @@ object DBProjectModel {
       throw lazyUnmarshaller.getError
     }
 
-    Using(new BufferedReader(new FileReader(xmlDocument, StandardCharsets.UTF_8))) { br: Reader =>
+    Using(new BufferedReader(new FileReader(xmlDocument, StandardCharsets.UTF_8))) { br =>
       val xmlStreamReader = DBProjectModel.XML_INPUT_FACTORY.get().createXMLStreamReader(br)
       lazyUnmarshaller.getItem.unmarshal(xmlStreamReader).asInstanceOf[Module]
     } match {
