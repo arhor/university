@@ -3,7 +3,7 @@ package by.arhor.core.pattern.lazy;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-class LazyFactory {
+final class LazyFactory {
 
   static <T> NaiveLazy<T> evalUnsafe(Supplier<T> source) {
     return new NaiveLazy<>(source);
