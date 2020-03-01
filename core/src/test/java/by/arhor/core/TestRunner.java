@@ -1,10 +1,9 @@
 package by.arhor.core;
 
 
-import org.junit.jupiter.api.Test;
-
 import by.arhor.core.pattern.visitor.Visitable;
 import by.arhor.core.pattern.visitor.Visitor;
+import org.junit.jupiter.api.Test;
 
 public class TestRunner {
 
@@ -32,10 +31,6 @@ public class TestRunner {
     }
   }
 
-  private static abstract class AbstractVisitor<T> implements Visitor<AbstractVisitable<T>> {
-    public abstract void visit(AbstractVisitable<T> item);
-  }
-
   @Test
   public void testRun() {
     Visitable<Integer> integerVisitable = new Visitable<>() {
@@ -45,12 +40,7 @@ public class TestRunner {
       }
     };
 
-    Visitor<Visitable<Integer>> integerVisitor = new Visitor<Visitable<Integer>>() {
-      @Override
-      public void visit(Visitable<Integer> item) {
-        System.out.println(item);
-      }
-    };
+    Visitor<Visitable<Integer>> integerVisitor = System.out::println;
 
     integerVisitable.accept(integerVisitor);
   }
