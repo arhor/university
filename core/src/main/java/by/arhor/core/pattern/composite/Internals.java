@@ -1,18 +1,17 @@
 package by.arhor.core.pattern.composite;
 
-import static java.util.stream.Collectors.toList;
-
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.function.Consumer;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
-final class CompositeFactory {
+import static java.util.stream.Collectors.toList;
+
+final class Internals {
+
+  private Internals() { throw new UnsupportedOperationException("Must not be instantiated"); }
 
   @SafeVarargs
   static <T> Node<T> buildNode(Composite<T>... children) {
@@ -24,24 +23,28 @@ final class CompositeFactory {
   }
 
   private static final class NodeImpl<T> implements Node<T> {
+
+    @Nonnull
     private final List<Composite<T>> children;
 
     @SafeVarargs
-    NodeImpl(Composite<T>... children) {
+    NodeImpl(final Composite<T>... children) {
       this.children = Arrays.stream(children)
           .filter(Objects::nonNull)
           .collect(toList());
     }
 
     @Override
-    public final Node<T> add(@Nonnull Composite<T> child) {
+    public final Node<T> add(@Nonnull final Composite<T> child) {
       children.add(child);
       return this;
     }
 
     @Override
-    public final void execute(@Nonnull Consumer<T> action) {
-      children.forEach(child -> child.execute(action));
+    public final void execute(@Nonnull final Consumer<T> action) {
+      for (final Composite<T> child : children) {
+        child.execute(action);
+      }
     }
   }
 
@@ -50,7 +53,7 @@ final class CompositeFactory {
     @Nullable
     private T value;
 
-    LeafImpl(@Nullable T value) {
+    LeafImpl(@Nullable final T value) {
       this.value = value;
     }
 
@@ -61,12 +64,12 @@ final class CompositeFactory {
     }
 
     @Override
-    public final void setValue(@Nullable T value) {
+    public final void setValue(@Nullable final T value) {
       this.value = value;
     }
 
     @Override
-    public final void execute(@Nonnull Consumer<T> action) {
+    public final void execute(@Nonnull final Consumer<T> action) {
       action.accept(value);
     }
   }

@@ -8,6 +8,6 @@ public interface Node<T> extends Composite<T> {
 
   @SafeVarargs
   static <T> Node<T> node(@Nonnull Composite<T>... children) {
-    return CompositeFactory.buildNode(children);
+    return Internals.buildNode(children);
   }
 }

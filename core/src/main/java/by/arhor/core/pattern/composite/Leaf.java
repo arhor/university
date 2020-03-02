@@ -10,6 +10,6 @@ public interface Leaf<T> extends Composite<T> {
   void setValue(@Nullable T value);
 
   static <T> Leaf<T> leaf(T value) {
-    return CompositeFactory.buildLeaf(value);
+    return Internals.buildLeaf(value);
   }
 }
