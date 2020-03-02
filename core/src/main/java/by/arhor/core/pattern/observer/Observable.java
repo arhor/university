@@ -8,31 +8,35 @@ public interface Observable<T> {
 
   void unsubscribe(Observer<T> observer);
 
-  static <T> ObservableRef<T> ofReference(@Nonnull T value) {
-    return ObservableFactory.observableRef(value);
+  /* Basic factory methods */
+
+  static <R> ObservableRef<R> ofRef(@Nonnull R value) {
+    return Internals.observableRef(value);
   }
 
-  static <T> ObservableVal<T> ofValue(@Nonnull T value) {
-    return ObservableFactory.observableVal(value);
+  static <V> ObservableVal<V> ofVal(@Nonnull V value) {
+    return Internals.observableVal(value);
   }
+
+
 
   static <T extends Number & Comparable<T>> ObservableVal<T> of(@Nonnull T value) {
-    return ofValue(value);
+    return ofVal(value);
   }
 
   static ObservableVal<Boolean> of(@Nonnull Boolean value) {
-    return ofValue(value);
+    return ofVal(value);
   }
 
   static ObservableVal<Character> of(@Nonnull Character value) {
-    return ofValue(value);
+    return ofVal(value);
   }
 
   static ObservableVal<String> of(@Nonnull String value) {
-    return ofValue(value);
+    return ofVal(value);
   }
 
   static <T> ObservableRef<T> of(@Nonnull T value) {
-    return ofReference(value);
+    return ofRef(value);
   }
 }
