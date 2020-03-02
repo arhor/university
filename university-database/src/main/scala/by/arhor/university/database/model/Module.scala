@@ -1,6 +1,7 @@
 package by.arhor.university.database.model
 
 import java.io.Serializable
+import java.util.function.Consumer
 
 import javax.xml.bind.annotation._
 
@@ -14,4 +15,12 @@ case class Module(
     @xmlTransient var executionCost: Int
 ) extends Serializable {
   def this() = this(null, null, null, false, 0)
+
+  def forEachDependency(action: Consumer[Dependency]): Unit = {
+    if (dependencies != null) dependencies.forEach(action)
+  }
+
+  def forEachQuery(action: Consumer[Query]): Unit = {
+    if (queries != null) queries.forEach(action)
+  }
 }

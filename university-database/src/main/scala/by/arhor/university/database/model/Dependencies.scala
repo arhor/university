@@ -14,9 +14,9 @@ case class Dependencies(
 
   def this() = this(null)
 
-  def forEach(dependencyConsumer: Consumer[Dependency]): Unit = {
+  def forEach(action: Consumer[Dependency]): Unit = {
     if (list != null) {
-      list.forEach(dependencyConsumer)
+      list.forEach(action)
     }
   }
 }

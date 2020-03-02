@@ -8,8 +8,7 @@ import java.util.{Properties, StringJoiner}
 import java.util.regex.Pattern
 
 import by.arhor.core.{Either, Lazy}
-import by.arhor.university.database.model.{CreateQuery, InsertQuery, Module}
-import javax.annotation.Nonnull
+import by.arhor.university.database.model.{CreateQuery, Dependency, InsertQuery, Module}
 import javax.xml.bind.{JAXBContext, JAXBException, Unmarshaller}
 import javax.xml.stream.XMLInputFactory
 
@@ -46,23 +45,18 @@ final class DBProjectModel(modules: Map[String, Module]) {
 
     modules.get(name) match {
       case Some(module) =>
-        val dependencies = module.dependencies
-        if (dependencies != null) {
-          dependencies.forEach { dependency => cost.addAndGet(computeExecutionCost(dependency.name)) }
-        }
+        module.forEachDependency { case Dependency(name) => cost.addAndGet(computeExecutionCost(name)) }
 
-        val queries = module.queries
-        if (queries != null) {
-          queries.list.forEach {
-            case query: CreateQuery => query.target match {
-              case "table" => cost.incrementAndGet()
-              case "procedure" => cost.addAndGet(10)
-              case _ =>
-            }
-            case _: InsertQuery => cost.addAndGet(100)
+        module.forEachQuery {
+          case CreateQuery(target) => target match {
+            case "table" => cost.incrementAndGet()
+            case "procedure" => cost.addAndGet(10)
             case _ =>
           }
+          case _: InsertQuery => cost.addAndGet(100)
+          case _ =>
         }
+
       case _ =>
     }
 
@@ -80,7 +74,7 @@ final class DBProjectModel(modules: Map[String, Module]) {
         Using(lazyConnection.getItem.createStatement()) { statement =>
           currentContext = context
           statement.execute("USE " + currentContext)
-          System.out.printf("context changed to to [%s]%n", currentContext)
+          println(s"context changed to to [$currentContext]")
         } match {
           case Failure(exception) => throw exception
           case _ =>
@@ -142,29 +136,27 @@ final class DBProjectModel(modules: Map[String, Module]) {
     }
   }
 
-  private def writeModule(@Nonnull name: String, @Nonnull text: StringBuilder): Unit = {
+  private def buildDepList(module: Module): String = {
+    val deps = new StringJoiner(", ", "-- #dependencies: [", "]\n\n")
+    module.forEachDependency { case Dependency(name) => deps.add(name) }
+    deps.toString
+  }
+
+  private def writeModule(name: String, text: StringBuilder): Unit = {
     modules.get(name) match {
       case Some(module) if !module.resolved =>
-        val dependencies = module.dependencies
-        if (dependencies != null) {
-          dependencies.forEach { dependency => writeModule(dependency.name, text) }
-        }
+        module.forEachDependency { case Dependency(name) => writeModule(name, text) }
 
         val queries = module.queries
 
         if (queries.list != null) {
           text.append("-- #module: ").append(name).append(" ").append(BLOCK_START).append(" START\n")
 
-          if (dependencies != null) {
-            if (dependencies.list != null) {
-              val deps = new StringJoiner(", ", "[", "]\n\n")
-              dependencies.forEach(dependency => deps.add(dependency.name))
-              text.append("-- #dependencies: ").append(deps.toString)
-            }
-          }
+          val depList = buildDepList(module)
+
+          text.append(depList)
 
           var counter = 0
-
           queries.forEach { query =>
             if (query.context != null) {
               writeContext(query.context, text)
@@ -275,7 +267,7 @@ object DBProjectModel {
 
   private val XML_FILE_PATTERN: Lazy[Pattern] = Lazy.evalSafe { () => Pattern.compile(".+(-.+)*(\\.xml)") }
 
-  def fromRootDirectory(@Nonnull rootDirectory: File): DBProjectModel = {
+  def fromRootDirectory(rootDirectory: File): DBProjectModel = {
     if (!rootDirectory.isDirectory) {
       throw new IllegalArgumentException("Passed file `rootDirectory` must be a `directory`...")
     }
@@ -283,7 +275,7 @@ object DBProjectModel {
     new DBProjectModel(modules)
   }
 
-  private def handleDirectory(@Nonnull directory: File): Map[String, Module] = {
+  private def handleDirectory(directory: File): Map[String, Module] = {
     var modules = Map[String, Module]()
 
     val files = directory.listFiles()
