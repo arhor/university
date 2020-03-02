@@ -13,8 +13,10 @@ case class Module(
     @xmlElement   var queries: Queries,
     @xmlTransient var resolved: Boolean,
     @xmlTransient var executionCost: Int
-) extends Serializable {
+) extends Serializable with Comparable[Module] {
   def this() = this(null, null, null, false, 0)
+
+  override def compareTo(that: Module): Int = this.executionCost - that.executionCost
 
   def forEachDependency(action: Consumer[Dependency]): Unit = {
     if (dependencies != null) dependencies.forEach(action)

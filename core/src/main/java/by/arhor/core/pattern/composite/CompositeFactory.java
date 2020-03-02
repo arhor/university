@@ -28,31 +28,20 @@ final class CompositeFactory {
 
     @SafeVarargs
     NodeImpl(Composite<T>... children) {
-      this.children =
-          Arrays.stream(children)
-                .filter(Objects::nonNull)
-                .collect(toList());
+      this.children = Arrays.stream(children)
+          .filter(Objects::nonNull)
+          .collect(toList());
     }
 
     @Override
-    public Node<T> add(@Nonnull Composite<T> child) {
+    public final Node<T> add(@Nonnull Composite<T> child) {
       children.add(child);
       return this;
     }
 
     @Override
-    public void execute(@Nonnull Consumer<T> action) {
-      Queue<Composite<T>> delayed = new LinkedList<>();
-      for (var child : children) {
-        if (child instanceof Leaf) {
-          child.execute(action);
-        } else {
-          delayed.add(child);
-        }
-      }
-      while (!delayed.isEmpty()) {
-        delayed.poll().execute(action);
-      }
+    public final void execute(@Nonnull Consumer<T> action) {
+      children.forEach(child -> child.execute(action));
     }
   }
 

@@ -7,4 +7,5 @@ import javax.annotation.Nonnull;
 public interface Composite<T> {
 
   void execute(@Nonnull Consumer<T> action);
+
 }
