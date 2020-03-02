@@ -1,5 +1,5 @@
 plugins {
-  id 'java-library'
+  id 'scala'
 }
 
 group = 'by.arhor'
@@ -15,6 +15,7 @@ repositories {
 }
 
 dependencies {
+  implementation 'org.scala-lang:scala-library:2.13.1'
   implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
