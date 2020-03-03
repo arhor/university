@@ -1,9 +1,10 @@
 package by.arhor.core.pattern.lazy;
 
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
-final class LazyFactory {
+final class Internals {
 
   static <T> NaiveLazy<T> evalUnsafe(Supplier<T> source) {
     return new NaiveLazy<>(source);
@@ -43,15 +44,22 @@ final class LazyFactory {
   }
 
   private static final class NaiveLazy<T> extends AbstractLazy<T> {
+
     NaiveLazy(Supplier<T> source) { super(source); }
 
     @Override
     public final T get() {
       return computed ? value : compute();
     }
+
+    @Override
+    public <R> NaiveLazy<R> map(final Function<T, R> f) {
+      return Internals.evalUnsafe(() -> f.apply(this.get()));
+    }
   }
 
   private static final class SafeLazy<T> extends AbstractLazy<T> {
+
     SafeLazy(Supplier<T> source) { super(source); }
 
     @Override
@@ -62,6 +70,11 @@ final class LazyFactory {
         }
       }
       return value;
+    }
+
+    @Override
+    public <R> SafeLazy<R> map(final Function<T, R> f) {
+      return Internals.evalSafe(() -> f.apply(this.get()));
     }
   }
 }

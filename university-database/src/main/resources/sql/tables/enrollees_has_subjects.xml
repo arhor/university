@@ -18,12 +18,9 @@
                 (
                     subject_id     BIGINT      NOT NULL,
                     enrollee_id    BIGINT      NOT NULL,
-                    score          SMALLINT    NOT NULL,
+                    score          SMALLINT    NOT NULL CHECK (score >= 0 AND score <= 100),
 
                     CONSTRAINT PK_enrollees_has_subjects PRIMARY KEY CLUSTERED (subject_id, enrollee_id),
-
-                    CONSTRAINT CHK_enrollees_has_subjects_score
-                    CHECK (score >= 0 AND score <= 100),
 
                     CONSTRAINT FK_enrollees_has_subjects_subject_id FOREIGN KEY (subject_id)
                     REFERENCES subjects (id)

@@ -1,8 +1,6 @@
 package by.arhor.university.database;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -11,7 +9,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import by.arhor.core.Lazy;
+import by.arhor.core.pattern.lazy.Lazy;
 
 public final class ConnectionPool implements AutoCloseable {
 

@@ -4,7 +4,9 @@ import static by.arhor.core.util.JsonUtils.Node.$;
 
 import java.util.StringJoiner;
 
-public class JsonUtils {
+public final class JsonUtils {
+
+  private JsonUtils() { throw new UnsupportedOperationException("Must not be instantiated"); }
 
   public static String json(Node<?> ...nodes) {
     var body = new StringJoiner(", ", "{ ", " }");
@@ -35,7 +37,7 @@ public class JsonUtils {
           : '"' + name + '"' + ": " + '"' + value + '"';
     }
   }
-  
+
   {
     var obj = json(
         $("name", "Vasya"),

@@ -1,9 +1,12 @@
 package by.arhor.core.pattern.lazy;
 
 import javax.annotation.Nonnull;
+
 import java.util.function.Supplier;
 
-public interface Lazy<T> extends Supplier<T> {
+import by.arhor.core.function.RichSupplier;
+
+public interface Lazy<T> extends RichSupplier<T> {
 
   /**
    * Method shows is this lazy instance already computed or not.
@@ -21,7 +24,7 @@ public interface Lazy<T> extends Supplier<T> {
    * @return evaluation result
    */
   static <T> Lazy<T> eval(@Nonnull Supplier<T> source) {
-    return LazyFactory.evalUnsafe(source);
+    return Internals.evalUnsafe(source);
   }
 
   /**
@@ -32,6 +35,6 @@ public interface Lazy<T> extends Supplier<T> {
    * @return evaluation result
    */
   static <T> Lazy<T> evalSafe(@Nonnull Supplier<T> source) {
-    return LazyFactory.evalSafe(source);
+    return Internals.evalSafe(source);
   }
 }

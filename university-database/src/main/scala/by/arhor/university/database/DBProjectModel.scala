@@ -7,8 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.{Properties, StringJoiner}
 import java.util.regex.Pattern
 
-import by.arhor.core.{Either, Lazy}
-import by.arhor.university.database.model.{CreateQuery, InsertQuery, Module}
+import by.arhor.core.Either
+import by.arhor.core.pattern.`lazy`.Lazy
+import by.arhor.university.database.model.{CreateQuery, Dependency, InsertQuery, Module}
 import javax.xml.bind.{JAXBContext, JAXBException, Unmarshaller}
 import javax.xml.stream.XMLInputFactory
 
@@ -127,6 +128,12 @@ final class DBProjectModel(modules: Map[String, Module]) {
         }
         module.resolved = true
     }
+  }
+
+  private def buildDepList(module: Module): String = {
+    val deps = new StringJoiner(", ", "-- #dependencies: [", "]\n\n")
+    module.forEachDependency { case Dependency(name) => deps.add(name) }
+    deps.toString
   }
 
   private def writeModule(name: String, text: StringBuilder): Unit = {

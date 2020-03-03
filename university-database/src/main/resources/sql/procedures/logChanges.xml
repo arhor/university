@@ -41,8 +41,7 @@
                         field_name,
                         old_value,
                         new_value,
-                        modified_by,
-                        modified_date
+                        modified_by
                     )
                     VALUES
                     (
@@ -50,8 +49,7 @@
                         @field,
                         @old_val,
                         @new_val,
-                        @login_name,
-                       GETDATE()
+                        @login_name
                     )
                 END
             END

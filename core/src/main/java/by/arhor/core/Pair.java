@@ -2,6 +2,7 @@ package by.arhor.core;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -55,5 +56,13 @@ public final class Pair<S, T> {
   @Override
   public int hashCode() {
     return Objects.hash(first, second);
+  }
+
+  @Override
+  public String toString() {
+    return new StringJoiner(", ", "{ " + Pair.class.getSimpleName() + ": {", " }")
+        .add("first: " + first)
+        .add("second: " + second)
+        .toString();
   }
 }

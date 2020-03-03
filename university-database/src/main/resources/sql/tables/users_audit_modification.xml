@@ -21,7 +21,7 @@
                     old_value     NVARCHAR(512) NULL,
                     new_value     NVARCHAR(512) NULL,
                     modified_by   VARCHAR(128)  NOT NULL,
-                    modified_date DATETIME      NOT NULL
+                    modified_date DATETIME      NOT NULL DEFAULT GETDATE()
 
                     CONSTRAINT PK_users_audit_modification PRIMARY KEY CLUSTERED (id ASC)
                 )
