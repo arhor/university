@@ -970,7 +970,8 @@ BEGIN
         )
         IF (@facultyId IS NOT NULL)
         BEGIN
-            INSERT INTO faculties_has_enrollees (faculty_id, enrollee_id) VALUES (@facultyId, @enrolleeId)
+            INSERT INTO faculties_has_enrollees (faculty_id, enrollee_id, filing_date)
+            VALUES (@facultyId, @enrolleeId, GETDATE())
         END
     END
     SET @counter = @counter + 1
