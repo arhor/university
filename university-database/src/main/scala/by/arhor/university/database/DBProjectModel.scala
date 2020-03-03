@@ -9,7 +9,7 @@ import java.util.regex.Pattern
 
 import by.arhor.core.Either
 import by.arhor.core.pattern.`lazy`.Lazy
-import by.arhor.university.database.model.{CreateQuery, Dependency, InsertQuery, Module}
+import by.arhor.university.database.xml.{CreateQuery, Dependency, InsertQuery, Module}
 import javax.xml.bind.{JAXBContext, JAXBException, Unmarshaller}
 import javax.xml.stream.XMLInputFactory
 

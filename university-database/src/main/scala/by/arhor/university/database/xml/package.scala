@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.{XmlAccessorType, XmlAttribute, XmlElement, Xml
 import scala.annotation.meta.{companionClass, field}
 
 // required to make XML annotations visible for JAXB context
-package object model {
+package object xml {
   type xmlAccessorType = XmlAccessorType @ companionClass
   type xmlRootElement  = XmlRootElement  @ companionClass
   type xmlAttribute    = XmlAttribute    @ field

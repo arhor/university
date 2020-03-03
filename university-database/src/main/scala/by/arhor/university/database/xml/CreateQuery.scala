@@ -1,10 +1,10 @@
-package by.arhor.university.database.model
+package by.arhor.university.database.xml
 
 import javax.xml.bind.annotation.XmlAccessType
 
-@xmlRootElement(name = "drop")
+@xmlRootElement(name = "create")
 @xmlAccessorType(XmlAccessType.FIELD)
-case class DropQuery(
+case class CreateQuery(
     @xmlAttribute var target: String
 ) extends Query {
   def this() = this(null)

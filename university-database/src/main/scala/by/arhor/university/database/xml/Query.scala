@@ -1,4 +1,4 @@
-package by.arhor.university.database.model
+package by.arhor.university.database.xml
 
 import java.io.Serializable
 
