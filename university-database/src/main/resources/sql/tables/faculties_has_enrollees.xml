@@ -18,7 +18,7 @@
                 (
                     faculty_id     BIGINT      NOT NULL,
                     enrollee_id    BIGINT      NOT NULL,
-                    filing_date    DATETIME    NOT NULL,
+                    filing_date    DATETIME    NOT NULL DEFAULT GETDATE(),
 
                     CONSTRAINT PK_faculties_has_enrollees PRIMARY KEY CLUSTERED (faculty_id, enrollee_id),
 

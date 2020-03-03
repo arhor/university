@@ -146,9 +146,9 @@ final class DBProjectModel(modules: Map[String, Module]) {
         if (queries.list != null) {
           text.append("-- #module: ").append(name).append(" ").append(BLOCK_START).append(" START\n")
 
-          val depList = buildDepList(module)
-
-          text.append(depList)
+          if (module.dependencies != null) {
+            text.append(buildDepList(module))
+          }
 
           var counter = 0
           queries.forEach { query =>

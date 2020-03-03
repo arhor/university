@@ -30,55 +30,15 @@
                     WHERE session_id = @@SPID
                 )
 
-                IF EXISTS (SELECT 1 FROM deleted)
+                IF EXISTS (SELECT * FROM deleted)
                 BEGIN
-                    INSERT INTO users_audit
-                    (
-                        user_id,
-                        email,
-                        password,
-                        first_name,
-                        last_name,
-                        role_id,
-                         modified_by,
-                        modified_date,
-                        operation
-                    )
-                    SELECT d.id
-                         , d.email
-                         , d.password
-                         , d.first_name
-                         , d.last_name
-                         , d.role_id
-                         , @login_name
-                         , GETDATE()
-                         , 'DELETED'
-                    FROM deleted d
+                    INSERT INTO users_audit (user_id, email, password, first_name, last_name, role_id, modified_by, operation)
+                    SELECT id, email, password, first_name, last_name, role_id, @login_name, 'DELETED' FROM deleted
                 END
                 ELSE
                 BEGIN
-                    INSERT INTO users_audit
-                    (
-                        user_id,
-                        email,
-                        password,
-                        first_name,
-                        last_name,
-                        role_id,
-                        modified_by,
-                        modified_date,
-                        operation
-                    )
-                    SELECT i.id
-                         , i.email
-                         , i.password
-                         , i.first_name
-                         , i.last_name
-                         , i.role_id
-                         , @login_name
-                         , GETDATE()
-                         , 'CREATED'
-                      FROM inserted i
+                    INSERT INTO users_audit (user_id, email, password, first_name, last_name, role_id, modified_by, operation)
+                    SELECT id, email, password, first_name, last_name, role_id, @login_name, 'CREATED' FROM inserted
                 END
             END
             ]]>

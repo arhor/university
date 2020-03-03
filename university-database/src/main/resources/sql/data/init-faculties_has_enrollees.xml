@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="init-faculties_has_enrollees">
+
+    <dependencies>
+        <dependency name="enrollees"/>
+        <dependency name="faculties"/>
+        <dependency name="enrollees_has_subjects"/>
+        <dependency name="faculties_has_enrollees"/>
+        <dependency name="faculties_has_subjects"/>
+        <dependency name="init-enrollees"/>
+        <dependency name="init-faculties"/>
+        <dependency name="init-enrollees_has_subjects"/>
+        <dependency name="init-faculties_has_subjects"/>
+    </dependencies>
+
+    <queries context="university">
+        <insert>
+            <![CDATA[
+            DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))
+            DECLARE @subjectsMin    INT = 3
+            DECLARE @counter        INT = 0
+
+            WHILE (@counter < @totalEnrollees)
+            BEGIN
+                DECLARE @enrolleeId BIGINT = (
+                    SELECT e.id
+                    FROM enrollees e WITH(NOLOCK)
+                    ORDER BY e.id ASC
+                    OFFSET @counter ROWS
+                    FETCH NEXT 1 ROWS ONLY
+                )
+
+                IF NOT EXISTS (SELECT * FROM faculties_has_enrollees WITH(NOLOCK) WHERE enrollee_id = @enrolleeId)
+                BEGIN
+                    PRINT N'Looking for appropriate faculty for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
+
+                    DECLARE @availableFaculties TABLE(id BIGINT)
+
+                    INSERT INTO @availableFaculties (id)
+                    SELECT f.id
+                    FROM faculties f WITH(NOLOCK)
+                    JOIN faculties_has_subjects fs WITH(NOLOCK) ON fs.faculty_id = f.id
+                    WHERE fs.subject_id IN (
+                        SELECT es.subject_id
+                        FROM enrollees_has_subjects es WITH(NOLOCK)
+                        WHERE es.enrollee_id = @enrolleeId
+                    )
+                    GROUP BY f.id
+                    HAVING COUNT(f.id) >= @subjectsMin
+
+                    DECLARE @facultyId BIGINT = (
+                        SELECT id FROM @availableFaculties
+                        ORDER BY id
+                        OFFSET CAST(FLOOR((SELECT COUNT(*) FROM @availableFaculties) * RAND()) AS INT) ROWS
+                        FETCH NEXT 1 ROWS ONLY
+                    )
+
+                    IF (@facultyId IS NOT NULL)
+                    BEGIN
+                        INSERT INTO faculties_has_enrollees (faculty_id, enrollee_id) VALUES (@facultyId, @enrolleeId)
+                    END
+                END
+                SET @counter = @counter + 1
+            END
+            ]]>
+        </insert>
+    </queries>
+
+</module>

@@ -8,6 +8,7 @@
         <dependency name="users"/>
         <dependency name="enrollees"/>
         <dependency name="getAdminRole"/>
+        <dependency name="init-users"/>
     </dependencies>
 
     <queries context="university">

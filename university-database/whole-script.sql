@@ -57,10 +57,8 @@ BEGIN
 CREATE TABLE langs
     (
         id       BIGINT     NOT NULL IDENTITY(1,1),
-        label    CHAR(2)    NOT NULL,
-        CONSTRAINT PK_langs PRIMARY KEY CLUSTERED (id ASC),
-        CONSTRAINT CHK_langs_label
-        CHECK (label LIKE '[A-Z][A-Z]')
+        label    CHAR(2)    NOT NULL CHECK (label LIKE '[A-Z][A-Z]'),
+        CONSTRAINT PK_langs PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
@@ -173,19 +171,17 @@ IF (OBJECT_ID('users_audit') IS NULL)
 BEGIN
     CREATE TABLE users_audit
     (
-        id               BIGINT           NOT NULL IDENTITY(1, 1),
-        user_id          BIGINT           NOT NULL,
-        email            NVARCHAR(255)    NOT NULL,
-        password         NVARCHAR(512)    NOT NULL,
-        first_name       NVARCHAR(50)     NOT NULL,
-        last_name        NVARCHAR(50)     NOT NULL,
-        role_id          BIGINT           NOT NULL,
-        modified_by      VARCHAR(128)     NOT NULL,
-        modified_date    DATETIME         NOT NULL,
-        operation        VARCHAR(20)      NOT NULL,
-        CONSTRAINT PK_users_audit PRIMARY KEY CLUSTERED (id ASC),
-        CONSTRAINT CHK_users_audit_operation
-        CHECK (operation in ('CREATED', 'DELETED'))
+        id            BIGINT        NOT NULL IDENTITY(1, 1),
+        user_id       BIGINT        NOT NULL,
+        email         NVARCHAR(255) NOT NULL,
+        password      NVARCHAR(512) NOT NULL,
+        first_name    NVARCHAR(50)  NOT NULL,
+        last_name     NVARCHAR(50)  NOT NULL,
+        role_id       BIGINT        NOT NULL,
+        modified_by   VARCHAR(128)  NOT NULL,
+        modified_date DATETIME      NOT NULL DEFAULT GETDATE(),
+        operation     VARCHAR(20)   NOT NULL CHECK (operation in ('CREATED', 'DELETED')),
+        CONSTRAINT PK_users_audit PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
@@ -204,7 +200,7 @@ BEGIN
         old_value     NVARCHAR(512) NULL,
         new_value     NVARCHAR(512) NULL,
         modified_by   VARCHAR(128)  NOT NULL,
-        modified_date DATETIME      NOT NULL
+        modified_date DATETIME      NOT NULL DEFAULT GETDATE(),
         CONSTRAINT PK_users_audit_modification PRIMARY KEY CLUSTERED (id ASC)
     )
 END
@@ -221,11 +217,9 @@ BEGIN
         id              BIGINT          NOT NULL IDENTITY(1,1),
         country         NVARCHAR(64)    NOT NULL,
         city            NVARCHAR(64)    NOT NULL,
-        school_score    SMALLINT        NOT NULL,
+        school_score    SMALLINT        NOT NULL CHECK (school_score >= 0 AND school_score <= 100),
         user_id         BIGINT          NOT NULL UNIQUE,
         CONSTRAINT PK_enrollees PRIMARY KEY CLUSTERED (id ASC),
-        CONSTRAINT CHK_enrollees_school_score
-        CHECK (school_score >= 0 AND school_score <= 100),
         CONSTRAINT FK_enrollees_user_id FOREIGN KEY (user_id)
         REFERENCES users (id)
             ON DELETE CASCADE
@@ -255,55 +249,15 @@ BEGIN
         FROM sys.dm_exec_sessions
         WHERE session_id = @@SPID
     )
-    IF EXISTS (SELECT 1 FROM deleted)
+    IF EXISTS (SELECT * FROM deleted)
     BEGIN
-        INSERT INTO users_audit
-        (
-            user_id,
-            email,
-            password,
-            first_name,
-            last_name,
-            role_id,
-             modified_by,
-            modified_date,
-            operation
-        )
-        SELECT d.id
-             , d.email
-             , d.password
-             , d.first_name
-             , d.last_name
-             , d.role_id
-             , @login_name
-             , GETDATE()
-             , 'DELETED'
-        FROM deleted d
+        INSERT INTO users_audit (user_id, email, password, first_name, last_name, role_id, modified_by, operation)
+        SELECT id, email, password, first_name, last_name, role_id, @login_name, 'DELETED' FROM deleted
     END
     ELSE
     BEGIN
-        INSERT INTO users_audit
-        (
-            user_id,
-            email,
-            password,
-            first_name,
-            last_name,
-            role_id,
-            modified_by,
-            modified_date,
-            operation
-        )
-        SELECT i.id
-             , i.email
-             , i.password
-             , i.first_name
-             , i.last_name
-             , i.role_id
-             , @login_name
-             , GETDATE()
-             , 'CREATED'
-          FROM inserted i
+        INSERT INTO users_audit (user_id, email, password, first_name, last_name, role_id, modified_by, operation)
+        SELECT id, email, password, first_name, last_name, role_id, @login_name, 'CREATED' FROM inserted
     END
 END
 GO
@@ -318,7 +272,7 @@ BEGIN
     (
         faculty_id     BIGINT      NOT NULL,
         enrollee_id    BIGINT      NOT NULL,
-        filing_date    DATETIME    NOT NULL,
+        filing_date    DATETIME    NOT NULL DEFAULT GETDATE(),
         CONSTRAINT PK_faculties_has_enrollees PRIMARY KEY CLUSTERED (faculty_id, enrollee_id),
         CONSTRAINT FK_faculties_has_enrollees_faculty_id FOREIGN KEY (faculty_id)
         REFERENCES faculties (id)
@@ -342,10 +296,8 @@ BEGIN
     (
         subject_id     BIGINT      NOT NULL,
         enrollee_id    BIGINT      NOT NULL,
-        score          SMALLINT    NOT NULL,
+        score          SMALLINT    NOT NULL CHECK (score >= 0 AND score <= 100),
         CONSTRAINT PK_enrollees_has_subjects PRIMARY KEY CLUSTERED (subject_id, enrollee_id),
-        CONSTRAINT CHK_enrollees_has_subjects_score
-        CHECK (score >= 0 AND score <= 100),
         CONSTRAINT FK_enrollees_has_subjects_subject_id FOREIGN KEY (subject_id)
         REFERENCES subjects (id)
             ON DELETE CASCADE
@@ -493,24 +445,8 @@ BEGIN
             FROM sys.dm_exec_sessions
             WHERE session_id = @@SPID
         )
-        INSERT INTO users_audit_modification
-        (
-            user_id,
-            field_name,
-            old_value,
-            new_value,
-            modified_by,
-            modified_date
-        )
-        VALUES
-        (
-            @id,
-            @field,
-            @old_val,
-            @new_val,
-            @login_name,
-           GETDATE()
-        )
+        INSERT INTO users_audit_modification (user_id, field_name, old_value, new_value, modified_by)
+        VALUES (@id, @field, @old_val, @new_val, @login_name)
     END
 END
 GO
@@ -716,8 +652,24 @@ END
 GO
 -- #module: init-subjects <<< END
 
+-- #module: init-roles >>> START
+-- #dependencies: [roles]
+
+IF NOT EXISTS (SELECT * FROM roles WHERE title = 'USER')
+BEGIN
+    INSERT INTO roles (title) VALUES ('USER')
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM roles WHERE title = 'ADMIN')
+BEGIN
+    INSERT INTO roles (title) VALUES ('ADMIN')
+END
+GO
+-- #module: init-roles <<< END
+
 -- #module: init-faculties_has_subjects >>> START
--- #dependencies: [faculties, subjects, faculties_has_subjects]
+-- #dependencies: [faculties, subjects, faculties_has_subjects, init-faculties, init-subjects]
 
 DECLARE @facultyId BIGINT
 DECLARE @subjectId BIGINT
@@ -725,196 +677,77 @@ DECLARE @subjectId BIGINT
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Биологический факультет'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Биология'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Биология')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык'))
 ---------------------------- Исторический факультет ---------------------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Исторический факультет'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'))
 -------------------------- Химический факультет -------------------------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Химический факультет'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика'))
 ---------------- Факультет прикладной математики и информатики ----------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Факультет прикладной математики и информатики'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика'))
 ------------- Факультет радиофизики и компьютерных технологий -----------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Факультет радиофизики и компьютерных технологий'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Физика')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'))
 ------------------------- Экономический факультет -----------------------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Экономический факультет'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Математика'))
 -------------------------- Юридический факультет ------------------------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Юридический факультет'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'))
 ---------------------------- Военный факультет --------------------------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Военный факультет'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Химия')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'))
 ------------------------ Филологический факультет -----------------------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Филологический факультет'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Русский язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Белорусский язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'))
 ------------ Республиканский институт китаеведения имени Конфуция -------------
 SELECT @facultyId = id FROM faculties WITH(NOLOCK) WHERE default_title = N'Республиканский институт китаеведения имени Конфуция'
 INSERT INTO faculties_has_subjects (faculty_id, subject_id)
 VALUES
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История'),
-(@facultyId, SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Биология')
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Иностранный язык')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'История')),
+(@facultyId, (SELECT id FROM subjects WITH(NOLOCK) WHERE default_title = N'Биология'))
 GO
 -- #module: init-faculties_has_subjects <<< END
 
--- #module: init-enrollees_has_subjects >>> START
--- #dependencies: [enrollees, subjects, enrollees_has_subjects]
-
-DECLARE @totalSubjects  INT = (SELECT COUNT(*) FROM subjects WITH(NOLOCK))
-DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))
-DECLARE @counter INT = 0
-WHILE (@counter < @totalEnrollees)
-BEGIN
-    DECLARE @enrolleeId BIGINT = (
-        SELECT   e.id
-        FROM     enrollees e WITH(NOLOCK)
-        ORDER BY e.id ASC
-        OFFSET @counter ROWS
-        FETCH NEXT 1 ROWS ONLY
-    )
-  	PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
-    DECLARE @subjectsCount INT = (SELECT COUNT(*) FROM enrollees_has_subjects es WITH(NOLOCK) WHERE es.enrollee_id = @enrolleeId)
-    IF (@subjectsCount < 3)
-    BEGIN
-		PRINT CAST((3 - @subjectsCount) AS NVARCHAR(30)) + N' subjects will be generated'
-        WHILE (@subjectsCount < 3)
-        BEGIN
-		        DECLARE @subjectNum INT = FLOOR((@totalSubjects - @subjectsCount) * RAND())
-            DECLARE @subjectId BIGINT = (
-                SELECT sub.id
-                FROM subjects sub WITH(NOLOCK)
-                WHERE sub.id NOT IN (
-                    SELECT es.subject_id
-                    FROM enrollees_has_subjects es WITH(NOLOCK)
-                    WHERE es.enrollee_id = @enrolleeId
-                )
-                ORDER BY sub.id ASC
-                OFFSET @subjectNum ROWS
-                FETCH NEXT 1 ROWS ONLY
-            )
-            INSERT INTO enrollees_has_subjects (subject_id, enrollee_id, score)
-            VALUES
-            (
-                @subjectId,
-                @enrolleeId,
-                CEILING(100 * RAND())
-            )
-            SET @subjectsCount = @subjectsCount + 1
-			PRINT N'Success' + (CHAR(13) + CHAR(10)) -- line-break CR + LF
-        END
-    END
-    ELSE
-    BEGIN
-        PRINT N'There are ' + CAST(@subjectsCount AS NVARCHAR(30)) + N' subjects already exists'
-    END
-    SET @counter = @counter + 1
-END
-GO
--- #module: init-enrollees_has_subjects <<< END
-
--- #module: init-enrollees >>> START
--- #dependencies: [users, enrollees, getAdminRole]
-
-DECLARE @Countries TABLE
-(
-    id      BIGINT,
-    name    NVARCHAR(64)
-)
-INSERT INTO @Countries (id, name)
-VALUES (1, N'Беларусь'), (2, N'Россия'), (3, N'Украина'), (4, N'Польша');
-DECLARE @Cities TABLE
-(
-    countryId    BIGINT,
-    num          BIGINT,
-    name         NVARCHAR(64)
-)
-INSERT INTO @Cities (countryId, num, name)
-VALUES (1, 1, N'Минск')  , (1, 2, N'Гродно') , (1, 3, N'Гомель') , (1, 4, N'Могилёв')
-     , (2, 1, N'Москва') , (2, 2, N'Саратов'), (2, 3, N'Магадан'), (2, 4, N'Суздаль')
-     , (3, 1, N'Киев')   , (3, 2, N'Львов')  , (3, 3, N'Одесса') , (3, 4, N'Харьков')
-     , (4, 1, N'Варшава'), (4, 2, N'Краков') , (4, 3, N'Гданьск'), (4, 4, N'Люблин');
-DECLARE @Admin BIGINT
-EXEC @Admin = dbo.getAdminRole
-DECLARE @counter    INT = 0
-DECLARE @totalUsers INT = (SELECT COUNT(*) FROM users u WITH(NOLOCK) WHERE u.role_id != @Admin)
-WHILE (@counter < @totalUsers)
-BEGIN
-    DECLARE @userId BIGINT = (
-        SELECT   u.id
-        FROM     users u WITH(NOLOCK)
-        WHERE    u.role_id != @Admin
-        ORDER BY u.id ASC
-        OFFSET @counter ROWS
-        FETCH NEXT 1 ROWS ONLY
-    )
-    IF NOT EXISTS (SELECT * FROM enrollees e WITH(NOLOCK) WHERE e.user_id = @userId)
-    BEGIN
-        DECLARE @countryId INT = CEILING (4 * RAND())
-        DECLARE @cityNum   INT = CEILING (4 * RAND())
-        DECLARE @countryName NVARCHAR(64) = (
-            SELECT name
-            FROM @Countries
-            WHERE id = @countryId
-        )
-        DECLARE @cityName NVARCHAR(64) = (
-            SELECT name
-            FROM @Cities
-            WHERE countryId = @countryId
-            AND num = @cityNum
-        )
-        INSERT INTO enrollees (country, city, school_score, user_id)
-        VALUES
-        (
-            @countryName,
-            @cityName,
-            CEILING(100 * RAND()),
-            @userId
-        )
-    END
-    SET @counter = @counter + 1
-END
-GO
--- #module: init-enrollees <<< END
-
 -- #module: init-users >>> START
--- #dependencies: [langs, users, getAdminRole, createNewUser]
+-- #dependencies: [langs, users, getAdminRole, createNewUser, init-roles, init-langs]
 
 -- password to use: `password` encrypted with BCrypt (strength 5)
 DECLARE @Password NVARCHAR(512) = N'$2y$05$wc9f6o/gGJyoagNZfHkHJerFc0tIJAmdCQmabJCtXs0uOJhUAGICa'
@@ -979,19 +812,169 @@ END
 GO
 -- #module: init-users <<< END
 
--- #module: init-roles >>> START
--- #dependencies: [roles]
+-- #module: init-enrollees >>> START
+-- #dependencies: [users, enrollees, getAdminRole, init-users]
 
-IF NOT EXISTS (SELECT * FROM roles WHERE title = 'USER')
+DECLARE @Countries TABLE
+(
+    id      BIGINT,
+    name    NVARCHAR(64)
+)
+INSERT INTO @Countries (id, name)
+VALUES (1, N'Беларусь'), (2, N'Россия'), (3, N'Украина'), (4, N'Польша');
+DECLARE @Cities TABLE
+(
+    countryId    BIGINT,
+    num          BIGINT,
+    name         NVARCHAR(64)
+)
+INSERT INTO @Cities (countryId, num, name)
+VALUES (1, 1, N'Минск')  , (1, 2, N'Гродно') , (1, 3, N'Гомель') , (1, 4, N'Могилёв')
+     , (2, 1, N'Москва') , (2, 2, N'Саратов'), (2, 3, N'Магадан'), (2, 4, N'Суздаль')
+     , (3, 1, N'Киев')   , (3, 2, N'Львов')  , (3, 3, N'Одесса') , (3, 4, N'Харьков')
+     , (4, 1, N'Варшава'), (4, 2, N'Краков') , (4, 3, N'Гданьск'), (4, 4, N'Люблин');
+DECLARE @Admin BIGINT
+EXEC @Admin = dbo.getAdminRole
+DECLARE @counter    INT = 0
+DECLARE @totalUsers INT = (SELECT COUNT(*) FROM users u WITH(NOLOCK) WHERE u.role_id != @Admin)
+WHILE (@counter < @totalUsers)
 BEGIN
-    INSERT INTO roles (title) VALUES ('USER')
+    DECLARE @userId BIGINT = (
+        SELECT   u.id
+        FROM     users u WITH(NOLOCK)
+        WHERE    u.role_id != @Admin
+        ORDER BY u.id ASC
+        OFFSET @counter ROWS
+        FETCH NEXT 1 ROWS ONLY
+    )
+    IF NOT EXISTS (SELECT * FROM enrollees e WITH(NOLOCK) WHERE e.user_id = @userId)
+    BEGIN
+        DECLARE @countryId INT = CEILING (4 * RAND())
+        DECLARE @cityNum   INT = CEILING (4 * RAND())
+        DECLARE @countryName NVARCHAR(64) = (
+            SELECT name
+            FROM @Countries
+            WHERE id = @countryId
+        )
+        DECLARE @cityName NVARCHAR(64) = (
+            SELECT name
+            FROM @Cities
+            WHERE countryId = @countryId
+            AND num = @cityNum
+        )
+        INSERT INTO enrollees (country, city, school_score, user_id)
+        VALUES
+        (
+            @countryName,
+            @cityName,
+            CEILING(100 * RAND()),
+            @userId
+        )
+    END
+    SET @counter = @counter + 1
 END
 GO
+-- #module: init-enrollees <<< END
 
-IF NOT EXISTS (SELECT * FROM roles WHERE title = 'ADMIN')
+-- #module: init-enrollees_has_subjects >>> START
+-- #dependencies: [enrollees, subjects, enrollees_has_subjects, init-enrollees, init-subjects]
+
+DECLARE @subjectsRequired INT = 4
+DECLARE @totalSubjects  INT = (SELECT COUNT(*) FROM subjects WITH(NOLOCK))
+DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))
+DECLARE @counter INT = 0
+WHILE (@counter < @totalEnrollees)
 BEGIN
-    INSERT INTO roles (title) VALUES ('ADMIN')
+    DECLARE @enrolleeId BIGINT = (
+        SELECT   e.id
+        FROM     enrollees e WITH(NOLOCK)
+        ORDER BY e.id ASC
+        OFFSET @counter ROWS
+        FETCH NEXT 1 ROWS ONLY
+    )
+    PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
+    DECLARE @subjectsCount INT = (SELECT COUNT(*) FROM enrollees_has_subjects es WITH(NOLOCK) WHERE es.enrollee_id = @enrolleeId)
+    IF (@subjectsCount < @subjectsRequired)
+    BEGIN
+    PRINT CAST((@subjectsRequired - @subjectsCount) AS NVARCHAR(30)) + N' subjects will be generated'
+        WHILE (@subjectsCount < @subjectsRequired)
+        BEGIN
+            DECLARE @subjectNum INT = FLOOR((@totalSubjects - @subjectsCount) * RAND())
+            DECLARE @subjectId BIGINT = (
+                SELECT sub.id
+                FROM subjects sub WITH(NOLOCK)
+                WHERE sub.id NOT IN (
+                    SELECT es.subject_id
+                    FROM enrollees_has_subjects es WITH(NOLOCK)
+                    WHERE es.enrollee_id = @enrolleeId
+                )
+                ORDER BY sub.id ASC
+                OFFSET @subjectNum ROWS
+                FETCH NEXT 1 ROWS ONLY
+            )
+            INSERT INTO enrollees_has_subjects (subject_id, enrollee_id, score)
+            VALUES
+            (
+                @subjectId,
+                @enrolleeId,
+                CEILING(100 * RAND())
+            )
+            SET @subjectsCount = @subjectsCount + 1
+            PRINT N'Success' + (CHAR(13) + CHAR(10)) -- line-break CR + LF
+        END
+    END
+    ELSE
+    BEGIN
+        PRINT N'There are ' + CAST(@subjectsCount AS NVARCHAR(30)) + N' subjects already exists'
+    END
+    SET @counter = @counter + 1
 END
 GO
--- #module: init-roles <<< END
+-- #module: init-enrollees_has_subjects <<< END
+
+-- #module: init-faculties_has_enrollees >>> START
+-- #dependencies: [enrollees, faculties, enrollees_has_subjects, faculties_has_enrollees, faculties_has_subjects, init-enrollees, init-faculties, init-enrollees_has_subjects, init-faculties_has_subjects]
+
+DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))
+DECLARE @subjectsMin    INT = 3
+DECLARE @counter        INT = 0
+WHILE (@counter < @totalEnrollees)
+BEGIN
+    DECLARE @enrolleeId BIGINT = (
+        SELECT e.id
+        FROM enrollees e WITH(NOLOCK)
+        ORDER BY e.id ASC
+        OFFSET @counter ROWS
+        FETCH NEXT 1 ROWS ONLY
+    )
+    IF NOT EXISTS (SELECT * FROM faculties_has_enrollees WITH(NOLOCK) WHERE enrollee_id = @enrolleeId)
+    BEGIN
+        PRINT N'Looking for appropriate faculty for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
+        DECLARE @availableFaculties TABLE(id BIGINT)
+        INSERT INTO @availableFaculties (id)
+        SELECT f.id
+        FROM faculties f WITH(NOLOCK)
+        JOIN faculties_has_subjects fs WITH(NOLOCK) ON fs.faculty_id = f.id
+        WHERE fs.subject_id IN (
+            SELECT es.subject_id
+            FROM enrollees_has_subjects es WITH(NOLOCK)
+            WHERE es.enrollee_id = @enrolleeId
+        )
+        GROUP BY f.id
+        HAVING COUNT(f.id) >= @subjectsMin
+        DECLARE @facultyId BIGINT = (
+            SELECT id FROM @availableFaculties
+            ORDER BY id
+            OFFSET CAST(FLOOR((SELECT COUNT(*) FROM @availableFaculties) * RAND()) AS INT) ROWS
+            FETCH NEXT 1 ROWS ONLY
+        )
+        IF (@facultyId IS NOT NULL)
+        BEGIN
+            INSERT INTO faculties_has_enrollees (faculty_id, enrollee_id) VALUES (@facultyId, @enrolleeId)
+        END
+    END
+    SET @counter = @counter + 1
+END
+GO
+-- #module: init-faculties_has_enrollees <<< END
 

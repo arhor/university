@@ -9,6 +9,8 @@
         <dependency name="users"/>
         <dependency name="getAdminRole"/>
         <dependency name="createNewUser"/>
+        <dependency name="init-roles"/>
+        <dependency name="init-langs"/>
     </dependencies>
 
     <queries context="university">
