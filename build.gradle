@@ -1,32 +1,44 @@
+plugins {
+    id 'org.springframework.boot'        version '2.2.5.RELEASE' apply false
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE' apply false
+}
+
 tasks.withType(JavaCompile).each {
-  it.options.compilerArgs += [
-      '-Xlint:preview',
-      '-Xlint:unchecked',
-      '-Xlint:deprecation'
-  ]
+    it.options.compilerArgs += [
+            '-Xlint:preview',
+            '-Xlint:unchecked',
+            '-Xlint:deprecation'
+    ]
 }
 
 configure([
-    project (':core'),
-    project (':university-server'),
+        project (':core'),
+        project (':university-server'),
 ]) {
-  apply plugin: 'java'
-  apply plugin: 'jacoco'
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
 
-  test {
-    finalizedBy jacocoTestReport
-  }
-
-  jacocoTestReport {
-    afterEvaluate {
-      getClassDirectories() from classDirectories.files.collect {
-        fileTree(dir: it, exclude: [
-            '**/domain/**',
-            '**/dto/**',
-            '**/error/**',
-            '**/config/**',
-        ])
-      }
+    configurations {
+        testImplementation {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
     }
-  }
+
+    test {
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
+    }
+
+    jacocoTestReport {
+        afterEvaluate {
+            getClassDirectories() from classDirectories.files.collect {
+                fileTree(dir: it, exclude: [
+                        '**/domain/**',
+                        '**/dto/**',
+                        '**/error/**',
+                        '**/config/**',
+                ])
+            }
+        }
+    }
 }

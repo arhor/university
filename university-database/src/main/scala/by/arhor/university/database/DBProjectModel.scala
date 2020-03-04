@@ -239,7 +239,7 @@ object DBProjectModel {
           properties.getProperty(DB_PASSWORD))
       Either.success(connection)
     } catch {
-      case e@(_: IOException | _: ClassNotFoundException | _: SQLException) => Either.error(e)
+      case e@(_: IOException | _: ClassNotFoundException | _: SQLException) => Either.failure(e)
     }
   }
 
@@ -255,7 +255,7 @@ object DBProjectModel {
       val unmarshaller = context.createUnmarshaller()
       Either.success(unmarshaller)
     } catch {
-      case e: JAXBException => Either.error(e)
+      case e: JAXBException => Either.failure(e)
     }
   }
 

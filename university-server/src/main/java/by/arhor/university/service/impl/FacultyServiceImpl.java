@@ -25,7 +25,7 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
   public Either<FacultyDTO, ServiceError> create(FacultyDTO dto) {
     boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
-      return Either.error(null);
+      return Either.failure(null);
     }
     var newFaculty = mapper.map(dto, Faculty.class);
     var createdFaculty = repository.save(newFaculty);
@@ -36,7 +36,7 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
   public Either<FacultyDTO, ServiceError> update(FacultyDTO dto) {
     boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
-      return Either.error(null);
+      return Either.failure(null);
     }
     var faculty = repository.findById(dto.getId()).orElseThrow(RuntimeException::new);
     faculty.setDefaultTitle(dto.getDefaultTitle());

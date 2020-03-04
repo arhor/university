@@ -23,7 +23,6 @@ import by.arhor.university.domain.model.User;
 import by.arhor.university.domain.repository.UserRepository;
 import by.arhor.university.service.UserService;
 import by.arhor.university.service.dto.UserDTO;
-import by.arhor.university.service.error.ErrorLabel;
 import by.arhor.university.service.error.ServiceError;
 
 @Service
@@ -72,7 +71,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   @Override
   public Either<UserDTO, ServiceError> create(UserDTO userDto) {
     if (emailAlreadyTaken(userDto.getEmail())) {
-      return Either.error(null);
+      return Either.failure(null);
     }
 
     final var newUser = repository.createNewUser(
@@ -109,7 +108,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         .findById(id)
         .map(user -> mapper.map(user, UserDTO.class))
         .map(Either::<UserDTO, ServiceError>success)
-        .orElseGet(() -> Either.error(ServiceError.notFound("User", "id", id)));
+        .orElseGet(() -> Either.failure(ServiceError.notFound("User", "id", id)));
   }
 
   @Override

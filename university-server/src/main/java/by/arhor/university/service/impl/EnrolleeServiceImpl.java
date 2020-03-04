@@ -1,6 +1,6 @@
 package by.arhor.university.service.impl;
 
-import static by.arhor.core.Either.error;
+import static by.arhor.core.Either.failure;
 import static by.arhor.university.service.error.ServiceError.alreadyExists;
 import static by.arhor.university.service.error.ServiceError.notFound;
 
@@ -44,10 +44,10 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
         user.setEnrollee(savedEnrollee);
         return Either.success(toDto(savedEnrollee));
       } else {
-        return error(alreadyExists("Enrollee", "user", userEmail));
+        return failure(alreadyExists("Enrollee", "user", userEmail));
       }
     } else {
-      return error(notFound("User", "email", userEmail));
+      return failure(notFound("User", "email", userEmail));
     }
   }
 

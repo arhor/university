@@ -6,6 +6,8 @@ import javax.annotation.Nonnull;
 
 public final class Either<T, E> {
 
+  private static final Either<Void, ?> SUCCESS = new Either();
+
   private final T item;
   private final E error;
 
@@ -14,11 +16,20 @@ public final class Either<T, E> {
     this.error = error;
   }
 
+  private Either() {
+    this(null, null);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <E> Either<Void, E> success() {
+    return (Either<Void, E>) SUCCESS;
+  }
+
   public static <T, E> Either<T, E> success(T item) {
     return new Either<>(item, null);
   }
 
-  public static <T, E> Either<T, E> error(E error) {
+  public static <T, E> Either<T, E> failure(E error) {
     return new Either<>(null, error);
   }
 
@@ -28,7 +39,7 @@ public final class Either<T, E> {
 
   public final T getItem() {
     if (hasError()) {
-      throw new IllegalStateException("Must not extract item if error occurred");
+      throw new IllegalStateException("Must not extract item in error state");
     }
     return item;
   }

@@ -7,8 +7,7 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 @MappedSuperclass
-public abstract class AbstractModelObject<ID extends Serializable>
-    implements ModelObject<ID> {
+public abstract class AbstractModelObject<ID extends Serializable> implements ModelObject<ID> {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

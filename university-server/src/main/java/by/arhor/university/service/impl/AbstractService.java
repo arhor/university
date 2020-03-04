@@ -1,10 +1,12 @@
 package by.arhor.university.service.impl;
 
-import static by.arhor.core.Either.error;
+import static by.arhor.core.Either.failure;
+import static by.arhor.core.Either.success;
 import static by.arhor.university.service.error.ServiceError.notFound;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +43,7 @@ public abstract class AbstractService<T, D extends DTO<K>, K>
         .findById(id)
         .map(this::toDto)
         .map(Either::<D, ServiceError>success)
-        .orElseGet(() -> error(notFound(dtoClass.getSimpleName(), "id", id)));
+        .orElseGet(() -> failure(notFound(dtoClass.getSimpleName(), "id", id)));
   }
 
   @Override
@@ -67,5 +69,18 @@ public abstract class AbstractService<T, D extends DTO<K>, K>
   public void deleteById(K id) {
     final var item = repository.findById(id).orElseThrow(RuntimeException::new);
     repository.delete(item);
+  }
+
+  protected static final class ServiceOps {
+    static <T, K> Either<Void, ServiceError> deleteById(JpaRepository<T, K> repository, K id) {
+      Optional<T> item = repository.findById(id);
+
+      if (item.isPresent()) {
+        repository.delete(item.get());
+        return success();
+      }
+
+      return failure(notFound("dtoClass.getSimpleName()", "id", id));
+    }
   }
 }
