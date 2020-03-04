@@ -2,7 +2,6 @@ plugins {
     id 'org.springframework.boot' version '2.2.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
-    id 'jacoco'
 }
 
 group = 'by.arhor'
@@ -61,18 +60,4 @@ compileJava {
 
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
-}
-
-jacocoTestReport {
-    afterEvaluate {
-        getClassDirectories() from classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    '**/domain/**',
-                    '**/dto/**',
-                    '**/error/**',
-                    '**/config/**',
-            ])
-        }
-    }
 }

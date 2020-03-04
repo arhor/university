@@ -5,3 +5,28 @@ tasks.withType(JavaCompile).each {
       '-Xlint:deprecation'
   ]
 }
+
+configure([
+    project (':core'),
+    project (':university-server'),
+]) {
+  apply plugin: 'java'
+  apply plugin: 'jacoco'
+
+  test {
+    finalizedBy jacocoTestReport
+  }
+
+  jacocoTestReport {
+    afterEvaluate {
+      getClassDirectories() from classDirectories.files.collect {
+        fileTree(dir: it, exclude: [
+            '**/domain/**',
+            '**/dto/**',
+            '**/error/**',
+            '**/config/**',
+        ])
+      }
+    }
+  }
+}
