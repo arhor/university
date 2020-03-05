@@ -9,8 +9,8 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import by.arhor.core.Either;
-import by.arhor.core.Pair;
+import by.arhor.university.core.Either;
+import by.arhor.university.core.Pair;
 import by.arhor.university.service.error.ErrorLabel;
 import by.arhor.university.service.error.ServiceError;
 import by.arhor.university.web.api.model.ApiError;

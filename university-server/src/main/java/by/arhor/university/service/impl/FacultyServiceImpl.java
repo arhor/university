@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import by.arhor.core.Either;
+import by.arhor.university.core.Either;
 import by.arhor.university.domain.model.Faculty;
 import by.arhor.university.domain.repository.FacultyRepository;
 import by.arhor.university.service.FacultyService;

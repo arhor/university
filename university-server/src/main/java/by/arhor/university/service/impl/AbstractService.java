@@ -1,7 +1,7 @@
 package by.arhor.university.service.impl;
 
-import static by.arhor.core.Either.failure;
-import static by.arhor.core.Either.success;
+import static by.arhor.university.core.Either.failure;
+import static by.arhor.university.core.Either.success;
 import static by.arhor.university.service.error.ServiceError.notFound;
 import static java.util.stream.Collectors.toList;
 
@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import by.arhor.core.Either;
+import by.arhor.university.core.Either;
 import by.arhor.university.service.dto.DTO;
 import by.arhor.university.service.error.ServiceError;
 import by.arhor.university.service.trait.Deleter;

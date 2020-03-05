@@ -26,6 +26,8 @@
                         ON DELETE CASCADE
                         ON UPDATE CASCADE
                 )
+
+                CREATE NONCLUSTERED INDEX IDX_labels_lang_id ON labels (lang_id ASC)
             END
             ]]>
         </create>

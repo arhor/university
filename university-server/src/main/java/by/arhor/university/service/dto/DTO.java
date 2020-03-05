@@ -1,6 +1,6 @@
 package by.arhor.university.service.dto;
 
-import by.arhor.core.Identifiable;
+import by.arhor.university.core.Identifiable;
 
 /**
  * Marker-interface

@@ -17,8 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import by.arhor.core.Either;
-import by.arhor.core.function.RichSupplier;
+import by.arhor.university.core.Either;
+import by.arhor.university.core.function.RichSupplier;
 import by.arhor.university.domain.model.User;
 import by.arhor.university.domain.repository.UserRepository;
 import by.arhor.university.service.UserService;

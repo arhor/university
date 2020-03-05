@@ -1,6 +1,6 @@
 package by.arhor.university.service.impl;
 
-import static by.arhor.core.Either.failure;
+import static by.arhor.university.core.Either.failure;
 import static by.arhor.university.service.error.ServiceError.alreadyExists;
 import static by.arhor.university.service.error.ServiceError.notFound;
 
@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import by.arhor.core.Either;
+import by.arhor.university.core.Either;
 import by.arhor.university.domain.model.Enrollee;
 import by.arhor.university.domain.repository.EnrolleeRepository;
 import by.arhor.university.domain.repository.UserRepository;

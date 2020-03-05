@@ -1,6 +1,6 @@
 package by.arhor.university.web.filter;
 
-import by.arhor.core.pattern.lazy.Lazy;
+import by.arhor.university.core.pattern.lazy.Lazy;
 import org.springframework.lang.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

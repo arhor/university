@@ -2,7 +2,7 @@ package by.arhor.university.domain.model;
 
 import java.io.Serializable;
 
-import by.arhor.core.Identifiable;
+import by.arhor.university.core.Identifiable;
 
 /**
  * Marker-interface

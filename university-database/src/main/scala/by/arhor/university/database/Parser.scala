@@ -2,10 +2,10 @@ package by.arhor.university.database
 
 import java.util.function.Consumer
 
-import by.arhor.core.pattern.composite.{Composite, Leaf, Node}
+import by.arhor.university.core.pattern.composite.{Composite, Leaf, Node}
 import by.arhor.university.database.xml.{Dependency, Module}
 
-final case class ModuleGraph(private val modules: Set[Module]) extends Composite[Module] {
+final case class Parser(private val modules: Set[Module]) extends Composite[Module] {
 
   modules.foreach { case module if !module.resolved =>
 

@@ -4,11 +4,11 @@ import java.io._
 import java.nio.charset.StandardCharsets
 import java.sql.{Connection, DriverManager, SQLException}
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.{Properties, StringJoiner}
 import java.util.regex.Pattern
+import java.util.{Properties, StringJoiner}
 
-import by.arhor.core.Either
-import by.arhor.core.pattern.`lazy`.Lazy
+import by.arhor.university.core
+import by.arhor.university.core.pattern.`lazy`.Lazy
 import by.arhor.university.database.xml.{CreateQuery, Dependency, InsertQuery, Module}
 import javax.xml.bind.{JAXBContext, JAXBException, Unmarshaller}
 import javax.xml.stream.XMLInputFactory
@@ -220,7 +220,7 @@ object DBProjectModel {
   private val DB_USERNAME = "db.username"
   private val DB_PASSWORD = "db.password"
 
-  private val CONNECTION: Lazy[Either[Connection, Throwable]] = Lazy.evalSafe { () =>
+  private val CONNECTION: Lazy[core.Either[Connection, Throwable]] = Lazy.evalSafe { () =>
     val classLoader = classOf[DBProjectModel].getClassLoader
     val properties = new Properties()
     val configFile = classLoader.getResourceAsStream("database.properties")
@@ -237,9 +237,9 @@ object DBProjectModel {
           properties.getProperty(DB_URL),
           properties.getProperty(DB_USERNAME),
           properties.getProperty(DB_PASSWORD))
-      Either.success(connection)
+      core.Either.success(connection)
     } catch {
-      case e@(_: IOException | _: ClassNotFoundException | _: SQLException) => Either.failure(e)
+      case e@(_: IOException | _: ClassNotFoundException | _: SQLException) => core.Either.failure(e)
     }
   }
 
@@ -249,13 +249,13 @@ object DBProjectModel {
     xmlInputFactory
   }
 
-  private val UNMARSHALLER: Lazy[Either[Unmarshaller, Throwable]] = Lazy.evalSafe { () =>
+  private val UNMARSHALLER: Lazy[core.Either[Unmarshaller, Throwable]] = Lazy.evalSafe { () =>
     try {
       val context = JAXBContext.newInstance(classOf[Module])
       val unmarshaller = context.createUnmarshaller()
-      Either.success(unmarshaller)
+      core.Either.success(unmarshaller)
     } catch {
-      case e: JAXBException => Either.failure(e)
+      case e: JAXBException => core.Either.failure(e)
     }
   }
 

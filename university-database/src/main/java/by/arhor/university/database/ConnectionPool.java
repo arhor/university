@@ -9,7 +9,7 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import by.arhor.core.pattern.lazy.Lazy;
+import by.arhor.university.core.pattern.lazy.Lazy;
 
 public final class ConnectionPool implements AutoCloseable {
 

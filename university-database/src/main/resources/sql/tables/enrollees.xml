@@ -28,6 +28,7 @@
                         ON DELETE CASCADE
                         ON UPDATE CASCADE
                 )
+                CREATE NONCLUSTERED INDEX IDX_enrollees_user_id ON enrollees (user_id ASC)
                 CREATE NONCLUSTERED INDEX IDX_enrollees_country ON enrollees (country ASC)
                 CREATE NONCLUSTERED INDEX IDX_enrollees_city ON enrollees (city ASC)
             END
