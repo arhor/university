@@ -1,4 +1,4 @@
-package by.arhor.university.domain.repository;
+package by.arhor.university.repository;
 
 import static by.arhor.university.Constants.CACHE_USERS;
 
@@ -10,9 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import by.arhor.university.domain.model.User;
+import by.arhor.university.model.User;
 
-public interface UserRepository extends JpaRepository<User, Long>, CustomUserRepository {
+public interface UserRepository extends JpaRepository<User, Long>, UserRepositoryExt {
 
   @Cacheable(value = CACHE_USERS, key = "#email")
   @Query("SELECT u FROM User u WHERE u.email = :email")

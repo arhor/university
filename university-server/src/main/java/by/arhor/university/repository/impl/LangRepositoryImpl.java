@@ -1,4 +1,4 @@
-package by.arhor.university.domain.repository.impl;
+package by.arhor.university.repository.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -6,10 +6,10 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import by.arhor.university.repository.LangRepository;
 import org.springframework.stereotype.Repository;
 
-import by.arhor.university.domain.model.Lang;
-import by.arhor.university.domain.repository.LangRepository;
+import by.arhor.university.model.Lang;
 
 @Repository
 public class LangRepositoryImpl implements LangRepository {

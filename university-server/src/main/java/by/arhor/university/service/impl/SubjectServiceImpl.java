@@ -1,7 +1,7 @@
 package by.arhor.university.service.impl;
 
-import by.arhor.university.domain.model.Subject;
-import by.arhor.university.domain.repository.SubjectRepository;
+import by.arhor.university.model.Subject;
+import by.arhor.university.repository.SubjectRepository;
 import by.arhor.university.service.SubjectService;
 import by.arhor.university.service.dto.SubjectDTO;
 import org.modelmapper.ModelMapper;

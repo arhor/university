@@ -1,4 +1,4 @@
-package by.arhor.university.domain.model;
+package by.arhor.university.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,23 +14,30 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@Table(name = "roles")
+@Table(name = "langs")
 @EqualsAndHashCode(callSuper = true)
 @NamedStoredProcedureQueries({
-  @NamedStoredProcedureQuery(
-      name = "getDefaultRole",
-      procedureName = "getDefaultRole",
-      resultClasses = Long.class)
+  @NamedStoredProcedureQuery(name = "getDefaultLangId", procedureName = "getDefaultLang")
 })
-public class Role extends AbstractModelObject<Short> {
+public class Lang extends AbstractModelObject<Short> {
 
   @NotNull
   @Enumerated(EnumType.STRING)
-  @Column(name = "title", unique = true, nullable = false)
-  private Role.Value title;
+  @Column(name = "label", unique = true, nullable = false)
+  private Lang.Value label;
 
   public enum Value {
-    USER,
-    ADMIN
+    RU("Russian"),
+    EN("English");
+
+    private final String name;
+
+    Value(String name) {
+      this.name = name;
+    }
+
+    public String getName() {
+      return name;
+    }
   }
 }

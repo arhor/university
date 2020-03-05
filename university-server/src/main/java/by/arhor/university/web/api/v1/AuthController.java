@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import by.arhor.university.domain.repository.UserRepository;
+import by.arhor.university.repository.UserRepository;
 import by.arhor.university.web.api.model.SignInRequest;
 import by.arhor.university.web.api.model.SignUpRequest;
 import by.arhor.university.web.security.JwtProvider;

@@ -1,8 +1,8 @@
-package by.arhor.university.domain.repository;
+package by.arhor.university.repository;
 
 import java.util.Optional;
 
-import by.arhor.university.domain.model.Role;
+import by.arhor.university.model.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.query.Procedure;

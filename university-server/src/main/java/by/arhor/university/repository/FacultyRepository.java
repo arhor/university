@@ -1,7 +1,6 @@
-package by.arhor.university.domain.repository;
+package by.arhor.university.repository;
 
-import by.arhor.university.domain.model.Faculty;
-import org.springframework.data.domain.Example;
+import by.arhor.university.model.Faculty;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FacultyRepository extends JpaRepository<Faculty, Long> {

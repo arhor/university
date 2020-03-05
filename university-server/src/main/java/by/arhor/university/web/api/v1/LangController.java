@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import by.arhor.university.domain.model.Lang;
-import by.arhor.university.domain.repository.LangRepository;
+import by.arhor.university.model.Lang;
+import by.arhor.university.repository.LangRepository;
 
 @Lazy
 @RestController

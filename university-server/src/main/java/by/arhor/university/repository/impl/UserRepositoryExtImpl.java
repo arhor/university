@@ -1,17 +1,15 @@
-package by.arhor.university.domain.repository.impl;
+package by.arhor.university.repository.impl;
 
 import javax.persistence.EntityManager;
-import javax.persistence.ParameterMode;
 import javax.persistence.PersistenceContext;
-import javax.persistence.StoredProcedureQuery;
 
+import by.arhor.university.repository.UserRepositoryExt;
 import org.springframework.stereotype.Repository;
 
-import by.arhor.university.domain.model.User;
-import by.arhor.university.domain.repository.CustomUserRepository;
+import by.arhor.university.model.User;
 
 @Repository
-public class CustomUserRepositoryImpl implements CustomUserRepository {
+public class UserRepositoryExtImpl implements UserRepositoryExt {
 
   @PersistenceContext
   private EntityManager entityManager;

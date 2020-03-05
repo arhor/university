@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import by.arhor.university.domain.model.Role;
-import by.arhor.university.domain.repository.RoleRepository;
+import by.arhor.university.model.Role;
+import by.arhor.university.repository.RoleRepository;
 
 @Lazy
 @RestController

@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import by.arhor.university.core.Either;
 import by.arhor.university.core.function.RichSupplier;
-import by.arhor.university.domain.model.User;
-import by.arhor.university.domain.repository.UserRepository;
+import by.arhor.university.model.User;
+import by.arhor.university.repository.UserRepository;
 import by.arhor.university.service.UserService;
 import by.arhor.university.service.dto.UserDTO;
 import by.arhor.university.service.error.ServiceError;

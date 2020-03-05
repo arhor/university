@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import by.arhor.university.core.Either;
-import by.arhor.university.domain.model.Enrollee;
-import by.arhor.university.domain.repository.EnrolleeRepository;
-import by.arhor.university.domain.repository.UserRepository;
+import by.arhor.university.model.Enrollee;
+import by.arhor.university.repository.EnrolleeRepository;
+import by.arhor.university.repository.UserRepository;
 import by.arhor.university.service.EnrolleeService;
 import by.arhor.university.service.dto.EnrolleeDTO;
 import by.arhor.university.service.error.ServiceError;

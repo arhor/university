@@ -1,7 +1,7 @@
 package by.arhor.university.service.impl;
 
-import by.arhor.university.domain.repository.LabelRepository;
-import by.arhor.university.domain.repository.LangRepository;
+import by.arhor.university.repository.LabelRepository;
+import by.arhor.university.repository.LangRepository;
 import by.arhor.university.service.LabelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

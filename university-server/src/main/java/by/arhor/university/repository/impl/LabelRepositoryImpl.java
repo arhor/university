@@ -1,14 +1,14 @@
-package by.arhor.university.domain.repository.impl;
+package by.arhor.university.repository.impl;
 
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import by.arhor.university.repository.LabelRepository;
 import org.springframework.stereotype.Repository;
 
-import by.arhor.university.domain.model.Lang;
-import by.arhor.university.domain.repository.LabelRepository;
+import by.arhor.university.model.Lang;
 
 @Repository
 public class LabelRepositoryImpl implements LabelRepository {

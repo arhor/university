@@ -1,6 +1,6 @@
-package by.arhor.university.domain.repository;
+package by.arhor.university.repository;
 
-import by.arhor.university.domain.model.Subject;
+import by.arhor.university.model.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SubjectRepository extends JpaRepository<Subject, Long> {

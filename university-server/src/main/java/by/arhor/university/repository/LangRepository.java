@@ -1,9 +1,9 @@
-package by.arhor.university.domain.repository;
+package by.arhor.university.repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import by.arhor.university.domain.model.Lang;
+import by.arhor.university.model.Lang;
 
 public interface LangRepository {
 

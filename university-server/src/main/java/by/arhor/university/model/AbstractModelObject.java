@@ -1,4 +1,4 @@
-package by.arhor.university.domain.model;
+package by.arhor.university.model;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
