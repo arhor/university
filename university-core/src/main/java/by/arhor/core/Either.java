@@ -1,18 +1,20 @@
 package by.arhor.core;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 import javax.annotation.Nonnull;
 
 public final class Either<T, E> {
 
-  private static final Either<Void, ?> SUCCESS = new Either();
+  private static final Either<?, ?> SUCCESS = new Either<>();
+  private static final Either<?, ?> FAILURE = new Either<>();
 
-  private final T item;
+  private final T value;
   private final E error;
 
-  private Either(T item, E error) {
-    this.item = item;
+  private Either(T value, E error) {
+    this.value = value;
     this.error = error;
   }
 
@@ -23,6 +25,11 @@ public final class Either<T, E> {
   @SuppressWarnings("unchecked")
   public static <E> Either<Void, E> success() {
     return (Either<Void, E>) SUCCESS;
+  }
+
+  @SuppressWarnings("unchecked")
+  public static <E> Either<Void, E> failure() {
+    return (Either<Void, E>) FAILURE;
   }
 
   public static <T, E> Either<T, E> success(T item) {
@@ -37,18 +44,18 @@ public final class Either<T, E> {
     return error != null;
   }
 
-  public final T getItem() {
+  public final Optional<T> value() {
     if (hasError()) {
       throw new IllegalStateException("Must not extract item in error state");
     }
-    return item;
+    return Optional.ofNullable(value);
   }
 
-  public final E getError() {
+  public final E error() {
     return error;
   }
 
   public <R> Either<R, E> map(@Nonnull Function<T, R> mapper) {
-    return new Either<>(hasError() ? null : mapper.apply(item), error);
+    return new Either<>(hasError() ? null : mapper.apply(value), error);
   }
 }

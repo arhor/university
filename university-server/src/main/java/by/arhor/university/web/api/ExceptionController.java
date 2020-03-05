@@ -129,24 +129,27 @@ public class ExceptionController {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(JsonProcessingException.class)
   public ApiError jsonProcessingException(JsonProcessingException ex, WebRequest request) throws IOException {
-    log.error("JSON parsing exception", ex);
-    JsonParser parser = (JsonParser) ex.getProcessor();
+    log.error("JSON processing exception", ex);
 
-    Object value = parser.getCurrentName() != null ? parser.getCurrentName() : parser.getText();
+    var processor = ex.getProcessor();
 
-    JsonLocation location = ex.getLocation();
+    String value;
+    if (processor instanceof JsonParser) {
+      final var parser = (JsonParser) processor;
+      value = (parser.getCurrentName() != null) ? parser.getCurrentName() : parser.getText();
+    } else {
+      value = "[UNKNOWN JSON PROCESSOR]";
+    }
 
-    int lineNr = location.getLineNr();
-    int columnNr = location.getColumnNr();
+    JsonLocation loc = ex.getLocation();
 
     return new ApiError(
         ApiError.INVALID_JSON_MESSAGE,
         messageSource.getMessage(
             "error.json.parse",
-            new Object[] { value, lineNr, columnNr },
+            new Object[] { value, loc.getLineNr(), loc.getColumnNr() },
             request.getLocale()
         )
     );
   }
-
 }

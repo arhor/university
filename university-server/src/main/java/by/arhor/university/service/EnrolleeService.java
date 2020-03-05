@@ -10,7 +10,7 @@ import by.arhor.university.service.trait.Reader;
 import by.arhor.university.service.trait.Updater;
 
 public interface EnrolleeService
-    extends  Reader<EnrolleeDTO, Long>
+    extends Reader<EnrolleeDTO, Long>
           , Updater<EnrolleeDTO>
           , Deleter<EnrolleeDTO, Long> {
 

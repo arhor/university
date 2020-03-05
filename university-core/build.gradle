@@ -5,7 +5,7 @@ plugins {
 group = 'by.arhor'
 version = '0.0.1-SNAPSHOT'
 
-description = 'core'
+description = 'university-core'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11

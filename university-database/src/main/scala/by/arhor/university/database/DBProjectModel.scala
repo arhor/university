@@ -25,9 +25,9 @@ final class DBProjectModel(modules: Map[String, Module]) {
     val lazyConnection = CONNECTION.get()
 
     if (lazyConnection.hasError) {
-      throw lazyConnection.getError
+      throw lazyConnection.error
     } else {
-      lazyConnection.getItem
+      lazyConnection.value.get()
     }
   }
 
@@ -292,12 +292,12 @@ object DBProjectModel {
     val lazyUnmarshaller = DBProjectModel.UNMARSHALLER.get()
 
     if (lazyUnmarshaller.hasError) {
-      throw lazyUnmarshaller.getError
+      throw lazyUnmarshaller.error
     }
 
     Using(new BufferedReader(new FileReader(xmlDocument, StandardCharsets.UTF_8))) { br =>
       val xmlStreamReader = DBProjectModel.XML_INPUT_FACTORY.get().createXMLStreamReader(br)
-      lazyUnmarshaller.getItem.unmarshal(xmlStreamReader).asInstanceOf[Module]
+      lazyUnmarshaller.value.get().unmarshal(xmlStreamReader).asInstanceOf[Module]
     } match {
       case Success(value) => value
       case Failure(exception) => throw exception

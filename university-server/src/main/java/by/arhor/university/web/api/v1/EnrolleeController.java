@@ -1,9 +1,8 @@
 package by.arhor.university.web.api.v1;
 
+import static by.arhor.university.Constants.REST_API_V_1;
 import static by.arhor.university.web.api.util.PageUtils.paginate;
-import static by.arhor.university.web.api.v1.ApiController.API_V_1;
 
-import java.net.Authenticator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ import by.arhor.university.service.dto.EnrolleeDTO;
 
 @Lazy
 @RestController
-@RequestMapping(path = API_V_1 + "/enrollees")
+@RequestMapping(path = REST_API_V_1 + "/enrollees")
 public class EnrolleeController extends ApiController {
 
   private final EnrolleeService enrolleeService;

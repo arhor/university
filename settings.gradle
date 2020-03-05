@@ -1,10 +1,6 @@
 rootProject.name = 'university'
 
-include ':core'
-
-include ':university-eureka-server'
-include ':university-service-faculties'
-
+include ':university-core'
 include ':university-server'
 include ':university-client'
 include ':university-database'

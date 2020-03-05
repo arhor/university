@@ -74,12 +74,10 @@ public abstract class AbstractService<T, D extends DTO<K>, K>
   protected static final class ServiceOps {
     static <T, K> Either<Void, ServiceError> deleteById(JpaRepository<T, K> repository, K id) {
       Optional<T> item = repository.findById(id);
-
       if (item.isPresent()) {
         repository.delete(item.get());
         return success();
       }
-
       return failure(notFound("dtoClass.getSimpleName()", "id", id));
     }
   }

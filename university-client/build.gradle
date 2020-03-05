@@ -1,13 +1,14 @@
 plugins {
-  id 'com.github.node-gradle.node' version '2.2.0'
+  id 'com.github.node-gradle.node' version '2.2.2'
   id 'base'
 }
 
 description = 'university-client'
 
 node {
+  version  = '13.2.0'
+  npmVersion = '6.13.1'
   download = true
-  version  = '13.1.0'
 }
 
 task npmAuditFix (type: NpmTask, dependsOn: npmInstall) {

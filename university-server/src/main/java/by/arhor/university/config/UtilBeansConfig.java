@@ -47,5 +47,4 @@ public class UtilBeansConfig {
     registrationBean.addUrlPatterns("/api/*");
     return registrationBean;
   }
-
 }

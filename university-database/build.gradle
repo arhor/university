@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation project(':core')
+    implementation project(':university-core')
 
     implementation 'org.scala-lang:scala-library:2.13.1'
 

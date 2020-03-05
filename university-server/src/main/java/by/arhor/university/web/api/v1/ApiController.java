@@ -15,9 +15,7 @@ import by.arhor.university.service.error.ErrorLabel;
 import by.arhor.university.service.error.ServiceError;
 import by.arhor.university.web.api.model.ApiError;
 
-public class ApiController {
-
-  protected static final String API_V_1 = "/api/v1";
+public abstract class ApiController {
 
   private static final Pair<HttpStatus,String> DEFAULT_ERROR_RESPONSE = Pair.of(HttpStatus.INTERNAL_SERVER_ERROR, ApiError.UNEXPECTED);
   private static final Logger log = LoggerFactory.getLogger(ApiController.class);
@@ -25,23 +23,27 @@ public class ApiController {
   @Autowired private MessageSource messageSource;
 
   protected <T> ResponseEntity<?> handle(Either<T, ServiceError> either, Locale locale) {
+    log.debug("handling service response");
     if (either == null) {
+      log.debug("expected response is [Either], buy service responded with [null]");
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("null");
     }
     return either.hasError()
-        ? handleError(either.getError(), locale)
-        : handleSuccess(either.getItem());
+        ? handleFailure(either.error(), locale)
+        : handleSuccess(either.value().orElse(null));
   }
 
   private <T> ResponseEntity<T> handleSuccess(T item) {
+    log.debug("handling ");
     return ResponseEntity.ok(item);
   }
 
-  private ResponseEntity<ApiError> handleError(ServiceError error, Locale locale) {
+  private ResponseEntity<ApiError> handleFailure(ServiceError error, Locale locale) {
     var errorLabel = error.getErrorLabel();
 
-    var statusAndCode = parseStatusAndCode(errorLabel);
+    log.debug("handling failure with error label: [{}]", errorLabel);
 
+    var statusAndCode = parseStatusAndCode(errorLabel);
     return ResponseEntity.status(statusAndCode.getFirst())
         .body(
             new ApiError(

@@ -12,7 +12,7 @@ tasks.withType(JavaCompile).each {
 }
 
 configure([
-        project (':core'),
+        project (':university-core'),
         project (':university-server'),
 ]) {
     apply plugin: 'java'

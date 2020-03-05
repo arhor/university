@@ -1,7 +1,9 @@
 package by.arhor.university.web.api.v1;
 
-import static by.arhor.university.web.api.v1.ApiController.API_V_1;
+import static by.arhor.university.Constants.REST_API_V_1;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,10 @@ import by.arhor.university.web.security.JwtProvider;
 import by.arhor.university.web.security.JwtResponse;
 
 @RestController
-@RequestMapping(path = API_V_1 + "/auth")
+@RequestMapping(path = REST_API_V_1 + "/auth")
 public class AuthController extends ApiController {
+
+  private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
   private final AuthenticationManager authManager;
   private final UserRepository userRepository;
