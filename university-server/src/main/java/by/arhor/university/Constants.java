@@ -11,4 +11,7 @@ public final class Constants {
   public static final String CACHE_USERS = "cache_users";
   public static final String CACHE_LANGS = "cache_langs";
   public static final String CACHE_ROLES = "cache_roles";
+
+  public static final Object[] EMPTY_ARRAY = new Object[0];
+
 }

@@ -38,7 +38,6 @@ public class EnrolleeSubject implements Serializable {
   @Data
   @Embeddable
   public static class CompositeId implements Serializable {
-
     @Column(name = "subject_id", nullable = false)
     private Long subjectId;
 

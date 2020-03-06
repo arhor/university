@@ -17,6 +17,7 @@ import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
 @Data
 @Entity
@@ -42,6 +43,7 @@ public class Faculty extends AbstractModelObject<Long> {
       fetch = FetchType.LAZY,
       cascade = CascadeType.ALL,
       orphanRemoval = true)
+  @BatchSize(size = 50)
   private List<FacultyEnrollee> facultyEnrollees;
 
   @ManyToMany(fetch = FetchType.LAZY)
@@ -49,5 +51,6 @@ public class Faculty extends AbstractModelObject<Long> {
       name = "faculties_has_subjects",
       joinColumns = @JoinColumn(name = "faculty_id", nullable = false),
       inverseJoinColumns = @JoinColumn(name = "subject_id", nullable = false))
+  @BatchSize(size = 10)
   private List<Subject> subjects;
 }

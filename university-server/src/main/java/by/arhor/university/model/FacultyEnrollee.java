@@ -41,7 +41,6 @@ public class FacultyEnrollee implements Serializable {
   @Data
   @Embeddable
   public static class CompositeId implements Serializable {
-
     @Column(name = "faculty_id", nullable = false)
     private Long facultyId;
 

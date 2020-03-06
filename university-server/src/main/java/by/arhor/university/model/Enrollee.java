@@ -17,6 +17,7 @@ import javax.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.BatchSize;
 
 @Data
 @Entity
@@ -50,5 +51,6 @@ public class Enrollee extends AbstractModelObject<Long> {
       fetch = FetchType.LAZY,
       cascade = CascadeType.ALL,
       orphanRemoval = true)
+  @BatchSize(size = 10)
   private List<EnrolleeSubject> enrolleeSubjects;
 }

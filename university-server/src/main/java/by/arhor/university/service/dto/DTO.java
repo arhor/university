@@ -1,9 +1,9 @@
 package by.arhor.university.service.dto;
 
-import by.arhor.university.core.Identifiable;
+import java.io.Serializable;
 
 /**
  * Marker-interface
  */
-public interface DTO<ID> extends Identifiable<ID> {
+public interface DTO extends Serializable {
 }

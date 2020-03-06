@@ -2,6 +2,8 @@ package by.arhor.university.service.error;
 
 public interface ServiceError {
 
+  String NOT_FOUND = "error.not.found";
+
   ErrorLabel getErrorLabel();
 
   Object[] props();

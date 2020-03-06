@@ -12,8 +12,7 @@ public enum ErrorLabel {
     this.value = value;
   }
 
-  public String getValue() {
+  public final String getValue() {
     return value;
   }
-
 }

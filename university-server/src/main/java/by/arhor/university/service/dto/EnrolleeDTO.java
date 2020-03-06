@@ -1,9 +1,13 @@
 package by.arhor.university.service.dto;
 
+import by.arhor.university.Constants;
 import lombok.Data;
 
 @Data
-public final class EnrolleeDTO implements DTO<Long> {
+public final class EnrolleeDTO implements DTO {
+
+  private static final long serialVersionUID = Constants.SERIAL_VERSION;
+
   private Long   id;
   private String country;
   private String city;

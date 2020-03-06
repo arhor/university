@@ -1,7 +1,10 @@
 package by.arhor.university.web.api.v1;
 
-import java.util.Locale;
-
+import by.arhor.university.core.Either;
+import by.arhor.university.core.Pair;
+import by.arhor.university.service.error.ErrorLabel;
+import by.arhor.university.service.error.ServiceError;
+import by.arhor.university.web.api.model.ApiError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import by.arhor.university.core.Either;
-import by.arhor.university.core.Pair;
-import by.arhor.university.service.error.ErrorLabel;
-import by.arhor.university.service.error.ServiceError;
-import by.arhor.university.web.api.model.ApiError;
+import java.util.Locale;
 
 public abstract class ApiController {
 

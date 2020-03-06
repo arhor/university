@@ -19,7 +19,7 @@ import by.arhor.university.service.error.ServiceError;
 import by.arhor.university.service.trait.Deleter;
 import by.arhor.university.service.trait.Reader;
 
-public abstract class AbstractService<T, D extends DTO<K>, K>
+public abstract class AbstractService<T, D extends DTO, K>
     implements Reader<D, K>, Deleter<D, K> {
 
   protected final Class<D> dtoClass;
