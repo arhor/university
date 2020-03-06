@@ -13,65 +13,74 @@
     </dependencies>
 
     <queries context="university">
+        <util>
+            <![CDATA[
+            TRUNCATE TABLE enrollees_has_subjects
+            ]]>
+        </util>
+
         <insert>
             <![CDATA[
-            DECLARE @subjectsRequired INT = 4
+            DECLARE @subjectsRequired INT = 3
 
-            DECLARE @totalSubjects  INT = (SELECT COUNT(*) FROM subjects WITH(NOLOCK))
+            DECLARE @totalFaculties INT = (SELECT COUNT(*) FROM faculties WITH(NOLOCK))
             DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))
 
             DECLARE @counter INT = 0
+
             WHILE (@counter < @totalEnrollees)
             BEGIN
                 DECLARE @enrolleeId BIGINT = (
-                    SELECT   e.id
-                    FROM     enrollees e WITH(NOLOCK)
+                    SELECT e.id
+                    FROM enrollees e WITH(NOLOCK)
                     ORDER BY e.id ASC
                     OFFSET @counter ROWS
                     FETCH NEXT 1 ROWS ONLY
                 )
 
-                PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
-
-                DECLARE @subjectsCount INT = (SELECT COUNT(*) FROM enrollees_has_subjects es WITH(NOLOCK) WHERE es.enrollee_id = @enrolleeId)
-
-                IF (@subjectsCount < @subjectsRequired)
+                IF ((SELECT COUNT(*) FROM enrollees_has_subjects es WHERE es.enrollee_id = @enrolleeId) < @subjectsRequired)
                 BEGIN
-                PRINT CAST((@subjectsRequired - @subjectsCount) AS NVARCHAR(30)) + N' subjects will be generated'
+                    PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
 
-                    WHILE (@subjectsCount < @subjectsRequired)
-                    BEGIN
-                        DECLARE @subjectNum INT = FLOOR((@totalSubjects - @subjectsCount) * RAND())
+                    SET TRANSACTION ISOLATION LEVEL READ COMMITTED
+                    BEGIN TRANSACTION
+                        DELETE FROM enrollees_has_subjects WHERE enrollee_id = @enrolleeId
 
-                        DECLARE @subjectId BIGINT = (
-                            SELECT sub.id
-                            FROM subjects sub WITH(NOLOCK)
-                            WHERE sub.id NOT IN (
-                                SELECT es.subject_id
-                                FROM enrollees_has_subjects es WITH(NOLOCK)
-                                WHERE es.enrollee_id = @enrolleeId
-                            )
-                            ORDER BY sub.id ASC
-                            OFFSET @subjectNum ROWS
+                        DECLARE @facultyId BIGINT = (
+                            SELECT f.id
+                            FROM faculties f
+                            ORDER BY f.id ASC
+                            OFFSET CAST(FLOOR(@totalFaculties * RAND()) AS INT) ROWS
                             FETCH NEXT 1 ROWS ONLY
                         )
 
-                        INSERT INTO enrollees_has_subjects (subject_id, enrollee_id, score)
-                        VALUES
-                        (
-                            @subjectId,
-                            @enrolleeId,
-                            CEILING(100 * RAND())
-                        )
+                        DECLARE @subjectsCount INT = 0
 
-                        SET @subjectsCount = @subjectsCount + 1
-                        PRINT N'Success' + (CHAR(13) + CHAR(10)) -- line-break CR + LF
-                    END
-                END
+                        WHILE (@subjectsCount < @subjectsRequired)
+                        BEGIN
+                            DECLARE @subjectId BIGINT = (
+                                SELECT fhs.subject_id
+                                FROM faculties_has_subjects fhs
+                                WHERE fhs.faculty_id = @facultyId
+                                ORDER BY fhs.faculty_id ASC
+                                OFFSET @subjectsCount ROWS
+                                FETCH NEXT 1 ROWS ONLY
+                            )
 
-                ELSE
-                BEGIN
-                    PRINT N'There are ' + CAST(@subjectsCount AS NVARCHAR(30)) + N' subjects already exists'
+                            INSERT INTO enrollees_has_subjects (enrollee_id, subject_id, score)
+                            VALUES
+                            (
+                                @enrolleeId,
+                                @subjectId,
+                                CEILING(100 * RAND())
+                            )
+
+
+                            SET @subjectsCount = @subjectsCount + 1
+                        END
+
+                    COMMIT TRANSACTION
+                    PRINT N'Success' + (CHAR(13) + CHAR(10)) -- line-break CR + LF
                 END
 
                 SET @counter = @counter + 1

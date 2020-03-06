@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="enrollment_campaign">
+
+    <dependencies>
+        <dependency name="users"/>
+    </dependencies>
+
+    <queries context="university">
+        <drop target="view">
+            <![CDATA[
+            IF OBJECT_ID('enrollment_campaign') IS NOT NULL
+            BEGIN
+                DROP VIEW enrollment_campaign
+            END
+            ]]>
+        </drop>
+
+        <create target="view">
+            <![CDATA[
+            SELECT r.title AS 'Role'
+                 , l.label AS 'Language'
+                 , u.first_name AS 'First Name'
+                 , u.last_name AS 'Last Name'
+                 , e.country AS 'Country'
+                 , e.city AS 'City'
+                 , e.school_score + SUM(ehs.score) AS 'Total Score'
+                 , f.default_title AS 'Faculty'
+                 , '' AS 'Status'
+            FROM users u
+            JOIN langs l ON l.id = u.lang_id
+            JOIN roles r ON r.id = u.role_id
+            JOIN enrollees e ON u.id = e.user_id
+            JOIN enrollees_has_subjects ehs ON e.id = ehs.enrollee_id
+            JOIN faculties_has_enrollees fhe ON e.id = fhe.enrollee_id
+            JOIN faculties f ON f.id = fhe.faculty_id
+            GROUP BY r.title
+                   , l.label
+                   , u.id
+                   , u.first_name
+                   , u.last_name
+                   , e.country
+                   , e.city
+                   , e.school_score
+                   , f.id
+                   , f.default_title
+            ORDER BY f.id ASC
+                   , 'Total Score' DESC
+            ]]>
+        </create>
+    </queries>
+
+</module>

@@ -17,6 +17,12 @@
     </dependencies>
 
     <queries context="university">
+        <util>
+            <![CDATA[
+            TRUNCATE TABLE faculties_has_enrollees
+            ]]>
+        </util>
+
         <insert>
             <![CDATA[
             DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))

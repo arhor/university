@@ -39,8 +39,9 @@
             DECLARE @Admin BIGINT
             EXEC @Admin = dbo.getAdminRole
 
-            DECLARE @counter    INT = 0
             DECLARE @totalUsers INT = (SELECT COUNT(*) FROM users u WITH(NOLOCK) WHERE u.role_id != @Admin)
+            DECLARE @counter    INT = 0
+
             WHILE (@counter < @totalUsers)
             BEGIN
                 DECLARE @userId BIGINT = (

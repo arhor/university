@@ -30,7 +30,7 @@
             END
 
             DECLARE @counter INT = 1
-            WHILE (@counter <= 100)
+            WHILE (@counter <= 10000)
             BEGIN
                 DECLARE @Email NVARCHAR(50) = N'user.test' + CONVERT(NVARCHAR(3), @counter)  + N'@gmail.com'
 

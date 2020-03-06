@@ -58,6 +58,7 @@
                         <xsd:restriction base="xsd:string">
                             <xsd:enumeration value="database"/>
                             <xsd:enumeration value="table"/>
+                            <xsd:enumeration value="view"/>
                             <xsd:enumeration value="procedure"/>
                             <xsd:enumeration value="function"/>
                             <xsd:enumeration value="trigger"/>
@@ -77,6 +78,7 @@
                             <xsd:enumeration value="database"/>
                             <xsd:enumeration value="user"/>
                             <xsd:enumeration value="table"/>
+                            <xsd:enumeration value="view"/>
                             <xsd:enumeration value="procedure"/>
                             <xsd:enumeration value="function"/>
                             <xsd:enumeration value="trigger"/>
