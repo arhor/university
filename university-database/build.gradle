@@ -23,13 +23,5 @@ dependencies {
     implementation 'jakarta.activation:jakarta.activation-api:1.2.1'
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.2'
 
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
     implementation 'com.microsoft.sqlserver:mssql-jdbc:8.1.1.jre11-preview'
-
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.5.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.5.2'
-}
-
-test {
-    useJUnitPlatform()
 }

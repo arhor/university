@@ -39,7 +39,6 @@ public class Enrollee extends AbstractModelObject<Long> {
   private Byte schoolScore;
 
   @OneToOne(
-      mappedBy = "enrollee",
       fetch = FetchType.LAZY,
       cascade = CascadeType.ALL,
       orphanRemoval = true)

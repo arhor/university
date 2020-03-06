@@ -1,34 +1,36 @@
 plugins {
-  id 'com.github.node-gradle.node' version '2.2.2'
-  id 'base'
+    id 'com.github.node-gradle.node' version '2.2.2'
+    id 'base'
 }
 
 description = 'university-client'
 
 node {
-  version  = '13.2.0'
-  npmVersion = '6.13.1'
-  download = true
+    version  = '13.2.0'
+    npmVersion = '6.13.1'
+    download = true
 }
 
+def jsRootDir = "${project.projectDir}"
+
 task npmAuditFix (type: NpmTask, dependsOn: npmInstall) {
-  description = 'Verify and fix vulnerabilities in dependencies'
-  workingDir = file("${project.projectDir}")
-  args = ['audit', 'fix']
+    description = 'Verify and fix vulnerabilities in dependencies'
+    workingDir = file(jsRootDir)
+    args = ['audit', 'fix']
 }
 
 task clientBuild (type: NpmTask, dependsOn: npmAuditFix) {
-  description = 'Builds production version of the university client'
-  workingDir = file("${project.projectDir}")
-  args = ['run', 'build']
+    description = 'Builds production version of the university client'
+    workingDir = file(jsRootDir)
+    args = ['run', 'build']
 }
 
 task clientStart (type: NpmTask, dependsOn: clientBuild) {
-  description = 'Serves client for development purposes'
-  workingDir = file("${project.projectDir}")
-  args = ['run', 'serve']
+    description = 'Serves client for development purposes'
+    workingDir = file(jsRootDir)
+    args = ['run', 'serve']
 }
 
 assemble {
-  dependsOn clientBuild
+    dependsOn clientBuild
 }

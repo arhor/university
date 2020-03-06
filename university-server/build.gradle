@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot'
     id 'io.spring.dependency-management'
     id 'java'
+    id 'idea'
 }
 
 group = 'by.arhor'
@@ -12,8 +13,31 @@ description = 'university-server'
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
+task clientCopy(type: Copy, dependsOn: ':university-client:build') {
+    from '../university-client/dist'
+    into 'build/resources/main/static/.'
+}
+
+bootRun {
+    args = ['--spring.profiles.active=dev']
+}
+
+idea {
+    targetVersion '11'
+}
+
+compileJava {
+    dependsOn clientCopy
+}
+
 repositories {
     mavenCentral()
+}
+
+configurations {
+    implementation {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
 }
 
 dependencies {
@@ -27,6 +51,7 @@ dependencies {
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
     implementation 'org.modelmapper:modelmapper:2.3.6'
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -37,27 +62,4 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-}
-
-configurations {
-    implementation {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
-    }
-}
-
-task clientCopy(type: Copy, dependsOn: ':university-client:build') {
-    from '../university-client/dist'
-    into 'build/resources/main/static/.'
-}
-
-bootRun {
-    args = ['--spring.profiles.active=dev']
-}
-
-compileJava {
-    dependsOn clientCopy
-}
-
-test {
-    useJUnitPlatform()
 }
