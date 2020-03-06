@@ -9,7 +9,7 @@
             <![CDATA[
             IF (OBJECT_ID('langs') IS NULL)
             BEGIN
-            CREATE TABLE langs
+                CREATE TABLE langs
                 (
                     id       BIGINT     NOT NULL IDENTITY(1,1),
                     label    CHAR(2)    NOT NULL CHECK (label LIKE '[A-Z][A-Z]'),

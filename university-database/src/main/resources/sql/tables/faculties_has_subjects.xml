@@ -32,11 +32,8 @@
                         ON UPDATE CASCADE
                 )
 
-                CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_faculty_id
-                ON faculties_has_subjects (faculty_id ASC)
-
-                CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_subject_id
-                ON faculties_has_subjects (subject_id ASC)
+                CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_faculty_id ON faculties_has_subjects (faculty_id ASC)
+                CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_subject_id ON faculties_has_subjects (subject_id ASC)
             END
             ]]>
         </create>

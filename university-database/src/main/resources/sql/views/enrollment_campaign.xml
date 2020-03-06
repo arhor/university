@@ -5,7 +5,14 @@
         name="enrollment_campaign">
 
     <dependencies>
+        <dependency name="langs"/>
+        <dependency name="roles"/>
         <dependency name="users"/>
+        <dependency name="enrollees"/>
+        <dependency name="faculties"/>
+        <dependency name="enrollees_has_subjects"/>
+        <dependency name="faculties_has_enrollees"/>
+        <dependency name="calcEnrollmentPosition"/>
     </dependencies>
 
     <queries context="university">

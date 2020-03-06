@@ -54,7 +54,7 @@ GO
 -- #module: langs >>> START
 IF (OBJECT_ID('langs') IS NULL)
 BEGIN
-CREATE TABLE langs
+    CREATE TABLE langs
     (
         id       BIGINT     NOT NULL IDENTITY(1,1),
         label    CHAR(2)    NOT NULL CHECK (label LIKE '[A-Z][A-Z]'),
@@ -108,9 +108,41 @@ BEGIN
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
+    CREATE NONCLUSTERED INDEX IDX_labels_lang_id ON labels (lang_id ASC)
 END
 GO
 -- #module: labels <<< END
+
+-- #module: users >>> START
+-- #dependencies: [roles, langs]
+
+IF (OBJECT_ID('users') IS NULL)
+BEGIN
+    CREATE TABLE users
+    (
+        id            BIGINT           NOT NULL IDENTITY(1,1),
+        email         NVARCHAR(255)    NOT NULL UNIQUE,
+        password      NVARCHAR(512)    NOT NULL,
+        first_name    NVARCHAR(50)     NOT NULL,
+        last_name     NVARCHAR(50)     NOT NULL,
+        role_id       BIGINT           NOT NULL,
+        lang_id       BIGINT           NOT NULL,
+        CONSTRAINT PK_users PRIMARY KEY CLUSTERED (id ASC),
+        CONSTRAINT FK_users_role_id FOREIGN KEY (role_id)
+        REFERENCES roles (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+        CONSTRAINT FK_users_langs_id FOREIGN KEY (lang_id)
+        REFERENCES langs (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE
+    )
+    CREATE NONCLUSTERED INDEX IDX_users_email ON users (email ASC)
+    CREATE NONCLUSTERED INDEX IDX_users_lang_id ON users (lang_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_users_role_id ON users (role_id ASC)
+END
+GO
+-- #module: users <<< END
 
 -- #module: faculties_has_subjects >>> START
 -- #dependencies: [faculties, subjects]
@@ -131,38 +163,11 @@ BEGIN
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
+    CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_faculty_id ON faculties_has_subjects (faculty_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_subject_id ON faculties_has_subjects (subject_id ASC)
 END
 GO
 -- #module: faculties_has_subjects <<< END
-
--- #module: users >>> START
--- #dependencies: [roles, langs]
-
-IF (OBJECT_ID('users') IS NULL)
-BEGIN
-    CREATE TABLE users
-    (
-        id            BIGINT           NOT NULL IDENTITY(1,1),
-        email         NVARCHAR(255)    NOT NULL,
-        password      NVARCHAR(512)    NOT NULL,
-        first_name    NVARCHAR(50)     NOT NULL,
-        last_name     NVARCHAR(50)     NOT NULL,
-        role_id       BIGINT           NOT NULL,
-        lang_id       BIGINT           NOT NULL,
-        CONSTRAINT PK_users PRIMARY KEY CLUSTERED (id ASC),
-        CONSTRAINT FK_users_role_id FOREIGN KEY (role_id)
-        REFERENCES roles (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE,
-        CONSTRAINT FK_users_langs_id FOREIGN KEY (lang_id)
-        REFERENCES langs (id)
-            ON DELETE CASCADE
-            ON UPDATE CASCADE
-    )
-    CREATE UNIQUE NONCLUSTERED INDEX IDX_users_email ON users (email ASC)
-END
-GO
--- #module: users <<< END
 
 -- #module: users_audit >>> START
 -- #dependencies: [users]
@@ -225,6 +230,7 @@ BEGIN
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
+    CREATE NONCLUSTERED INDEX IDX_enrollees_user_id ON enrollees (user_id ASC)
     CREATE NONCLUSTERED INDEX IDX_enrollees_country ON enrollees (country ASC)
     CREATE NONCLUSTERED INDEX IDX_enrollees_city ON enrollees (city ASC)
 END
@@ -283,6 +289,8 @@ BEGIN
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
+    CREATE NONCLUSTERED INDEX IDX_faculties_has_enrollees_faculty_id ON faculties_has_enrollees (faculty_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_faculties_has_enrollees_enrollee_id ON faculties_has_enrollees (enrollee_id ASC)
 END
 GO
 -- #module: faculties_has_enrollees <<< END
@@ -307,6 +315,8 @@ BEGIN
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
+    CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_subject_id ON enrollees_has_subjects (subject_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_enrollee_id ON enrollees_has_subjects (enrollee_id ASC)
 END
 GO
 -- #module: enrollees_has_subjects <<< END
@@ -515,6 +525,37 @@ END
 GO
 -- #module: TR_users_audit_modification <<< END
 
+-- #module: calcEnrollmentPosition >>> START
+-- #dependencies: [enrollees, enrollees_has_subjects, faculties_has_enrollees]
+
+IF OBJECT_ID('calcEnrollmentPosition') IS NOT NULL
+BEGIN
+    DROP FUNCTION calcEnrollmentPosition
+END
+GO
+
+CREATE FUNCTION dbo.calcEnrollmentPosition (
+    @facultyId  BIGINT,
+    @enrolleeId BIGINT
+)
+RETURNS INT
+AS
+BEGIN
+    DECLARE @position INT
+    ;WITH dashboard AS (
+        SELECT e.id, ROW_NUMBER() OVER(ORDER BY e.school_score + SUM(ehs.score) DESC) AS 'num'
+        FROM faculties_has_enrollees fhe
+        JOIN enrollees e ON e.id = fhe.enrollee_id
+        JOIN enrollees_has_subjects ehs  ON e.id = ehs.enrollee_id
+        WHERE fhe.faculty_id = @facultyId
+        GROUP BY e.id, e.school_score
+    )
+    SELECT @position = num FROM dashboard WHERE id = @enrolleeId
+    RETURN COALESCE(@position, 0)
+END
+GO
+-- #module: calcEnrollmentPosition <<< END
+
 -- #module: createNewUser >>> START
 -- #dependencies: [roles, langs, users, getDefaultRole, getDefaultLang]
 
@@ -559,6 +600,55 @@ BEGIN
 END
 GO
 -- #module: createNewUser <<< END
+
+-- #module: enrollment_campaign >>> START
+-- #dependencies: [langs, roles, users, enrollees, faculties, enrollees_has_subjects, faculties_has_enrollees, calcEnrollmentPosition]
+
+IF OBJECT_ID('enrollment_campaign') IS NOT NULL
+BEGIN
+    DROP VIEW enrollment_campaign
+END
+GO
+
+CREATE VIEW enrollment_campaign
+AS
+SELECT r.title AS 'Role'
+     , l.label AS 'Language'
+     , u.first_name AS 'First Name'
+     , u.last_name AS 'Last Name'
+     , e.country AS 'Country'
+     , e.city AS 'City'
+     , e.school_score + SUM(ehs.score) AS 'Total Score'
+     , f.default_title AS 'Faculty'
+     , (CASE
+            WHEN dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_budget THEN 'budget'
+            WHEN dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_paid THEN 'paid'
+            ELSE 'does not pass'
+        END) AS 'Status'
+FROM users u
+JOIN langs l ON l.id = u.lang_id
+JOIN roles r ON r.id = u.role_id
+JOIN enrollees e ON u.id = e.user_id
+JOIN enrollees_has_subjects ehs ON e.id = ehs.enrollee_id
+JOIN faculties_has_enrollees fhe ON e.id = fhe.enrollee_id
+JOIN faculties f ON f.id = fhe.faculty_id
+GROUP BY r.title
+       , l.label
+       , u.id
+       , u.first_name
+       , u.last_name
+       , e.id
+       , e.country
+       , e.city
+       , e.school_score
+       , f.id
+       , f.default_title
+       , f.seats_budget
+eats_paid
+ORDER BY f.id ASC
+       , 'Total Score' DESC
+GO
+-- #module: enrollment_campaign <<< END
 
 -- #module: init-faculties >>> START
 -- #dependencies: [faculties]
@@ -760,7 +850,7 @@ BEGIN
     EXECUTE dbo.createNewUser N'admin@gmail.com', @Password, N'Максим', N'Буришинец', @Admin,  @RU
 END
 DECLARE @counter INT = 1
-WHILE (@counter <= 100)
+WHILE (@counter <= 10000)
 BEGIN
     DECLARE @Email NVARCHAR(50) = N'user.test' + CONVERT(NVARCHAR(3), @counter)  + N'@gmail.com'
     DECLARE @Lang INT = ROUND((3 * RAND()), 0)
@@ -835,8 +925,8 @@ VALUES (1, 1, N'Минск')  , (1, 2, N'Гродно') , (1, 3, N'Гомель'
      , (4, 1, N'Варшава'), (4, 2, N'Краков') , (4, 3, N'Гданьск'), (4, 4, N'Люблин');
 DECLARE @Admin BIGINT
 EXEC @Admin = dbo.getAdminRole
-DECLARE @counter    INT = 0
 DECLARE @totalUsers INT = (SELECT COUNT(*) FROM users u WITH(NOLOCK) WHERE u.role_id != @Admin)
+DECLARE @counter    INT = 0
 WHILE (@counter < @totalUsers)
 BEGIN
     DECLARE @userId BIGINT = (
@@ -879,53 +969,57 @@ GO
 -- #module: init-enrollees_has_subjects >>> START
 -- #dependencies: [enrollees, subjects, enrollees_has_subjects, init-enrollees, init-subjects]
 
-DECLARE @subjectsRequired INT = 4
-DECLARE @totalSubjects  INT = (SELECT COUNT(*) FROM subjects WITH(NOLOCK))
+TRUNCATE TABLE enrollees_has_subjects
+GO
+
+DECLARE @subjectsRequired INT = 3
+DECLARE @totalFaculties INT = (SELECT COUNT(*) FROM faculties WITH(NOLOCK))
 DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))
 DECLARE @counter INT = 0
 WHILE (@counter < @totalEnrollees)
 BEGIN
     DECLARE @enrolleeId BIGINT = (
-        SELECT   e.id
-        FROM     enrollees e WITH(NOLOCK)
+        SELECT e.id
+        FROM enrollees e WITH(NOLOCK)
         ORDER BY e.id ASC
         OFFSET @counter ROWS
         FETCH NEXT 1 ROWS ONLY
     )
-    PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
-    DECLARE @subjectsCount INT = (SELECT COUNT(*) FROM enrollees_has_subjects es WITH(NOLOCK) WHERE es.enrollee_id = @enrolleeId)
-    IF (@subjectsCount < @subjectsRequired)
+    IF ((SELECT COUNT(*) FROM enrollees_has_subjects es WHERE es.enrollee_id = @enrolleeId) < @subjectsRequired)
     BEGIN
-    PRINT CAST((@subjectsRequired - @subjectsCount) AS NVARCHAR(30)) + N' subjects will be generated'
-        WHILE (@subjectsCount < @subjectsRequired)
-        BEGIN
-            DECLARE @subjectNum INT = FLOOR((@totalSubjects - @subjectsCount) * RAND())
-            DECLARE @subjectId BIGINT = (
-                SELECT sub.id
-                FROM subjects sub WITH(NOLOCK)
-                WHERE sub.id NOT IN (
-                    SELECT es.subject_id
-                    FROM enrollees_has_subjects es WITH(NOLOCK)
-                    WHERE es.enrollee_id = @enrolleeId
-                )
-                ORDER BY sub.id ASC
-                OFFSET @subjectNum ROWS
+        PRINT N'Generating subjects for enrollee with ID = ' + CAST(@enrolleeId AS NVARCHAR(30))
+        SET TRANSACTION ISOLATION LEVEL READ COMMITTED
+        BEGIN TRANSACTION
+            DELETE FROM enrollees_has_subjects WHERE enrollee_id = @enrolleeId
+            DECLARE @facultyId BIGINT = (
+                SELECT f.id
+                FROM faculties f
+                ORDER BY f.id ASC
+                OFFSET CAST(FLOOR(@totalFaculties * RAND()) AS INT) ROWS
                 FETCH NEXT 1 ROWS ONLY
             )
-            INSERT INTO enrollees_has_subjects (subject_id, enrollee_id, score)
-            VALUES
-            (
-                @subjectId,
-                @enrolleeId,
-                CEILING(100 * RAND())
-            )
-            SET @subjectsCount = @subjectsCount + 1
-            PRINT N'Success' + (CHAR(13) + CHAR(10)) -- line-break CR + LF
-        END
-    END
-    ELSE
-    BEGIN
-        PRINT N'There are ' + CAST(@subjectsCount AS NVARCHAR(30)) + N' subjects already exists'
+            DECLARE @subjectsCount INT = 0
+            WHILE (@subjectsCount < @subjectsRequired)
+            BEGIN
+                DECLARE @subjectId BIGINT = (
+                    SELECT fhs.subject_id
+                    FROM faculties_has_subjects fhs
+                    WHERE fhs.faculty_id = @facultyId
+                    ORDER BY fhs.faculty_id ASC
+                    OFFSET @subjectsCount ROWS
+                    FETCH NEXT 1 ROWS ONLY
+                )
+                INSERT INTO enrollees_has_subjects (enrollee_id, subject_id, score)
+                VALUES
+                (
+                    @enrolleeId,
+                    @subjectId,
+                    CEILING(100 * RAND())
+                )
+                SET @subjectsCount = @subjectsCount + 1
+            END
+        COMMIT TRANSACTION
+        PRINT N'Success' + (CHAR(13) + CHAR(10)) -- line-break CR + LF
     END
     SET @counter = @counter + 1
 END
@@ -934,6 +1028,9 @@ GO
 
 -- #module: init-faculties_has_enrollees >>> START
 -- #dependencies: [enrollees, faculties, enrollees_has_subjects, faculties_has_enrollees, faculties_has_subjects, init-enrollees, init-faculties, init-enrollees_has_subjects, init-faculties_has_subjects]
+
+TRUNCATE TABLE faculties_has_enrollees
+GO
 
 DECLARE @totalEnrollees INT = (SELECT COUNT(*) FROM enrollees WITH(NOLOCK))
 DECLARE @subjectsMin    INT = 3

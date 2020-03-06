@@ -32,11 +32,8 @@
                         ON DELETE CASCADE
                         ON UPDATE CASCADE
                 )
-                CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_subject_id
-                ON enrollees_has_subjects (subject_id ASC)
-
-                CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_enrollee_id
-                ON enrollees_has_subjects (enrollee_id ASC)
+                CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_subject_id ON enrollees_has_subjects (subject_id ASC)
+                CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_enrollee_id ON enrollees_has_subjects (enrollee_id ASC)
             END
             ]]>
         </create>
