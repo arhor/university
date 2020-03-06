@@ -20,6 +20,8 @@
 
         <create target="view">
             <![CDATA[
+            CREATE VIEW enrollment_campaign
+            AS
             SELECT r.title AS 'Role'
                  , l.label AS 'Language'
                  , u.first_name AS 'First Name'
