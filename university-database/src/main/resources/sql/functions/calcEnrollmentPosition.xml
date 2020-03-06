@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.arhor.by/sql-module ./../sql-module.xsd"
+        xmlns="http://www.arhor.by/sql-module"
+        name="calcEnrollmentPosition">
+
+    <dependencies>
+        <dependency name="enrollees"/>
+        <dependency name="enrollees_has_subjects"/>
+        <dependency name="faculties_has_enrollees"/>
+    </dependencies>
+
+    <queries context="university">
+        <drop target="function">
+            <![CDATA[
+            IF OBJECT_ID('calcEnrollmentPosition') IS NOT NULL
+            BEGIN
+                DROP FUNCTION calcEnrollmentPosition
+            END
+            ]]>
+        </drop>
+
+        <create target="function">
+            <![CDATA[
+            CREATE FUNCTION dbo.calcEnrollmentPosition (
+                @facultyId  BIGINT,
+                @enrolleeId BIGINT
+            )
+            RETURNS INT
+            AS
+            BEGIN
+                DECLARE @position INT
+
+                ;WITH dashboard AS (
+                    SELECT e.id, ROW_NUMBER() OVER(ORDER BY e.school_score + SUM(ehs.score) DESC) AS 'num'
+                    FROM faculties_has_enrollees fhe
+                    JOIN enrollees e ON e.id = fhe.enrollee_id
+                    JOIN enrollees_has_subjects ehs  ON e.id = ehs.enrollee_id
+                    WHERE fhe.faculty_id = @facultyId
+                    GROUP BY e.id, e.school_score
+                )
+
+                SELECT @position = num FROM dashboard WHERE id = @enrolleeId
+
+                RETURN COALESCE(@position, 0)
+            END
+            ]]>
+        </create>
+    </queries>
+
+</module>

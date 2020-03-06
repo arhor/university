@@ -30,7 +30,11 @@
                  , e.city AS 'City'
                  , e.school_score + SUM(ehs.score) AS 'Total Score'
                  , f.default_title AS 'Faculty'
-                 , '' AS 'Status'
+                 , (CASE
+                        WHEN dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_budget THEN 'budget'
+                        WHEN dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_paid THEN 'paid'
+                        ELSE 'does not pass'
+                    END) AS 'Status'
             FROM users u
             JOIN langs l ON l.id = u.lang_id
             JOIN roles r ON r.id = u.role_id
@@ -43,11 +47,14 @@
                    , u.id
                    , u.first_name
                    , u.last_name
+                   , e.id
                    , e.country
                    , e.city
                    , e.school_score
                    , f.id
                    , f.default_title
+                   , f.seats_budget
+				   , f.seats_paid
             ORDER BY f.id ASC
                    , 'Total Score' DESC
             ]]>
