@@ -2,6 +2,8 @@ package by.arhor.university.web.api.v1;
 
 import static by.arhor.university.Constants.REST_API_V_1;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -22,20 +24,15 @@ import by.arhor.university.service.UserService;
 import by.arhor.university.service.dto.UserDTO;
 
 @Lazy
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = REST_API_V_1 + "/users")
 public class UserController extends ApiController {
 
   private final UserService service;
 
-  @Autowired
-  public UserController(UserService service) {
-    this.service = service;
-  }
-
-  @GetMapping(
-      path = "/{id}",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<?> getUser(@PathVariable Long id, WebRequest req) {
     return handle(service.findOne(id), req.getLocale());
   }

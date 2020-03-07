@@ -6,6 +6,8 @@ import static by.arhor.university.web.api.util.PageUtils.paginate;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -25,25 +27,20 @@ import by.arhor.university.service.FacultyService;
 import by.arhor.university.service.dto.FacultyDTO;
 
 @Lazy
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = REST_API_V_1 + "/faculties")
 public class FacultyController extends ApiController {
 
   private final FacultyService service;
-  private final BiFunction<Integer, Integer, List<FacultyDTO>> findPage;
-
-  @Autowired
-  public FacultyController(FacultyService service) {
-    this.service = service;
-    this.findPage = paginate(service::findPage);
-  }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public List<FacultyDTO> getFaculties(
       @RequestParam(required = false) Integer page,
       @RequestParam(required = false) Integer size,
       WebRequest request) {
-    return findPage.apply(page, size);
+    return paginate(service::findPage).apply(page, size);
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -54,9 +51,7 @@ public class FacultyController extends ApiController {
   @PreAuthorize("hasAuthority('ADMIN')")
   @DeleteMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public void deleteFaculty(
-      @PathVariable("id") Long id,
-      WebRequest request) {
+  public void deleteFaculty(@PathVariable("id") Long id, WebRequest req) {
     service.deleteById(id);
   }
 }

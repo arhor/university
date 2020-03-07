@@ -5,6 +5,8 @@ import static by.arhor.university.Constants.REST_API_V_1;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
@@ -17,16 +19,13 @@ import by.arhor.university.model.Lang;
 import by.arhor.university.repository.LangRepository;
 
 @Lazy
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = REST_API_V_1 + "/langs")
 public class LangController extends ApiController {
 
   private final LangRepository repository;
-
-  @Autowired
-  public LangController(LangRepository repository) {
-    this.repository = repository;
-  }
 
   @Cacheable(cacheNames = CACHE_LANGS)
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

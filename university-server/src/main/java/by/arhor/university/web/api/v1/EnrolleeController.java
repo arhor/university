@@ -5,6 +5,8 @@ import static by.arhor.university.web.api.util.PageUtils.paginate;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -29,18 +31,14 @@ import by.arhor.university.service.UserService;
 import by.arhor.university.service.dto.EnrolleeDTO;
 
 @Lazy
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = REST_API_V_1 + "/enrollees")
 public class EnrolleeController extends ApiController {
 
   private final EnrolleeService enrolleeService;
   private final UserService userService;
-
-  @Autowired
-  public EnrolleeController(EnrolleeService enrolleeService, UserService userService) {
-    this.enrolleeService = enrolleeService;
-    this.userService = userService;
-  }
 
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -53,7 +51,8 @@ public class EnrolleeController extends ApiController {
       var email = ((User) principal).getUsername();
       return handle(enrolleeService.create(dto, email), req.getLocale());
     }
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
         .body("incompatible `principal` class provided in authentication");
   }
 

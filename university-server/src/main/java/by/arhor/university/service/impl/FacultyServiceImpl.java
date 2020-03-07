@@ -16,25 +16,28 @@ import by.arhor.university.service.error.ServiceError;
 @Transactional
 public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Long> implements FacultyService {
 
+  private final FacultyRepository repository;
+
   @Autowired
   public FacultyServiceImpl(FacultyRepository repository, ModelMapper mapper) {
     super(FacultyDTO.class, repository, mapper);
+    this.repository = repository;
   }
 
   @Override
   public Either<FacultyDTO, ServiceError> create(FacultyDTO dto) {
-    boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
+    boolean exists = repository.existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
       return Either.failure(null);
     }
     var newFaculty = mapper.map(dto, Faculty.class);
-    var createdFaculty = repository.save(newFaculty);
-    return Either.success(toDto(createdFaculty));
+    newFaculty = repository.save(newFaculty);
+    return Either.success(toDto(newFaculty));
   }
 
   @Override
   public Either<FacultyDTO, ServiceError> update(FacultyDTO dto) {
-    boolean exists = facultyRepository().existsByDefaultTitle(dto.getDefaultTitle());
+    boolean exists = repository.existsByDefaultTitle(dto.getDefaultTitle());
     if (exists) {
       return Either.failure(null);
     }
@@ -44,9 +47,5 @@ public class FacultyServiceImpl extends AbstractService<Faculty, FacultyDTO, Lon
     faculty.setSeatsPaid(dto.getSeatsPaid());
     var savedFaculty = repository.save(faculty);
     return Either.success(toDto(savedFaculty));
-  }
-
-  private FacultyRepository facultyRepository() {
-    return (FacultyRepository) repository;
   }
 }

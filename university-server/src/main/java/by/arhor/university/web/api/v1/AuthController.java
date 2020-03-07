@@ -2,6 +2,8 @@ package by.arhor.university.web.api.v1;
 
 import static by.arhor.university.Constants.REST_API_V_1;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +27,16 @@ import by.arhor.university.web.api.model.SignUpRequest;
 import by.arhor.university.web.security.JwtProvider;
 import by.arhor.university.web.security.JwtResponse;
 
+@Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = REST_API_V_1 + "/auth")
 public class AuthController extends ApiController {
-
-  private static final Logger log = LoggerFactory.getLogger(AuthController.class);
 
   private final AuthenticationManager authManager;
   private final UserRepository userRepository;
   private final PasswordEncoder encoder;
   private final JwtProvider jwtProvider;
-
-  @Autowired
-  public AuthController(
-      AuthenticationManager authManager,
-      UserRepository userRepository,
-      PasswordEncoder encoder,
-      JwtProvider jwtProvider) {
-    this.authManager = authManager;
-    this.userRepository = userRepository;
-    this.encoder = encoder;
-    this.jwtProvider = jwtProvider;
-  }
 
   @PostMapping("/signin")
   public JwtResponse authenticateUser(@RequestBody SignInRequest signInRequest) {
