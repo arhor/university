@@ -2,11 +2,6 @@ package by.arhor.university.web.api.v1;
 
 import static by.arhor.university.Constants.REST_API_V_1;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +21,8 @@ import by.arhor.university.web.api.model.SignInRequest;
 import by.arhor.university.web.api.model.SignUpRequest;
 import by.arhor.university.web.security.JwtProvider;
 import by.arhor.university.web.security.JwtResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -60,7 +57,8 @@ public class AuthController extends ApiController {
         signUpRequest.getEmail(),
         encoder.encode(signUpRequest.getPassword()),
         signUpRequest.getFirstName(),
-        signUpRequest.getLastName());
+        signUpRequest.getLastName()
+    );
 
     return new ResponseEntity<>("Successfully registered", HttpStatus.CREATED);
   }

@@ -38,4 +38,4 @@ security:
     secret: absolutelySecret
     expire: 900000
 
-logging.level.root: debug
+logging.level.root: info

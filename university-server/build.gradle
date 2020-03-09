@@ -27,9 +27,9 @@ idea {
     targetVersion '11'
 }
 
-compileJava {
-    dependsOn clientCopy
-}
+//compileJava {
+//    dependsOn clientCopy
+//}
 
 repositories {
     mavenCentral()

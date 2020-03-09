@@ -11,13 +11,8 @@ public final class PageUtils {
   public static final int DEFAULT_PAGE = 0;
   public static final int DEFAULT_SIZE = 50;
 
-  private static final ToIntFunction<Number> BOUNDED_PAGE;
-  private static final ToIntFunction<Number> BOUNDED_SIZE;
-
-  static {
-    BOUNDED_PAGE = NumberUtils.minBound(DEFAULT_PAGE);
-    BOUNDED_SIZE = NumberUtils.maxBound(DEFAULT_SIZE);
-  }
+  private static final ToIntFunction<Number> BOUNDED_PAGE = NumberUtils.minBound(DEFAULT_PAGE);
+  private static final ToIntFunction<Number> BOUNDED_SIZE = NumberUtils.maxBound(DEFAULT_SIZE);
 
   private PageUtils() {}
 
@@ -29,7 +24,7 @@ public final class PageUtils {
    * @param <T> return type of resulting function
    * @return bounded Function which consumes bounded arguments
    */
-  public static <N extends Number, T> BiFunction<N, N, T> paginate(IntBiFunction<T> request) {
+  public static <N extends Number, T> BiFunction<N, N, T> bound(IntBiFunction<T> request) {
     return (p, s) -> request.apply(
         boundPage(p),
         boundSize(s));

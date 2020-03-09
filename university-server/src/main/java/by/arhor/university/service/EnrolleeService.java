@@ -1,9 +1,11 @@
 package by.arhor.university.service;
 
 import java.util.List;
+import java.util.Locale;
 
 import by.arhor.university.core.Either;
 import by.arhor.university.service.dto.EnrolleeDTO;
+import by.arhor.university.service.dto.EnrolleeSubjectDTO;
 import by.arhor.university.service.error.ServiceError;
 import by.arhor.university.service.trait.Deleter;
 import by.arhor.university.service.trait.Reader;
@@ -17,5 +19,4 @@ public interface EnrolleeService
   List<EnrolleeDTO> findBestEnrollees(int page, int size);
 
   Either<EnrolleeDTO, ServiceError> create(EnrolleeDTO dto, String userEmail);
-
 }

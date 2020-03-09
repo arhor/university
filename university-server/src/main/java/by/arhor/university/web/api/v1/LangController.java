@@ -35,7 +35,7 @@ public class LangController extends ApiController {
   }
 
   @GetMapping(path = "/default", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Lang.Value getDefaultLangId() {
+  public Lang.Value getDefaultLang() {
     return repository.getDefaultLang().map(Lang::getLabel).orElse(Lang.Value.RU);
   }
 }

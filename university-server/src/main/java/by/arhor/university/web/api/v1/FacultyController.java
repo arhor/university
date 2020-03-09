@@ -1,14 +1,13 @@
 package by.arhor.university.web.api.v1;
 
 import static by.arhor.university.Constants.REST_API_V_1;
-import static by.arhor.university.web.api.util.PageUtils.paginate;
+import static by.arhor.university.web.api.util.PageUtils.bound;
 
 import java.util.List;
-import java.util.function.BiFunction;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -40,7 +39,7 @@ public class FacultyController extends ApiController {
       @RequestParam(required = false) Integer page,
       @RequestParam(required = false) Integer size,
       WebRequest request) {
-    return paginate(service::findPage).apply(page, size);
+    return bound(service::findPage).apply(page, size);
   }
 
   @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

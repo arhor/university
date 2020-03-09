@@ -5,6 +5,7 @@ import static by.arhor.university.service.error.ServiceError.alreadyExists;
 import static by.arhor.university.service.error.ServiceError.notFound;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import by.arhor.university.repository.EnrolleeRepository;
 import by.arhor.university.repository.UserRepository;
 import by.arhor.university.service.EnrolleeService;
 import by.arhor.university.service.dto.EnrolleeDTO;
+import by.arhor.university.service.dto.EnrolleeSubjectDTO;
 import by.arhor.university.service.error.ServiceError;
 
 @Service
@@ -25,6 +27,7 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
     implements EnrolleeService {
 
   @Autowired private UserRepository userRepository;
+  @Autowired private EnrolleeRepository enrolleeRepository;
 
   @Autowired
   public EnrolleeServiceImpl(EnrolleeRepository repository, ModelMapper mapper) {
@@ -37,10 +40,11 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
     if (userOptional.isPresent()) {
       var user = userOptional.get();
       var enrollee = user.getEnrollee();
+
       if (enrollee == null) {
         var newEnrollee = mapper.map(dto, Enrollee.class);
         newEnrollee.setUser(user);
-        var savedEnrollee = repository.save(newEnrollee);
+        var savedEnrollee = enrolleeRepository.save(newEnrollee);
         user.setEnrollee(savedEnrollee);
         return Either.success(toDto(savedEnrollee));
       } else {
@@ -78,6 +82,6 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
   }
 
   private EnrolleeRepository enrolleeRepository() {
-    return (EnrolleeRepository) repository;
+    return (EnrolleeRepository) enrolleeRepository;
   }
 }

@@ -1,14 +1,18 @@
 package by.arhor.university.web.api.v1;
 
 import static by.arhor.university.Constants.REST_API_V_1;
+import static by.arhor.university.web.api.util.PageUtils.bound;
 
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import by.arhor.university.service.SubjectService;
@@ -23,7 +27,10 @@ public class SubjectController extends ApiController {
 
   private final SubjectService service;
 
-  public List<SubjectDTO> getSubjects() {
-    return service.findAll();
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<SubjectDTO> getSubjects(
+      @RequestParam(required = false) Integer page,
+      @RequestParam(required = false) Integer size) {
+    return bound(service::findPage).apply(page, size);
   }
 }

@@ -30,13 +30,8 @@ public class CustomCsrfFilter extends OncePerRequestFilter {
   private static final String CSRF_COOKIE = "xsrf-token";
   private static final String CSRF_HEADER = "x-xsrf-token";
 
-  private final AccessDeniedHandler accessDeniedHandler;
-  private final Supplier<Pattern> safeMethod;
-
-  {
-    accessDeniedHandler = new AccessDeniedHandlerImpl();
-    safeMethod = Lazy.evalSafe(() -> Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$"));
-  }
+  private final AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
+  private final Supplier<Pattern> safeMethod = Lazy.evalSafe(() -> Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$"));
 
   @Override
   protected void doFilterInternal(

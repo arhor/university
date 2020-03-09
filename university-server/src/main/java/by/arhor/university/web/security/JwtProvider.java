@@ -30,14 +30,15 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtProvider {
 
-  private static final Logger log = LoggerFactory.getLogger(JwtProvider.class);
-
-  @Autowired private
-  ObjectMapper objectMapper;
+  private final ObjectMapper objectMapper;
 
   @Value("${security.jwt.secret}")
   private String jwtSecret;

@@ -4,10 +4,10 @@ import by.arhor.university.Constants;
 import lombok.Data;
 
 @Data
-public final class SubjectDTO implements DTO {
+public final class EnrolleeSubjectDTO implements DTO {
 
   private static final long serialVersionUID = Constants.SERIAL_VERSION;
 
-  private Long   id;
-  private String defaultTitle;
+  private SubjectDTO subject;
+  private Short score;
 }

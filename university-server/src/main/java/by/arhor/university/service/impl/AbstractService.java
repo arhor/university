@@ -5,6 +5,8 @@ import by.arhor.university.service.dto.DTO;
 import by.arhor.university.service.error.ServiceError;
 import by.arhor.university.service.trait.Deleter;
 import by.arhor.university.service.trait.Reader;
+import lombok.extern.slf4j.Slf4j;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +20,7 @@ import static by.arhor.university.core.Either.success;
 import static by.arhor.university.service.error.ServiceError.notFound;
 import static java.util.stream.Collectors.toList;
 
+@Slf4j
 public abstract class AbstractService<T, D extends DTO, K>
     implements Reader<D, K>, Deleter<D, K> {
 
@@ -39,7 +42,10 @@ public abstract class AbstractService<T, D extends DTO, K>
   @Transactional(readOnly = true)
   public Either<D, ServiceError> findOne(K id) {
     return repository
-        .findById(id)
+        .findById(id).map(entity -> {
+          log.info("Fetched entity: {}", entity);
+          return entity;
+        })
         .map(this::toDto)
         .map(Either::<D, ServiceError>success)
         .orElseGet(() -> failure(notFound(dtoClass.getSimpleName(), "id", id)));
