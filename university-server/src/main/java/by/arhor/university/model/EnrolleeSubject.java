@@ -12,20 +12,19 @@ import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "enrollees_has_subjects")
 public class EnrolleeSubject implements Serializable {
 
   @EmbeddedId
   private CompositeId id;
-
-  @Min(0)
-  @Max(100)
-  @Column(name = "score", nullable = false)
-  private Short score;
 
   @ManyToOne(optional = false)
   @MapsId("enrollee_id")
@@ -35,8 +34,15 @@ public class EnrolleeSubject implements Serializable {
   @MapsId("subject_id")
   private Subject subject;
 
+  @Min(0)
+  @Max(100)
+  @Column(name = "score", nullable = false)
+  private Short score;
+
   @Data
   @Embeddable
+  @NoArgsConstructor
+  @AllArgsConstructor
   public static class CompositeId implements Serializable {
     @Column(name = "enrollee_id", nullable = false)
     private Long enrolleeId;

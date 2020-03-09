@@ -19,4 +19,6 @@ public interface EnrolleeService
   List<EnrolleeDTO> findBestEnrollees(int page, int size);
 
   Either<EnrolleeDTO, ServiceError> create(EnrolleeDTO dto, String userEmail);
+
+  Either<EnrolleeDTO, ServiceError> addEnrolleeSubject(Long enrolleeId, Long subjectId, Short score);
 }

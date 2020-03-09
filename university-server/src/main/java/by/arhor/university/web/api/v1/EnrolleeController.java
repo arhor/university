@@ -6,8 +6,10 @@ import static by.arhor.university.web.api.util.PageUtils.bound;
 import java.util.List;
 import java.util.Locale;
 
+import by.arhor.university.core.Either;
 import by.arhor.university.model.Enrollee;
 import by.arhor.university.service.dto.EnrolleeSubjectDTO;
+import by.arhor.university.service.error.ServiceError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,12 +89,21 @@ public class EnrolleeController extends ApiController {
 
   @GetMapping(
       path = "/best",
-      consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   @PreAuthorize("hasAuthority('ADMIN')")
   public List<EnrolleeDTO> getBestEnrollees(
       @RequestParam(required = false) Integer page,
       @RequestParam(required = false) Integer size) {
     return bound(enrolleeService::findBestEnrollees).apply(page, size);
+  }
+
+  @PostMapping(path = "/{enrolleeId}")
+  public ResponseEntity<?> addEnrolleeSubject(
+      @PathVariable Long enrolleeId,
+      @RequestParam Long subjectId,
+      @RequestParam Short score, Locale locale) {
+
+
+    return handle(enrolleeService.addEnrolleeSubject(enrolleeId, subjectId, score), locale);
   }
 }

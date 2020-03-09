@@ -1,11 +1,14 @@
 package by.arhor.university.service.impl;
 
 import static by.arhor.university.core.Either.failure;
+import static by.arhor.university.core.Either.success;
 import static by.arhor.university.service.error.ServiceError.alreadyExists;
 import static by.arhor.university.service.error.ServiceError.notFound;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import by.arhor.university.core.Either;
 import by.arhor.university.model.Enrollee;
+import by.arhor.university.model.EnrolleeSubject;
+import by.arhor.university.model.Subject;
 import by.arhor.university.repository.EnrolleeRepository;
+import by.arhor.university.repository.SubjectRepository;
 import by.arhor.university.repository.UserRepository;
 import by.arhor.university.service.EnrolleeService;
 import by.arhor.university.service.dto.EnrolleeDTO;
 import by.arhor.university.service.dto.EnrolleeSubjectDTO;
+import by.arhor.university.service.error.ErrorLabel;
 import by.arhor.university.service.error.ServiceError;
 
 @Service
@@ -28,6 +35,7 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
 
   @Autowired private UserRepository userRepository;
   @Autowired private EnrolleeRepository enrolleeRepository;
+  @Autowired private SubjectRepository subjectRepository;
 
   @Autowired
   public EnrolleeServiceImpl(EnrolleeRepository repository, ModelMapper mapper) {
@@ -53,6 +61,58 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
     } else {
       return failure(notFound("User", "email", userEmail));
     }
+  }
+
+  @Override
+  public Either<EnrolleeDTO, ServiceError> addEnrolleeSubject(Long enrolleeId, Long subjectId, Short score) {
+    var optionalEnrollee = enrolleeRepository.findById(enrolleeId);
+    if (optionalEnrollee.isEmpty()) {
+      return failure(notFound("optionalEnrollee", "id", enrolleeId));
+    }
+
+    var enrollee = optionalEnrollee.get();
+
+    boolean enrolleeSubjectExists =
+        enrollee.getEnrolleeSubjects().stream()
+            .map(EnrolleeSubject::getId)
+            .map(EnrolleeSubject.CompositeId::getSubjectId)
+            .anyMatch(id -> Objects.equals(id, subjectId));
+
+    if (enrolleeSubjectExists) {
+      return failure(new ServiceError() {
+        @Override
+        public ErrorLabel getErrorLabel() {
+          return ErrorLabel.ALREADY_EXISTS;
+        }
+
+        @Override
+        public Object[] props() {
+          return new Object[] { "Enrollee", "EnrolleeSubject", subjectId };
+        }
+      });
+    }
+
+    var optionalSubject = subjectRepository.findById(subjectId);
+    if (optionalSubject.isEmpty()) {
+      return failure(notFound("optionalSubject", "id", subjectId));
+    }
+
+    var subject = optionalSubject.get();
+
+    enrollee
+        .getEnrolleeSubjects()
+        .add(
+            new EnrolleeSubject(
+                new EnrolleeSubject.CompositeId(enrolleeId, subjectId),
+                enrollee,
+                subject,
+                score
+            )
+        );
+
+    Enrollee savedEnrollee = enrolleeRepository.save(enrollee);
+
+    return success(toDto(savedEnrollee));
   }
 
   @Override
