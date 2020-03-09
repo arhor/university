@@ -13,11 +13,12 @@ import by.arhor.university.model.Lang;
 @Repository
 public class LabelRepositoryImpl implements LabelRepository {
 
-  private static final String SQL_GET_LOCALIZED_STRING = ""
-      + "SELECT lb.value "
-      + "FROM labels lb WITH(NOLOCK) "
-      + "WHERE lb.label = :label "
-      + "AND lb.lang_id = :lang_id";
+  private static final String SQL_GET_LOCALIZED_STRING = """
+      SELECT lb.value
+      FROM labels lb WITH(NOLOCK)
+      WHERE lb.label = :label
+      AND lb.lang_id = :lang_id
+      """.stripLeading();
 
   @PersistenceContext
   private EntityManager entityManager;

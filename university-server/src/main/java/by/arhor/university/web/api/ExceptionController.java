@@ -2,6 +2,9 @@ package by.arhor.university.web.api;
 
 import by.arhor.university.service.error.EntityNotFoundException;
 import by.arhor.university.web.api.model.ApiError;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,17 +25,12 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import java.io.IOException;
 
+@Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class ExceptionController {
 
-  private static final Logger log = LoggerFactory.getLogger(ExceptionController.class);
-
   private final MessageSource messageSource;
-
-  @Autowired
-  public ExceptionController(MessageSource messageSource) {
-    this.messageSource = messageSource;
-  }
 
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentTypeMismatchException.class)

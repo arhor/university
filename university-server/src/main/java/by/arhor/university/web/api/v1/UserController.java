@@ -58,5 +58,4 @@ public class UserController extends ApiController {
   public void deleteUser(Long id) {
     service.deleteById(id);
   }
-
 }

@@ -7,9 +7,9 @@ import by.arhor.university.model.Lang;
 
 public interface LangRepository {
 
-  Optional<Lang> findByLabel(String label);
+  Optional<Lang> findLangByLabel(String label);
 
-  short getDefaultLangId();
+  Optional<Lang> getDefaultLang();
 
   List<Lang> findAll();
 

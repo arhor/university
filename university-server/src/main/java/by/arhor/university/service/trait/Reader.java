@@ -6,7 +6,7 @@ import by.arhor.university.core.Either;
 import by.arhor.university.service.dto.DTO;
 import by.arhor.university.service.error.ServiceError;
 
-public interface Reader<T extends DTO<?>, K> {
+public interface Reader<T extends DTO, K> {
 
   Either<T, ServiceError> findOne(K id);
 

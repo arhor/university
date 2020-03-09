@@ -4,10 +4,11 @@ import static by.arhor.university.Constants.CACHE_LANGS;
 import static by.arhor.university.Constants.REST_API_V_1;
 
 import java.util.List;
+import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ public class LangController extends ApiController {
   }
 
   @GetMapping(path = "/default", produces = MediaType.APPLICATION_JSON_VALUE)
-  public short getDefaultLangId() {
-    return repository.getDefaultLangId();
+  public Lang.Value getDefaultLangId() {
+    return repository.getDefaultLang().map(Lang::getLabel).orElse(Lang.Value.RU);
   }
 }

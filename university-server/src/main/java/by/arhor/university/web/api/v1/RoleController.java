@@ -5,9 +5,6 @@ import static by.arhor.university.Constants.REST_API_V_1;
 
 import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
@@ -17,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import by.arhor.university.model.Role;
 import by.arhor.university.repository.RoleRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Lazy
 @Slf4j
@@ -34,7 +33,7 @@ public class RoleController extends ApiController {
   }
 
   @GetMapping(path = "/default", produces = MediaType.APPLICATION_JSON_VALUE)
-  public Long getDefaultRole() {
-    return repository.getDefaultRole();
+  public Role.Value getDefaultRole() {
+    return repository.getDefaultRole().map(Role::getTitle).orElse(Role.Value.USER);
   }
 }

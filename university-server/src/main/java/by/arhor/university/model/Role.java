@@ -17,10 +17,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "roles")
 @EqualsAndHashCode(callSuper = true)
 @NamedStoredProcedureQueries({
-  @NamedStoredProcedureQuery(
-      name = "getDefaultRole",
-      procedureName = "getDefaultRole",
-      resultClasses = Long.class)
+  @NamedStoredProcedureQuery(name = "getDefaultRoleId", procedureName = "getDefaultRole")
 })
 public class Role extends AbstractModelObject<Short> {
 
