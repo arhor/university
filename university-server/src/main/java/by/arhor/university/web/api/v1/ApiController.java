@@ -57,10 +57,10 @@ public abstract class ApiController {
 
   private Pair<HttpStatus, String> parseStatusAndCode(ErrorLabel errorLabel) {
     if (errorLabel != null) {
-      return switch (errorLabel) {
-        case NOT_FOUND -> Pair.of(HttpStatus.NOT_FOUND, ApiError.NOT_FOUND);
-        default -> DEFAULT_ERROR_RESPONSE;
-      };
+      switch (errorLabel) {
+        case NOT_FOUND : return Pair.of(HttpStatus.NOT_FOUND, ApiError.NOT_FOUND);
+        default: return DEFAULT_ERROR_RESPONSE;
+      }
     } else {
       return DEFAULT_ERROR_RESPONSE;
     }
