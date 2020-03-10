@@ -14,10 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 @EnableAsync
 @EnableCaching
 @SpringBootApplication
-public class UniversityApplication {
+public class UniversityServerApp {
 
   public static void main(String[] args) {
-    SpringApplication.run(UniversityApplication.class, args);
+    SpringApplication.run(UniversityServerApp.class, args);
   }
 
   @Bean

@@ -1,0 +1,19 @@
+# HTTP Server port
+server:
+  port: 8081
+
+spring:
+  application:
+    # Name of the application (used to register service with `eureka`)
+    name: university-service-users
+
+eureka:
+  client:
+    # This is eureka client
+    register-with-eureka: true
+    fetch-registry: true
+    # Register url to the server
+    service-url:
+      defaultZone: http://localhost:8080/eureka/
+  instance:
+    hostname: localhost

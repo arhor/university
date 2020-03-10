@@ -1,14 +1,42 @@
 plugins {
+    id 'org.springframework.boot'        version '2.2.5.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'com.github.node-gradle.node' version '2.2.2'
-    id 'base'
+    id 'java'
 }
 
+group = 'by.arhor'
+version = '0.0.1-SNAPSHOT'
+
 description = 'university-client'
+
+sourceCompatibility = JavaVersion.VERSION_13
+targetCompatibility = JavaVersion.VERSION_13
 
 node {
     version  = '13.2.0'
     npmVersion = '6.13.1'
     download = true
+}
+
+bootRun {
+    jvmArgs(['--enable-preview'])
+    args = ['--spring.profiles.active=dev']
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    implementation {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 
 def jsRootDir = "${project.projectDir}"
@@ -25,12 +53,11 @@ task clientBuild (type: NpmTask, dependsOn: npmAuditFix) {
     args = ['run', 'build']
 }
 
-task clientStart (type: NpmTask, dependsOn: clientBuild) {
-    description = 'Serves client for development purposes'
-    workingDir = file(jsRootDir)
-    args = ['run', 'serve']
+task clientCopy(type: Copy, dependsOn: clientBuild) {
+    from 'dist/'
+    into 'build/resources/main/static/.'
 }
 
-assemble {
-    dependsOn clientBuild
+compileJava {
+    dependsOn clientCopy
 }
