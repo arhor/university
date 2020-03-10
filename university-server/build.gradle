@@ -9,11 +9,10 @@ version = '0.0.1-SNAPSHOT'
 
 description = 'university-server'
 
-sourceCompatibility = JavaVersion.VERSION_13
-targetCompatibility = JavaVersion.VERSION_13
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 bootRun {
-    jvmArgs(['--enable-preview'])
     args = ['--spring.profiles.active=dev']
 }
 

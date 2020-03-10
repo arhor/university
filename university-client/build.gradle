@@ -1,7 +1,7 @@
 plugins {
     id 'org.springframework.boot'        version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'com.github.node-gradle.node' version '2.2.2'
+    id 'com.github.node-gradle.node'     version '2.2.2'
     id 'java'
 }
 
@@ -10,18 +10,13 @@ version = '0.0.1-SNAPSHOT'
 
 description = 'university-client'
 
-sourceCompatibility = JavaVersion.VERSION_13
-targetCompatibility = JavaVersion.VERSION_13
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 node {
     version  = '13.2.0'
     npmVersion = '6.13.1'
     download = true
-}
-
-bootRun {
-    jvmArgs(['--enable-preview'])
-    args = ['--spring.profiles.active=dev']
 }
 
 repositories {
