@@ -54,8 +54,8 @@ eureka:
 
 zuul:
   # All url come with prefix/api will interpret
-#  prefix: /api
+  prefix: /api
   routes:
-    users:
-      path: /oauth/**
-      url: http://localhost:8081/oauth
+    rest-api-v1:
+      path: /v1/**
+      url: http://localhost:8081/

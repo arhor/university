@@ -17,7 +17,8 @@ allprojects {
 
 configure([
         project (':university-core'),
-        project (':university-server'),
+        project (':university-gateway'),
+        project (':university-rest-api'),
 ]) {
     apply plugin: 'java'
     apply plugin: 'jacoco'

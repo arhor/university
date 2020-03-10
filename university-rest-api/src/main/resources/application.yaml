@@ -1,9 +1,11 @@
+# HTTP Server port
 server:
-  port: 8080
+  port: 8081
 
 spring:
   application:
-    name: university-server
+    # Name of the application (used to register service with `eureka`)
+    name: university-rest-api
 
   datasource:
     driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
@@ -32,6 +34,17 @@ spring:
           batch_versioned_data: true
           lob:
             non_contextual_creation: true
+
+eureka:
+  client:
+    # This is eureka client
+    register-with-eureka: true
+    fetch-registry: true
+    # Register url to the server
+    service-url:
+      defaultZone: http://localhost:8080/eureka/
+  instance:
+    hostname: localhost
 
 security:
   jwt:

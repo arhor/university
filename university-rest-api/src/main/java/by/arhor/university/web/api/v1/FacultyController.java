@@ -1,13 +1,9 @@
 package by.arhor.university.web.api.v1;
 
-import static by.arhor.university.Constants.REST_API_V_1;
-import static by.arhor.university.web.api.util.PageUtils.bound;
-
-import java.util.List;
-
+import by.arhor.university.service.FacultyService;
+import by.arhor.university.service.dto.FacultyDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,14 +18,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
-import by.arhor.university.service.FacultyService;
-import by.arhor.university.service.dto.FacultyDTO;
+import java.util.List;
+
+import static by.arhor.university.web.api.util.PageUtils.bound;
 
 @Lazy
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = REST_API_V_1 + "/faculties")
+@RequestMapping(path = "/faculties")
 public class FacultyController extends ApiController {
 
   private final FacultyService service;
