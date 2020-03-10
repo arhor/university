@@ -23,7 +23,7 @@ public class LangRepositoryImpl implements LangRepository {
   public Optional<Lang> findLangByLabel(String label) {
     return Optional.ofNullable(
         entityManager
-            .createQuery("SELECT l FROM Lang l WHERE l.label = :label", Lang.class)
+            .createQuery("SELECT l FROM Lang l WHERE l.label=:label", Lang.class)
             .setParameter("label", label)
             .getSingleResult()
     );
@@ -35,7 +35,7 @@ public class LangRepositoryImpl implements LangRepository {
     log.debug("default language id: {}", langId);
     return Optional.ofNullable(
         entityManager
-            .createQuery("SELECT l FROM Lang l WHERE l.id = :id", Lang.class)
+            .createQuery("SELECT l FROM Lang l WHERE l.id=:id", Lang.class)
             .setParameter("id",  langId.shortValue())
             .getSingleResult()
     );
@@ -44,7 +44,7 @@ public class LangRepositoryImpl implements LangRepository {
   @Override
   public List<Lang> findAll() {
     return entityManager
-        .createQuery("SELECT l FROM Lang l ", Lang.class)
+        .createQuery("SELECT l FROM Lang l", Lang.class)
         .getResultList();
   }
 }

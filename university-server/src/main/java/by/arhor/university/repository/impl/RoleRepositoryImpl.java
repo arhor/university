@@ -24,7 +24,7 @@ public class RoleRepositoryImpl implements RoleRepository {
   public Optional<Role> findRoleByTitle(String title) {
     return Optional.ofNullable(
         entityManager
-            .createQuery("SELECT r FROM Role r WHERE r.title = :title", Role.class)
+            .createQuery("SELECT r FROM Role r WHERE r.title=:title", Role.class)
             .setParameter("title", title)
             .getSingleResult()
     );
@@ -36,7 +36,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     log.debug("default role id: {}", roleId);
     return Optional.ofNullable(
         entityManager
-            .createQuery("SELECT r FROM Role r WHERE r.id = :id", Role.class)
+            .createQuery("SELECT r FROM Role r WHERE r.id=:id", Role.class)
             .setParameter("id",  roleId.shortValue())
             .getSingleResult()
     );

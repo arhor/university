@@ -26,5 +26,4 @@ public class UserRepositoryExtImpl implements UserRepositoryExt {
         .setParameter("lang_id", null)
         .getSingleResult();
   }
-
 }
