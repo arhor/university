@@ -1,7 +1,13 @@
 rootProject.name = 'university'
 
 include ':university-core'
-include ':university-client'
 include ':university-database'
+
 include ':university-gateway'
+
+include ':university-config-server'
+include ':university-registry-server'
+include ':university-auth-server'
+include ':university-gateway-server'
 include ':university-rest-api'
+include ':university-ui-client'

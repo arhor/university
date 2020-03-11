@@ -7,7 +7,7 @@ plugins {
 group = 'by.arhor'
 version = '0.0.1-SNAPSHOT'
 
-description = 'university-gateway'
+description = 'university-registry-server'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -29,12 +29,11 @@ configurations {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-zuul'
+
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 dependencyManagement {

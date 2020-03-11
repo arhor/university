@@ -24,19 +24,14 @@
             AS
             BEGIN
                 DECLARE @defaultLang CHAR(2) = 'RU'
-                DECLARE @id AS BIGINT
 
-                SELECT @id = langs.id
-                FROM  langs WITH(NOLOCK)
-                WHERE langs.label = @defaultLang
+                DECLARE @id BIGINT = (SELECT l.id FROM langs l WITH(NOLOCK) WHERE l.label = @defaultLang)
 
                 IF (@id IS NULL)
                 BEGIN
                     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
                     BEGIN TRANSACTION
-                        SELECT @id = langs.id
-                        FROM  langs
-                        WHERE langs.label = @defaultLang
+                        SELECT @id = l.id FROM langs l WHERE l.label = @defaultLang
 
                         IF (@id IS NULL)
                         BEGIN

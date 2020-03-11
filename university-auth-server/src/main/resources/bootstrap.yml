@@ -1,0 +1,17 @@
+spring:
+
+  application:
+    name: university-auth-server
+
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
+      password: password # ${CONFIG_SERVICE_PASSWORD}
+      username: user
+
+  datasource:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://localhost:1433;database=university;encrypt=false;loginTimeout=30;
+    username: UniversitySA
+    password: 1university@SECRET!

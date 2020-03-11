@@ -7,14 +7,10 @@ plugins {
 group = 'by.arhor'
 version = '0.0.1-SNAPSHOT'
 
-description = 'university-server'
+description = 'university-rest-api'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
-
-ext {
-    set('springCloudVersion', 'Hoxton.SR3')
-}
 
 bootRun {
     args = ['--spring.profiles.active=dev']
@@ -50,6 +46,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+    implementation 'org.springframework.cloud:spring-cloud-starter-oauth2'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    implementation 'org.springframework.cloud:spring-cloud-starter-sleuth'
+    implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+    implementation 'org.springframework.cloud:spring-cloud-netflix-hystrix-stream'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
     testImplementation 'com.h2database:h2'

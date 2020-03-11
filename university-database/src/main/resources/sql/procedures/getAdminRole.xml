@@ -24,19 +24,13 @@
             AS
             BEGIN
                 DECLARE @adminRole NVARCHAR(10) = N'ADMIN'
-                DECLARE @id AS BIGINT
-
-                SELECT @id = roles.id
-                FROM  roles WITH(NOLOCK)
-                WHERE roles.title = @adminRole
+                DECLARE @id BIGINT = (SELECT r.id FROM roles r WITH(NOLOCK) WHERE r.title = @adminRole)
 
                 IF (@id IS NULL)
                 BEGIN
                     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
                     BEGIN TRANSACTION
-                        SELECT @id = roles.id
-                        FROM  roles
-                        WHERE roles.title = @adminRole
+                        SELECT @id = r.id FROM roles r WHERE r.title = @adminRole
 
                         IF (@id IS NULL)
                         BEGIN

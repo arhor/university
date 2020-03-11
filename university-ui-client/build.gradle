@@ -8,7 +8,7 @@ plugins {
 group = 'by.arhor'
 version = '0.0.1-SNAPSHOT'
 
-description = 'university-client'
+description = 'university-ui-client'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11

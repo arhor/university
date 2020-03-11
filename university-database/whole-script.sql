@@ -334,17 +334,12 @@ CREATE PROCEDURE dbo.getAdminRole
 AS
 BEGIN
     DECLARE @adminRole NVARCHAR(10) = N'ADMIN'
-    DECLARE @id AS BIGINT
-    SELECT @id = roles.id
-    FROM  roles WITH(NOLOCK)
-    WHERE roles.title = @adminRole
+    DECLARE @id BIGINT = (SELECT r.id FROM roles r WITH(NOLOCK) WHERE r.title = @adminRole)
     IF (@id IS NULL)
     BEGIN
         SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
         BEGIN TRANSACTION
-            SELECT @id = roles.id
-            FROM  roles
-            WHERE roles.title = @adminRole
+            SELECT @id = r.id FROM roles r WHERE r.title = @adminRole
             IF (@id IS NULL)
             BEGIN
                 INSERT INTO roles (title) VALUES (@adminRole)
@@ -371,17 +366,12 @@ CREATE PROCEDURE dbo.getDefaultRole
 AS
 BEGIN
     DECLARE @defaultRole NVARCHAR(10) = N'USER'
-    DECLARE @id AS BIGINT
-    SELECT @id = roles.id
-    FROM  roles WITH(NOLOCK)
-    WHERE roles.title = @defaultRole
+    DECLARE @id BIGINT = (SELECT r.id FROM roles r WITH(NOLOCK) WHERE r.title = @defaultRole)
     IF (@id IS NULL)
     BEGIN
         SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
         BEGIN TRANSACTION
-            SELECT @id = roles.id
-            FROM  roles
-            WHERE roles.title = @defaultRole
+            SELECT @id = r.id FROM roles r WHERE r.title = @defaultRole
             IF (@id IS NULL)
             BEGIN
                 INSERT INTO roles (title) VALUES (@defaultRole)
@@ -408,17 +398,12 @@ CREATE PROCEDURE dbo.getDefaultLang
 AS
 BEGIN
     DECLARE @defaultLang CHAR(2) = 'RU'
-    DECLARE @id AS BIGINT
-    SELECT @id = langs.id
-    FROM  langs WITH(NOLOCK)
-    WHERE langs.label = @defaultLang
+    DECLARE @id BIGINT = (SELECT l.id FROM langs l WITH(NOLOCK) WHERE l.label = @defaultLang)
     IF (@id IS NULL)
     BEGIN
         SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
         BEGIN TRANSACTION
-            SELECT @id = langs.id
-            FROM  langs
-            WHERE langs.label = @defaultLang
+            SELECT @id = l.id FROM langs l WHERE l.label = @defaultLang
             IF (@id IS NULL)
             BEGIN
                 INSERT INTO langs (label) VALUES (@defaultLang)

@@ -24,6 +24,8 @@ object Runner extends App {
       case Some(route) => route.apply()
       case None => handleUnknownCommand(command)
     }
+  } else {
+    createFile()
   }
 
   private def handleUnknownCommand(command: String): Unit = {
