@@ -1,7 +1,5 @@
 package by.arhor.university.web.api.v1;
 
-import static by.arhor.university.Constants.REST_API_V_1;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = REST_API_V_1 + "/auth")
+@RequestMapping(path = "/auth")
 public class AuthController extends ApiController {
 
   private final AuthenticationManager authManager;

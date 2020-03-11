@@ -18,6 +18,7 @@ ext {
 
 bootRun {
     args = ['--spring.profiles.active=dev']
+    jvmArgs(javaModules.collect { "--add-opens=${it}=ALL-UNNAMED" })
 }
 
 repositories {

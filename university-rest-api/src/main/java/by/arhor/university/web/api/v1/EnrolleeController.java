@@ -1,17 +1,9 @@
 package by.arhor.university.web.api.v1;
 
-import static by.arhor.university.Constants.REST_API_V_1;
 import static by.arhor.university.web.api.util.PageUtils.bound;
 
 import java.util.List;
 import java.util.Locale;
-
-import by.arhor.university.core.Either;
-import by.arhor.university.model.Enrollee;
-import by.arhor.university.service.dto.EnrolleeSubjectDTO;
-import by.arhor.university.service.error.ServiceError;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -32,23 +24,22 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 import by.arhor.university.service.EnrolleeService;
-import by.arhor.university.service.UserService;
 import by.arhor.university.service.dto.EnrolleeDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Lazy
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = REST_API_V_1 + "/enrollees")
+@RequestMapping(path = "/enrollees")
 public class EnrolleeController extends ApiController {
 
   private final EnrolleeService enrolleeService;
 
   @ResponseStatus(HttpStatus.CREATED)
   @PreAuthorize("hasAuthority('USER')")
-  @PostMapping(
-      consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = "application/json", produces = "application/json")
   public ResponseEntity<?> enroll(
       @RequestBody EnrolleeDTO dto,
       WebRequest req,
@@ -66,30 +57,28 @@ public class EnrolleeController extends ApiController {
         .body("incompatible `principal` class provided in authentication");
   }
 
-  @DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @DeleteMapping(path = "/{id}", produces = "application/json")
   @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
   @ResponseStatus(HttpStatus.OK)
   public void unroll(@PathVariable Long id) {
     enrolleeService.deleteById(id);
   }
 
-  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{id}", produces = "application/json")
 //  @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<?> getEnrolleeById(@PathVariable Long id, WebRequest req) {
     return handle(enrolleeService.findOne(id), req.getLocale());
   }
 
   @PreAuthorize("hasAuthority('ADMIN')")
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = "application/json")
   public List<EnrolleeDTO> getEnrollees(
       @RequestParam(required = false) Integer page,
       @RequestParam(required = false) Integer size) {
     return bound(enrolleeService::findPage).apply(page, size);
   }
 
-  @GetMapping(
-      path = "/best",
-      produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/best", produces = "application/json")
   @PreAuthorize("hasAuthority('ADMIN')")
   public List<EnrolleeDTO> getBestEnrollees(
       @RequestParam(required = false) Integer page,
@@ -102,7 +91,6 @@ public class EnrolleeController extends ApiController {
       @PathVariable Long enrolleeId,
       @RequestParam Long subjectId,
       @RequestParam Short score, Locale locale) {
-
 
     return handle(enrolleeService.addEnrolleeSubject(enrolleeId, subjectId, score), locale);
   }

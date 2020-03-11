@@ -31,7 +31,7 @@ public class FacultyController extends ApiController {
 
   private final FacultyService service;
 
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(produces = "application/json")
   public List<FacultyDTO> getFaculties(
       @RequestParam(required = false) Integer page,
       @RequestParam(required = false) Integer size,
@@ -39,7 +39,7 @@ public class FacultyController extends ApiController {
     return bound(service::findPage).apply(page, size);
   }
 
-  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/{id}", produces = "application/json")
   public ResponseEntity<?> getFaculty(@PathVariable("id") Long id, WebRequest req) {
     return handle(service.findOne(id), req.getLocale());
   }
