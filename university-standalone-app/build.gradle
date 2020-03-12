@@ -1,7 +1,8 @@
 plugins {
     id 'org.springframework.boot'        version '2.2.5.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-    id 'com.github.node-gradle.node'     version '2.2.2'
+    id 'com.github.node-gradle.node'     version '2.2.3'
+    id 'io.freefair.lombok'              version '5.0.0-rc6'
     id 'java'
 }
 
@@ -15,7 +16,6 @@ targetCompatibility = JavaVersion.VERSION_11
 
 node {
     version  = '13.2.0'
-    npmVersion = '6.13.1'
     download = true
 }
 
@@ -36,9 +36,6 @@ configurations {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
-
     runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
 
     implementation project(':university-core')
@@ -68,16 +65,9 @@ task npmAuditFix (type: NpmTask, dependsOn: npmInstall) {
 }
 
 task clientBuild (type: NpmTask, dependsOn: npmAuditFix) {
-    description = 'Builds production version of the university client'
+    description = 'Builds production version of the university standalone app client'
     workingDir = file(jsRootDir)
     args = ['run', 'build']
 }
 
-task clientCopy(type: Copy, dependsOn: clientBuild) {
-    from 'dist/'
-    into 'build/resources/main/static/.'
-}
-
-compileJava.dependsOn clientCopy
-
-compileJava { dependsOn clientCopy }
+compileJava { dependsOn(clientBuild) }
