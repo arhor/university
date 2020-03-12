@@ -36,19 +36,23 @@ public class AuthController extends ApiController {
   private final JwtProvider jwtProvider;
 
   @PostMapping("/signin")
-  public JwtResponse authenticateUser(@RequestBody SignInRequest signInRequest) {
-    Authentication authentication =
-        authManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                signInRequest.getEmail(), signInRequest.getPassword()));
+  public JwtResponse authenticate(@RequestBody SignInRequest signInRequest) {
+    Authentication authentication = authManager.authenticate(
+        new UsernamePasswordAuthenticationToken(
+            signInRequest.getEmail(),
+            signInRequest.getPassword()
+        )
+    );
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    return JwtResponse.withToken(jwtProvider.generateJwtToken(authentication));
+    return JwtResponse.withToken(
+        jwtProvider.generateJwtToken(authentication)
+    );
   }
 
   @PostMapping("/signup")
-  public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
+  public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest) {
     if (userRepository.countByEmail(signUpRequest.getEmail()) != 0) {
       return new ResponseEntity<>("Fail -> Email is already taken!", HttpStatus.BAD_REQUEST);
     }
@@ -63,9 +67,11 @@ public class AuthController extends ApiController {
     return new ResponseEntity<>("Successfully registered", HttpStatus.CREATED);
   }
 
-  @PreAuthorize("isAuthenticated()")
   @GetMapping("/refresh")
+  @PreAuthorize("isAuthenticated()")
   public JwtResponse refresh(Authentication authentication) {
-    return JwtResponse.withToken(jwtProvider.generateJwtToken(authentication));
+    return JwtResponse.withToken(
+        jwtProvider.generateJwtToken(authentication)
+    );
   }
 }

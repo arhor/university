@@ -2,6 +2,10 @@ package by.arhor.university.web.api.v1;
 
 import static by.arhor.university.Constants.REST_API_V_1;
 
+import java.util.Locale;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,4 +21,8 @@ public class LabelController extends ApiController {
 
   private final LabelService service;
 
+  @GetMapping("/{label}")
+  public String localize(@PathVariable("label") String label, Locale locale) {
+    return service.localize(label, locale);
+  }
 }

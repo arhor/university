@@ -4,9 +4,12 @@ import static by.arhor.university.Constants.REST_API_V_1;
 import static by.arhor.university.web.api.util.PageUtils.bound;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,8 +21,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
+import by.arhor.university.core.Either;
+import by.arhor.university.model.Subject;
 import by.arhor.university.service.FacultyService;
 import by.arhor.university.service.dto.FacultyDTO;
+import by.arhor.university.service.error.ServiceError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,28 +33,44 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = REST_API_V_1 + "/faculties")
+@RequestMapping(path = REST_API_V_1 + "/faculties", produces = MediaType.APPLICATION_JSON_VALUE)
 public class FacultyController extends ApiController {
 
   private final FacultyService service;
 
-  @GetMapping(produces = "application/json")
+  @GetMapping
   public List<FacultyDTO> getFaculties(
       @RequestParam(required = false) Integer page,
-      @RequestParam(required = false) Integer size,
-      WebRequest request) {
+      @RequestParam(required = false) Integer size) {
     return bound(service::findPage).apply(page, size);
   }
 
-  @GetMapping(path = "/{id}", produces = "application/json")
-  public ResponseEntity<?> getFaculty(@PathVariable("id") Long id, WebRequest req) {
-    return handle(service.findOne(id), req.getLocale());
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getFaculty(@PathVariable("id") long id, Locale locale) {
+    return handle(
+        service.findOne(id),
+        locale
+    );
   }
 
-  @PreAuthorize("hasAuthority('ADMIN')")
-  @DeleteMapping(path = "/{id}")
+  @GetMapping("/{id}/subjects")
+  public ResponseEntity<?> getFacultySubjects(@PathVariable("id") long id, Locale locale) {
+    var serviceResponse = service.findOne(id);
+
+    if (serviceResponse.hasError()) {
+      return handle(serviceResponse, locale);
+    }
+
+
+    Optional<FacultyDTO> value = serviceResponse.value();
+
+    return null;
+  }
+
+  @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.ACCEPTED)
-  public void deleteFaculty(@PathVariable("id") Long id, WebRequest req) {
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public void deleteFaculty(@PathVariable("id") long id) {
     service.deleteById(id);
   }
 }

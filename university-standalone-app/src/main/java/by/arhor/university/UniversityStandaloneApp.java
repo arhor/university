@@ -21,7 +21,7 @@ public class UniversityStandaloneApp {
   }
 
   @Bean
-  public CommandLineRunner run(RestTemplate restTemplate) {
+  public CommandLineRunner run() {
     return args -> log.info("University-app started");
   }
 }

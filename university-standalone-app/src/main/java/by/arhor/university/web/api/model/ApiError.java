@@ -3,9 +3,9 @@ package by.arhor.university.web.api.model;
 import java.io.Serializable;
 
 import by.arhor.university.Constants;
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public final class ApiError implements Serializable {
 
   private static final long serialVersionUID = Constants.SERIAL_VERSION;
@@ -21,8 +21,4 @@ public final class ApiError implements Serializable {
   private final String code;
   private final String message;
 
-  public ApiError(String code, String message) {
-    this.code = code;
-    this.message = message;
-  }
 }

@@ -5,10 +5,8 @@ import store from '@/store'
 import vuetify from '@/plugins/vuetify'
 import filters from '@/filters'
 
-for (let name in filters) {
-  if (filters.hasOwnProperty(name)) {
-    Vue.filter(name, filters[name])
-  }
+for (const [name, filter] of Object.entries(filters)) {
+  Vue.filter(name, filter)
 }
 
 Vue.config.productionTip = false

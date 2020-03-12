@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,18 +21,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = REST_API_V_1 + "/roles")
+@RequestMapping(path = REST_API_V_1 + "/roles", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RoleController extends ApiController {
 
   private final RoleRepository repository;
 
+  @GetMapping
   @Cacheable(cacheNames = CACHE_ROLES)
-  @GetMapping(produces = "application/json")
   public List<Role> getRoles() {
     return repository.findAll();
   }
 
-  @GetMapping(path = "/default", produces = "application/json")
+  @GetMapping("/default")
   public Role.Value getDefaultRole() {
     return repository.getDefaultRole().map(Role::getTitle).orElse(Role.Value.USER);
   }
