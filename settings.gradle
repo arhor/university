@@ -2,12 +2,14 @@ rootProject.name = 'university'
 
 include ':university-core'
 include ':university-database'
+include ':university-standalone-app'
 
+// microservice version
 include ':university-gateway'
-
 include ':university-config-server'
 include ':university-registry-server'
 include ':university-auth-server'
 include ':university-gateway-server'
 include ':university-rest-api'
 include ':university-ui-client'
+
