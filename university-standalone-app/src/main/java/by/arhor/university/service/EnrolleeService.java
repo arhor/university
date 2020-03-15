@@ -18,5 +18,5 @@ public interface EnrolleeService
 
   Either<EnrolleeDTO, ServiceError> create(EnrolleeDTO dto, String userEmail);
 
-  Either<EnrolleeDTO, ServiceError> addEnrolleeSubject(Long enrolleeId, Long subjectId, Short score);
+  Either<EnrolleeDTO, ServiceError> addEnrolleeSubject(long enrolleeId, long subjectId, short score);
 }

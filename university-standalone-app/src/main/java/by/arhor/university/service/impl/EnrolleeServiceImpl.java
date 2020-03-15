@@ -60,7 +60,11 @@ public class EnrolleeServiceImpl extends AbstractService<Enrollee, EnrolleeDTO, 
   }
 
   @Override
-  public Either<EnrolleeDTO, ServiceError> addEnrolleeSubject(Long enrolleeId, Long subjectId, Short score) {
+  public Either<EnrolleeDTO, ServiceError> addEnrolleeSubject(
+      long enrolleeId,
+      long subjectId,
+      short score) {
+
     var optionalEnrollee = enrolleeRepository.findById(enrolleeId);
     if (optionalEnrollee.isEmpty()) {
       return failure(notFound("optionalEnrollee", "id", enrolleeId));

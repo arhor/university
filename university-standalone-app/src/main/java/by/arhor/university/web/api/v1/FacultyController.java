@@ -33,7 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = REST_API_V_1 + "/faculties", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(
+    path = REST_API_V_1 + "/faculties",
+    produces = MediaType.APPLICATION_JSON_VALUE)
 public class FacultyController extends ApiController {
 
   private final FacultyService service;
@@ -46,7 +48,7 @@ public class FacultyController extends ApiController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> getFaculty(@PathVariable("id") long id, Locale locale) {
+  public ResponseEntity<?> getFaculty(@PathVariable long id, Locale locale) {
     return handle(
         service.findOne(id),
         locale
@@ -54,13 +56,12 @@ public class FacultyController extends ApiController {
   }
 
   @GetMapping("/{id}/subjects")
-  public ResponseEntity<?> getFacultySubjects(@PathVariable("id") long id, Locale locale) {
+  public ResponseEntity<?> getFacultySubjects(@PathVariable long id, Locale locale) {
     var serviceResponse = service.findOne(id);
 
     if (serviceResponse.hasError()) {
       return handle(serviceResponse, locale);
     }
-
 
     Optional<FacultyDTO> value = serviceResponse.value();
 
@@ -70,7 +71,7 @@ public class FacultyController extends ApiController {
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.ACCEPTED)
   @PreAuthorize("hasAuthority('ADMIN')")
-  public void deleteFaculty(@PathVariable("id") long id) {
+  public void deleteFaculty(@PathVariable long id) {
     service.deleteById(id);
   }
 }

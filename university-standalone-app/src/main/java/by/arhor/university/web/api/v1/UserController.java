@@ -1,9 +1,12 @@
 package by.arhor.university.web.api.v1;
 
-import static by.arhor.university.Constants.REST_API_V_1;
-
+import by.arhor.university.service.UserService;
+import by.arhor.university.service.dto.UserDTO;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,39 +17,40 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
-import by.arhor.university.service.UserService;
-import by.arhor.university.service.dto.UserDTO;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.Locale;
+
+import static by.arhor.university.Constants.REST_API_V_1;
 
 @Lazy
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = REST_API_V_1 + "/users")
+@RequestMapping(
+    path = REST_API_V_1 + "/users",
+    consumes = MediaType.APPLICATION_JSON_VALUE,
+    produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController extends ApiController {
 
   private final UserService service;
 
-  @GetMapping(path = "/{id}", produces = "application/json")
-  public ResponseEntity<?> getUser(@PathVariable Long id, WebRequest req) {
-    return handle(service.findOne(id), req.getLocale());
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getUser(@PathVariable Long id, Locale locale) {
+    return handle(service.findOne(id), locale);
   }
 
-  @PostMapping(consumes = "application/json", produces = "application/json")
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<?> register(@RequestBody UserDTO dto, WebRequest req) {
-    return handle(service.create(dto), req.getLocale());
+  public ResponseEntity<?> register(@RequestBody UserDTO dto, Locale locale) {
+    return handle(service.create(dto), locale);
   }
 
-  @PatchMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
-  public ResponseEntity<?> update(@RequestBody UserDTO dto, WebRequest req) {
-    return handle(service.update(dto), req.getLocale());
+  @PatchMapping("/{id}")
+  public ResponseEntity<?> update(@RequestBody UserDTO dto, Locale locale) {
+    return handle(service.update(dto), locale);
   }
 
-  @DeleteMapping(path = "/{id}")
+  @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public void deleteUser(Long id) {
     service.deleteById(id);

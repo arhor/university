@@ -5,6 +5,7 @@ import static by.arhor.university.web.api.util.PageUtils.bound;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -66,14 +67,14 @@ public class EnrolleeController extends ApiController {
 
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-  public void unroll(@PathVariable Long id) {
+  public void unroll(@PathVariable long id) {
     enrolleeService.deleteById(id);
   }
 
   @GetMapping("/{id}")
   @PreAuthorize("isAuthenticated()")
-  public ResponseEntity<?> getEnrolleeById(@PathVariable Long id, WebRequest req) {
-    return handle(enrolleeService.findOne(id), req.getLocale());
+  public ResponseEntity<?> getEnrolleeById(@PathVariable long id, Locale locale) {
+    return handle(enrolleeService.findOne(id), locale);
   }
 
   @GetMapping
@@ -94,9 +95,11 @@ public class EnrolleeController extends ApiController {
 
   @PostMapping("/{enrolleeId}")
   public ResponseEntity<?> addEnrolleeSubject(
-      @PathVariable Long enrolleeId,
-      @RequestParam Long subjectId,
-      @RequestParam Short score, Locale locale) {
+      @PathVariable long enrolleeId,
+      @RequestParam long subjectId,
+      @RequestParam short score,
+      Locale locale) {
+
     return handle(
         enrolleeService.addEnrolleeSubject(
             enrolleeId,

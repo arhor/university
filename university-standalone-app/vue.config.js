@@ -1,10 +1,8 @@
 const path = require('path')
 
 const sourceDir = 'src/main/js'
-const outputDir = 'build/resources/main/static/'
 
 module.exports = {
-  outputDir: path.resolve(__dirname, outputDir),
   transpileDependencies: [
     'vuetify'
   ],

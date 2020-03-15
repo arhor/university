@@ -15,7 +15,7 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 node {
-    version  = '13.2.0'
+    version  = '13.11.0'
     download = true
 }
 
@@ -27,12 +27,6 @@ bootRun {
 repositories {
     mavenCentral()
     maven { url 'https://repo.spring.io/milestone' }
-}
-
-configurations {
-    implementation {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
-    }
 }
 
 dependencies {
@@ -47,11 +41,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     testImplementation 'com.h2database:h2'
-    testImplementation 'org.hamcrest:hamcrest-all:1.3'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
@@ -70,4 +62,9 @@ task clientBuild (type: NpmTask, dependsOn: npmAuditFix) {
     args = ['run', 'build']
 }
 
-compileJava { dependsOn(clientBuild) }
+task clientCopy(type: Copy, dependsOn: clientBuild) {
+    from 'dist/'
+    into 'build/resources/main/static/'
+}
+
+compileJava { dependsOn(clientCopy) }

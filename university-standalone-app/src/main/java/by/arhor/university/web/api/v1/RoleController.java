@@ -34,6 +34,8 @@ public class RoleController extends ApiController {
 
   @GetMapping("/default")
   public Role.Value getDefaultRole() {
-    return repository.getDefaultRole().map(Role::getTitle).orElse(Role.Value.USER);
+    return repository.getDefaultRole()
+        .map(Role::getTitle)
+        .orElse(Role.Value.USER);
   }
 }
