@@ -16,30 +16,34 @@
             BEGIN
                 CREATE TABLE users
                 (
-                    id            BIGINT           NOT NULL IDENTITY(1,1),
-                    email         NVARCHAR(255)    NOT NULL UNIQUE,
-                    password      NVARCHAR(512)    NOT NULL,
-                    first_name    NVARCHAR(50)     NOT NULL,
-                    last_name     NVARCHAR(50)     NOT NULL,
-                    role_id       BIGINT           NOT NULL,
-                    lang_id       BIGINT           NOT NULL,
+                    id         BIGINT        NOT NULL IDENTITY(1,1),
+                    email      NVARCHAR(255) NOT NULL UNIQUE,
+                    password   NVARCHAR(512) NOT NULL,
+                    first_name NVARCHAR(50)  NOT NULL,
+                    last_name  NVARCHAR(50)  NOT NULL,
+                    role_id    BIGINT        NOT NULL,
+                    lang_id    BIGINT        NOT NULL,
 
-                    CONSTRAINT PK_users PRIMARY KEY CLUSTERED (id ASC),
+                    CONSTRAINT PK_users
+                    PRIMARY KEY CLUSTERED (id ASC),
 
-                    CONSTRAINT FK_users_role_id FOREIGN KEY (role_id)
-                    REFERENCES roles (id)
+                    CONSTRAINT FK_users_role_id
+                    FOREIGN KEY (role_id) REFERENCES roles (id)
                         ON DELETE CASCADE
                         ON UPDATE CASCADE,
 
-                    CONSTRAINT FK_users_langs_id FOREIGN KEY (lang_id)
-                    REFERENCES langs (id)
+                    CONSTRAINT FK_users_langs_id
+                    FOREIGN KEY (lang_id) REFERENCES langs (id)
                         ON DELETE CASCADE
                         ON UPDATE CASCADE
                 )
 
-                CREATE NONCLUSTERED INDEX IDX_users_email ON users (email ASC)
-                CREATE NONCLUSTERED INDEX IDX_users_lang_id ON users (lang_id ASC)
-                CREATE NONCLUSTERED INDEX IDX_users_role_id ON users (role_id ASC)
+                CREATE NONCLUSTERED INDEX IDX_users_email
+                    ON users (email ASC)
+                CREATE NONCLUSTERED INDEX IDX_users_lang_id
+                    ON users (lang_id ASC)
+                CREATE NONCLUSTERED INDEX IDX_users_role_id
+                    ON users (role_id ASC)
             END
             ]]>
         </create>

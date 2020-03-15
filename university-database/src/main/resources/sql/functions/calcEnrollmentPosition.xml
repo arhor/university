@@ -32,7 +32,10 @@
                 DECLARE @position INT
 
                 ;WITH dashboard AS (
-                    SELECT e.id, ROW_NUMBER() OVER(ORDER BY e.school_score + SUM(ehs.score) DESC) AS 'num'
+                    SELECT e.id
+                         , ROW_NUMBER() OVER(
+                               ORDER BY e.school_score + SUM(ehs.score) DESC
+                           ) AS 'num'
                     FROM faculties_has_enrollees fhe
                     JOIN enrollees e ON e.id = fhe.enrollee_id
                     JOIN enrollees_has_subjects ehs  ON e.id = ehs.enrollee_id

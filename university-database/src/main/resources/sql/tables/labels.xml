@@ -15,19 +15,21 @@
             BEGIN
                 CREATE TABLE labels
                 (
-                    lang_id       BIGINT           NOT NULL,
-                    label         NVARCHAR(64)     NOT NULL,
-                    value         NVARCHAR(500)    NOT NULL,
+                    lang_id BIGINT        NOT NULL,
+                    label   NVARCHAR(64)  NOT NULL,
+                    value   NVARCHAR(500) NOT NULL,
 
-                    CONSTRAINT PK_labels PRIMARY KEY CLUSTERED (lang_id, label),
+                    CONSTRAINT PK_labels
+                    PRIMARY KEY CLUSTERED (lang_id, label),
 
-                    CONSTRAINT FK_faculty_titles_lang_id FOREIGN KEY (lang_id)
-                    REFERENCES langs (id)
+                    CONSTRAINT FK_faculty_titles_lang_id
+                    FOREIGN KEY (lang_id) REFERENCES langs (id)
                         ON DELETE CASCADE
                         ON UPDATE CASCADE
                 )
 
-                CREATE NONCLUSTERED INDEX IDX_labels_lang_id ON labels (lang_id ASC)
+                CREATE NONCLUSTERED INDEX IDX_labels_lang_id
+                    ON labels (lang_id ASC)
             END
             ]]>
         </create>

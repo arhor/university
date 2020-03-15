@@ -39,7 +39,15 @@
                  EXECUTE @default_role_id = dbo.getDefaultRole;
                  EXECUTE @default_lang_id = dbo.getDefaultLang;
 
-                 INSERT INTO users (email, password, first_name, last_name, role_id, lang_id)
+                 INSERT INTO users
+                 (
+                    email,
+                    password,
+                    first_name,
+                    last_name,
+                    role_id,
+                    lang_id
+                 )
                  VALUES
                  (
                      @email,

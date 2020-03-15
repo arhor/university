@@ -23,7 +23,8 @@
                     modified_by   VARCHAR(128)  NOT NULL,
                     modified_date DATETIME      NOT NULL DEFAULT GETDATE(),
 
-                    CONSTRAINT PK_users_audit_modification PRIMARY KEY CLUSTERED (id ASC)
+                    CONSTRAINT PK_users_audit_modification
+                    PRIMARY KEY CLUSTERED (id ASC)
                 )
             END
             ]]>

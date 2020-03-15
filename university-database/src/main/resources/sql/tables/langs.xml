@@ -11,10 +11,11 @@
             BEGIN
                 CREATE TABLE langs
                 (
-                    id       BIGINT     NOT NULL IDENTITY(1,1),
-                    label    CHAR(2)    NOT NULL CHECK (label LIKE '[A-Z][A-Z]'),
+                    id    BIGINT  NOT NULL IDENTITY(1,1),
+                    label CHAR(2) NOT NULL CHECK (label LIKE '[A-Z][A-Z]'),
 
-                    CONSTRAINT PK_langs PRIMARY KEY CLUSTERED (id ASC)
+                    CONSTRAINT PK_langs
+                    PRIMARY KEY CLUSTERED (id ASC)
                 )
             END
             ]]>

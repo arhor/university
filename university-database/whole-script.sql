@@ -43,9 +43,10 @@ IF (OBJECT_ID('subjects') IS NULL)
 BEGIN
     CREATE TABLE subjects
     (
-        id               BIGINT          NOT NULL IDENTITY(1,1),
-        default_title    NVARCHAR(50)    NOT NULL UNIQUE,
-        CONSTRAINT PK_subjects PRIMARY KEY CLUSTERED (id ASC)
+        id            BIGINT       NOT NULL IDENTITY(1,1),
+        default_title NVARCHAR(50) NOT NULL UNIQUE,
+        CONSTRAINT PK_subjects
+        PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
@@ -56,9 +57,10 @@ IF (OBJECT_ID('langs') IS NULL)
 BEGIN
     CREATE TABLE langs
     (
-        id       BIGINT     NOT NULL IDENTITY(1,1),
-        label    CHAR(2)    NOT NULL CHECK (label LIKE '[A-Z][A-Z]'),
-        CONSTRAINT PK_langs PRIMARY KEY CLUSTERED (id ASC)
+        id    BIGINT  NOT NULL IDENTITY(1,1),
+        label CHAR(2) NOT NULL CHECK (label LIKE '[A-Z][A-Z]'),
+        CONSTRAINT PK_langs
+        PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
@@ -69,11 +71,12 @@ IF (OBJECT_ID('faculties') IS NULL)
 BEGIN
     CREATE TABLE faculties
     (
-        id               BIGINT          NOT NULL IDENTITY(1,1),
-        default_title    NVARCHAR(128)   NOT NULL UNIQUE,
-        seats_paid       SMALLINT        NOT NULL,
-        seats_budget     SMALLINT        NOT NULL,
-        CONSTRAINT PK_faculties PRIMARY KEY CLUSTERED (id ASC)
+        id            BIGINT        NOT NULL IDENTITY(1,1),
+        default_title NVARCHAR(128) NOT NULL UNIQUE,
+        seats_paid    SMALLINT      NOT NULL,
+        seats_budget  SMALLINT      NOT NULL,
+        CONSTRAINT PK_faculties
+        PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
@@ -84,9 +87,10 @@ IF (OBJECT_ID('roles') IS NULL)
 BEGIN
     CREATE TABLE roles
     (
-        id       BIGINT         NOT NULL IDENTITY(1,1),
-        title    NVARCHAR(15)   NOT NULL,
-        CONSTRAINT PK_roles PRIMARY KEY CLUSTERED (id ASC)
+        id    BIGINT       NOT NULL IDENTITY(1,1),
+        title NVARCHAR(15) NOT NULL,
+        CONSTRAINT PK_roles
+        PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
@@ -99,16 +103,18 @@ IF (OBJECT_ID('labels') IS NULL)
 BEGIN
     CREATE TABLE labels
     (
-        lang_id       BIGINT           NOT NULL,
-        label         NVARCHAR(64)     NOT NULL,
-        value         NVARCHAR(500)    NOT NULL,
-        CONSTRAINT PK_labels PRIMARY KEY CLUSTERED (lang_id, label),
-        CONSTRAINT FK_faculty_titles_lang_id FOREIGN KEY (lang_id)
-        REFERENCES langs (id)
+        lang_id BIGINT        NOT NULL,
+        label   NVARCHAR(64)  NOT NULL,
+        value   NVARCHAR(500) NOT NULL,
+        CONSTRAINT PK_labels
+        PRIMARY KEY CLUSTERED (lang_id, label),
+        CONSTRAINT FK_faculty_titles_lang_id
+        FOREIGN KEY (lang_id) REFERENCES langs (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
-    CREATE NONCLUSTERED INDEX IDX_labels_lang_id ON labels (lang_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_labels_lang_id
+        ON labels (lang_id ASC)
 END
 GO
 -- #module: labels <<< END
@@ -120,26 +126,30 @@ IF (OBJECT_ID('users') IS NULL)
 BEGIN
     CREATE TABLE users
     (
-        id            BIGINT           NOT NULL IDENTITY(1,1),
-        email         NVARCHAR(255)    NOT NULL UNIQUE,
-        password      NVARCHAR(512)    NOT NULL,
-        first_name    NVARCHAR(50)     NOT NULL,
-        last_name     NVARCHAR(50)     NOT NULL,
-        role_id       BIGINT           NOT NULL,
-        lang_id       BIGINT           NOT NULL,
-        CONSTRAINT PK_users PRIMARY KEY CLUSTERED (id ASC),
-        CONSTRAINT FK_users_role_id FOREIGN KEY (role_id)
-        REFERENCES roles (id)
+        id         BIGINT        NOT NULL IDENTITY(1,1),
+        email      NVARCHAR(255) NOT NULL UNIQUE,
+        password   NVARCHAR(512) NOT NULL,
+        first_name NVARCHAR(50)  NOT NULL,
+        last_name  NVARCHAR(50)  NOT NULL,
+        role_id    BIGINT        NOT NULL,
+        lang_id    BIGINT        NOT NULL,
+        CONSTRAINT PK_users
+        PRIMARY KEY CLUSTERED (id ASC),
+        CONSTRAINT FK_users_role_id
+        FOREIGN KEY (role_id) REFERENCES roles (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-        CONSTRAINT FK_users_langs_id FOREIGN KEY (lang_id)
-        REFERENCES langs (id)
+        CONSTRAINT FK_users_langs_id
+        FOREIGN KEY (lang_id) REFERENCES langs (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
-    CREATE NONCLUSTERED INDEX IDX_users_email ON users (email ASC)
-    CREATE NONCLUSTERED INDEX IDX_users_lang_id ON users (lang_id ASC)
-    CREATE NONCLUSTERED INDEX IDX_users_role_id ON users (role_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_users_email
+        ON users (email ASC)
+    CREATE NONCLUSTERED INDEX IDX_users_lang_id
+        ON users (lang_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_users_role_id
+        ON users (role_id ASC)
 END
 GO
 -- #module: users <<< END
@@ -151,20 +161,23 @@ IF (OBJECT_ID('faculties_has_subjects') IS NULL)
 BEGIN
     CREATE TABLE faculties_has_subjects
     (
-        faculty_id     BIGINT      NOT NULL,
-        subject_id     BIGINT      NOT NULL,
-        CONSTRAINT PK_faculties_has_subjects PRIMARY KEY CLUSTERED (faculty_id, subject_id),
-        CONSTRAINT FK_faculties_has_subjects_faculty_id FOREIGN KEY (faculty_id)
-        REFERENCES faculties (id)
+        faculty_id BIGINT NOT NULL,
+        subject_id BIGINT NOT NULL,
+        CONSTRAINT PK_faculties_has_subjects
+        PRIMARY KEY CLUSTERED (faculty_id, subject_id),
+        CONSTRAINT FK_faculties_has_subjects_faculty_id
+        FOREIGN KEY (faculty_id) REFERENCES faculties (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-        CONSTRAINT FK_faculties_has_subjects_subject_id FOREIGN KEY (subject_id)
-        REFERENCES subjects (id)
+        CONSTRAINT FK_faculties_has_subjects_subject_id
+        FOREIGN KEY (subject_id) REFERENCES subjects (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
-    CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_faculty_id ON faculties_has_subjects (faculty_id ASC)
-    CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_subject_id ON faculties_has_subjects (subject_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_faculty_id
+        ON faculties_has_subjects (faculty_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_faculties_has_subjects_subject_id
+        ON faculties_has_subjects (subject_id ASC)
 END
 GO
 -- #module: faculties_has_subjects <<< END
@@ -185,8 +198,9 @@ BEGIN
         role_id       BIGINT        NOT NULL,
         modified_by   VARCHAR(128)  NOT NULL,
         modified_date DATETIME      NOT NULL DEFAULT GETDATE(),
-        operation     VARCHAR(20)   NOT NULL CHECK (operation in ('CREATED', 'DELETED')),
-        CONSTRAINT PK_users_audit PRIMARY KEY CLUSTERED (id ASC)
+        operation     VARCHAR(20)   NOT NULL CHECK (operation IN ('CREATED', 'DELETED')),
+        CONSTRAINT PK_users_audit
+        PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
@@ -206,7 +220,8 @@ BEGIN
         new_value     NVARCHAR(512) NULL,
         modified_by   VARCHAR(128)  NOT NULL,
         modified_date DATETIME      NOT NULL DEFAULT GETDATE(),
-        CONSTRAINT PK_users_audit_modification PRIMARY KEY CLUSTERED (id ASC)
+        CONSTRAINT PK_users_audit_modification
+        PRIMARY KEY CLUSTERED (id ASC)
     )
 END
 GO
@@ -219,20 +234,24 @@ IF (OBJECT_ID('enrollees') IS NULL)
 BEGIN
     CREATE TABLE enrollees
     (
-        id              BIGINT          NOT NULL IDENTITY(1,1),
-        country         NVARCHAR(64)    NOT NULL,
-        city            NVARCHAR(64)    NOT NULL,
-        school_score    SMALLINT        NOT NULL CHECK (school_score >= 0 AND school_score <= 100),
-        user_id         BIGINT          NOT NULL UNIQUE,
-        CONSTRAINT PK_enrollees PRIMARY KEY CLUSTERED (id ASC),
-        CONSTRAINT FK_enrollees_user_id FOREIGN KEY (user_id)
-        REFERENCES users (id)
+        id           BIGINT       NOT NULL IDENTITY(1,1),
+        country      NVARCHAR(64) NOT NULL,
+        city         NVARCHAR(64) NOT NULL,
+        school_score SMALLINT     NOT NULL CHECK (school_score >= 0 AND school_score <= 100),
+        user_id      BIGINT       NOT NULL UNIQUE,
+        CONSTRAINT PK_enrollees
+        PRIMARY KEY CLUSTERED (id ASC),
+        CONSTRAINT FK_enrollees_user_id
+        FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
-    CREATE NONCLUSTERED INDEX IDX_enrollees_user_id ON enrollees (user_id ASC)
-    CREATE NONCLUSTERED INDEX IDX_enrollees_country ON enrollees (country ASC)
-    CREATE NONCLUSTERED INDEX IDX_enrollees_city ON enrollees (city ASC)
+    CREATE NONCLUSTERED INDEX IDX_enrollees_user_id
+        ON enrollees (user_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_enrollees_country
+        ON enrollees (country ASC)
+    CREATE NONCLUSTERED INDEX IDX_enrollees_city
+        ON enrollees (city ASC)
 END
 GO
 -- #module: enrollees <<< END
@@ -257,13 +276,47 @@ BEGIN
     )
     IF EXISTS (SELECT * FROM deleted)
     BEGIN
-        INSERT INTO users_audit (user_id, email, password, first_name, last_name, role_id, modified_by, operation)
-        SELECT id, email, password, first_name, last_name, role_id, @login_name, 'DELETED' FROM deleted
+        INSERT INTO users_audit (
+            user_id,
+            email,
+            password,
+            first_name,
+            last_name,
+            role_id,
+            modified_by,
+            operation
+        )
+        SELECT id
+             , email
+             , password
+             , first_name
+             , last_name
+             , role_id
+             , @login_name
+             , 'DELETED'
+        FROM deleted
     END
     ELSE
     BEGIN
-        INSERT INTO users_audit (user_id, email, password, first_name, last_name, role_id, modified_by, operation)
-        SELECT id, email, password, first_name, last_name, role_id, @login_name, 'CREATED' FROM inserted
+        INSERT INTO users_audit (
+            user_id,
+            email,
+            password,
+            first_name,
+            last_name,
+            role_id,
+            modified_by,
+            operation
+        )
+        SELECT id
+             , email
+             , password
+             , first_name
+             , last_name
+             , role_id
+             , @login_name
+             , 'CREATED'
+        FROM inserted
     END
 END
 GO
@@ -276,21 +329,24 @@ IF (OBJECT_ID('faculties_has_enrollees') IS NULL)
 BEGIN
     CREATE TABLE faculties_has_enrollees
     (
-        faculty_id     BIGINT      NOT NULL,
-        enrollee_id    BIGINT      NOT NULL,
-        filing_date    DATETIME    NOT NULL DEFAULT GETDATE(),
-        CONSTRAINT PK_faculties_has_enrollees PRIMARY KEY CLUSTERED (faculty_id, enrollee_id),
-        CONSTRAINT FK_faculties_has_enrollees_faculty_id FOREIGN KEY (faculty_id)
-        REFERENCES faculties (id)
+        faculty_id  BIGINT   NOT NULL,
+        enrollee_id BIGINT   NOT NULL,
+        filing_date DATETIME NOT NULL DEFAULT GETDATE(),
+        CONSTRAINT PK_faculties_has_enrollees
+        PRIMARY KEY CLUSTERED (faculty_id, enrollee_id),
+        CONSTRAINT FK_faculties_has_enrollees_faculty_id
+        FOREIGN KEY (faculty_id) REFERENCES faculties (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-        CONSTRAINT FK_faculties_has_enrollees_enrollee_id FOREIGN KEY (enrollee_id)
-        REFERENCES enrollees (id)
+        CONSTRAINT FK_faculties_has_enrollees_enrollee_id
+        FOREIGN KEY (enrollee_id) REFERENCES enrollees (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
-    CREATE NONCLUSTERED INDEX IDX_faculties_has_enrollees_faculty_id ON faculties_has_enrollees (faculty_id ASC)
-    CREATE NONCLUSTERED INDEX IDX_faculties_has_enrollees_enrollee_id ON faculties_has_enrollees (enrollee_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_faculties_has_enrollees_faculty_id
+        ON faculties_has_enrollees (faculty_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_faculties_has_enrollees_enrollee_id
+        ON faculties_has_enrollees (enrollee_id ASC)
 END
 GO
 -- #module: faculties_has_enrollees <<< END
@@ -302,21 +358,24 @@ IF (OBJECT_ID('enrollees_has_subjects') IS NULL)
 BEGIN
     CREATE TABLE enrollees_has_subjects
     (
-        subject_id     BIGINT      NOT NULL,
-        enrollee_id    BIGINT      NOT NULL,
-        score          SMALLINT    NOT NULL CHECK (score >= 0 AND score <= 100),
-        CONSTRAINT PK_enrollees_has_subjects PRIMARY KEY CLUSTERED (subject_id, enrollee_id),
-        CONSTRAINT FK_enrollees_has_subjects_subject_id FOREIGN KEY (subject_id)
-        REFERENCES subjects (id)
+        subject_id  BIGINT   NOT NULL,
+        enrollee_id BIGINT   NOT NULL,
+        score       SMALLINT NOT NULL CHECK (score >= 0 AND score <= 100),
+        CONSTRAINT PK_enrollees_has_subjects
+        PRIMARY KEY CLUSTERED (subject_id, enrollee_id),
+        CONSTRAINT FK_enrollees_has_subjects_subject_id
+        FOREIGN KEY (subject_id) REFERENCES subjects (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-        CONSTRAINT FK_enrollees_has_subjects_enrollee_id FOREIGN KEY (enrollee_id)
-        REFERENCES enrollees (id)
+        CONSTRAINT FK_enrollees_has_subjects_enrollee_id
+        FOREIGN KEY (enrollee_id) REFERENCES enrollees (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE
     )
-    CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_subject_id ON enrollees_has_subjects (subject_id ASC)
-    CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_enrollee_id ON enrollees_has_subjects (enrollee_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_subject_id
+        ON enrollees_has_subjects (subject_id ASC)
+    CREATE NONCLUSTERED INDEX IDX_enrollees_has_subjects_enrollee_id
+        ON enrollees_has_subjects (enrollee_id ASC)
 END
 GO
 -- #module: enrollees_has_subjects <<< END
@@ -334,7 +393,11 @@ CREATE PROCEDURE dbo.getAdminRole
 AS
 BEGIN
     DECLARE @adminRole NVARCHAR(10) = N'ADMIN'
-    DECLARE @id BIGINT = (SELECT r.id FROM roles r WITH(NOLOCK) WHERE r.title = @adminRole)
+    DECLARE @id BIGINT = (
+        SELECT r.id
+        FROM roles r WITH(NOLOCK)
+        WHERE r.title = @adminRole
+    )
     IF (@id IS NULL)
     BEGIN
         SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
@@ -366,7 +429,11 @@ CREATE PROCEDURE dbo.getDefaultRole
 AS
 BEGIN
     DECLARE @defaultRole NVARCHAR(10) = N'USER'
-    DECLARE @id BIGINT = (SELECT r.id FROM roles r WITH(NOLOCK) WHERE r.title = @defaultRole)
+    DECLARE @id BIGINT = (
+        SELECT r.id
+        FROM roles r WITH(NOLOCK)
+        WHERE r.title = @defaultRole
+    )
     IF (@id IS NULL)
     BEGIN
         SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
@@ -398,7 +465,11 @@ CREATE PROCEDURE dbo.getDefaultLang
 AS
 BEGIN
     DECLARE @defaultLang CHAR(2) = 'RU'
-    DECLARE @id BIGINT = (SELECT l.id FROM langs l WITH(NOLOCK) WHERE l.label = @defaultLang)
+    DECLARE @id BIGINT = (
+        SELECT l.id
+        FROM langs l WITH(NOLOCK)
+        WHERE l.label = @defaultLang
+    )
     IF (@id IS NULL)
     BEGIN
         SET TRANSACTION ISOLATION LEVEL SERIALIZABLE
@@ -440,8 +511,20 @@ BEGIN
             FROM sys.dm_exec_sessions
             WHERE session_id = @@SPID
         )
-        INSERT INTO users_audit_modification (user_id, field_name, old_value, new_value, modified_by)
-        VALUES (@id, @field, @old_val, @new_val, @login_name)
+        INSERT INTO users_audit_modification (
+            user_id,
+            field_name,
+            old_value,
+            new_value,
+            modified_by
+        )
+        VALUES (
+            @id,
+            @field,
+            @old_val,
+            @new_val,
+            @login_name
+        )
     END
 END
 GO
@@ -528,7 +611,10 @@ AS
 BEGIN
     DECLARE @position INT
     ;WITH dashboard AS (
-        SELECT e.id, ROW_NUMBER() OVER(ORDER BY e.school_score + SUM(ehs.score) DESC) AS 'num'
+        SELECT e.id
+             , ROW_NUMBER() OVER(
+                   ORDER BY e.school_score + SUM(ehs.score) DESC
+               ) AS 'num'
         FROM faculties_has_enrollees fhe
         JOIN enrollees e ON e.id = fhe.enrollee_id
         JOIN enrollees_has_subjects ehs  ON e.id = ehs.enrollee_id
@@ -563,7 +649,15 @@ BEGIN
     DECLARE @default_lang_id BIGINT
     EXECUTE @default_role_id = dbo.getDefaultRole;
     EXECUTE @default_lang_id = dbo.getDefaultLang;
-    INSERT INTO users (email, password, first_name, last_name, role_id, lang_id)
+    INSERT INTO users
+    (
+       email,
+       password,
+       first_name,
+       last_name,
+       role_id,
+       lang_id
+    )
     VALUES
     (
         @email,
@@ -606,8 +700,10 @@ SELECT r.title AS 'Role'
      , e.school_score + SUM(ehs.score) AS 'Total Score'
      , f.default_title AS 'Faculty'
      , (CASE
-            WHEN dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_budget THEN 'budget'
-            WHEN dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_paid THEN 'paid'
+            WHEN (dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_budget)
+                THEN 'budget'
+            WHEN (dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_paid)
+                THEN 'paid'
             ELSE 'does not pass'
         END) AS 'Status'
 FROM users u

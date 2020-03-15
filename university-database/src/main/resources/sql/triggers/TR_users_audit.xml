@@ -32,13 +32,47 @@
 
                 IF EXISTS (SELECT * FROM deleted)
                 BEGIN
-                    INSERT INTO users_audit (user_id, email, password, first_name, last_name, role_id, modified_by, operation)
-                    SELECT id, email, password, first_name, last_name, role_id, @login_name, 'DELETED' FROM deleted
+                    INSERT INTO users_audit (
+                        user_id,
+                        email,
+                        password,
+                        first_name,
+                        last_name,
+                        role_id,
+                        modified_by,
+                        operation
+                    )
+                    SELECT id
+                         , email
+                         , password
+                         , first_name
+                         , last_name
+                         , role_id
+                         , @login_name
+                         , 'DELETED'
+                    FROM deleted
                 END
                 ELSE
                 BEGIN
-                    INSERT INTO users_audit (user_id, email, password, first_name, last_name, role_id, modified_by, operation)
-                    SELECT id, email, password, first_name, last_name, role_id, @login_name, 'CREATED' FROM inserted
+                    INSERT INTO users_audit (
+                        user_id,
+                        email,
+                        password,
+                        first_name,
+                        last_name,
+                        role_id,
+                        modified_by,
+                        operation
+                    )
+                    SELECT id
+                         , email
+                         , password
+                         , first_name
+                         , last_name
+                         , role_id
+                         , @login_name
+                         , 'CREATED'
+                    FROM inserted
                 END
             END
             ]]>

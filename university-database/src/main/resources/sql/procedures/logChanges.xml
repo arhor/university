@@ -35,8 +35,20 @@
                         WHERE session_id = @@SPID
                     )
 
-                    INSERT INTO users_audit_modification (user_id, field_name, old_value, new_value, modified_by)
-                    VALUES (@id, @field, @old_val, @new_val, @login_name)
+                    INSERT INTO users_audit_modification (
+                        user_id,
+                        field_name,
+                        old_value,
+                        new_value,
+                        modified_by
+                    )
+                    VALUES (
+                        @id,
+                        @field,
+                        @old_val,
+                        @new_val,
+                        @login_name
+                    )
                 END
             END
             ]]>

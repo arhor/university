@@ -25,7 +25,11 @@
             BEGIN
                 DECLARE @defaultLang CHAR(2) = 'RU'
 
-                DECLARE @id BIGINT = (SELECT l.id FROM langs l WITH(NOLOCK) WHERE l.label = @defaultLang)
+                DECLARE @id BIGINT = (
+                    SELECT l.id
+                    FROM langs l WITH(NOLOCK)
+                    WHERE l.label = @defaultLang
+                )
 
                 IF (@id IS NULL)
                 BEGIN

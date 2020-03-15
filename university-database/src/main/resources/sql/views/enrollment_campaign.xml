@@ -38,8 +38,10 @@
                  , e.school_score + SUM(ehs.score) AS 'Total Score'
                  , f.default_title AS 'Faculty'
                  , (CASE
-                        WHEN dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_budget THEN 'budget'
-                        WHEN dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_paid THEN 'paid'
+                        WHEN (dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_budget)
+                            THEN 'budget'
+                        WHEN (dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_paid)
+                            THEN 'paid'
                         ELSE 'does not pass'
                     END) AS 'Status'
             FROM users u

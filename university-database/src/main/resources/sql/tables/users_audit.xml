@@ -24,9 +24,10 @@
                     role_id       BIGINT        NOT NULL,
                     modified_by   VARCHAR(128)  NOT NULL,
                     modified_date DATETIME      NOT NULL DEFAULT GETDATE(),
-                    operation     VARCHAR(20)   NOT NULL CHECK (operation in ('CREATED', 'DELETED')),
+                    operation     VARCHAR(20)   NOT NULL CHECK (operation IN ('CREATED', 'DELETED')),
 
-                    CONSTRAINT PK_users_audit PRIMARY KEY CLUSTERED (id ASC)
+                    CONSTRAINT PK_users_audit
+                    PRIMARY KEY CLUSTERED (id ASC)
                 )
             END
             ]]>

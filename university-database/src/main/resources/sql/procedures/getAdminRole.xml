@@ -24,7 +24,12 @@
             AS
             BEGIN
                 DECLARE @adminRole NVARCHAR(10) = N'ADMIN'
-                DECLARE @id BIGINT = (SELECT r.id FROM roles r WITH(NOLOCK) WHERE r.title = @adminRole)
+
+                DECLARE @id BIGINT = (
+                    SELECT r.id
+                    FROM roles r WITH(NOLOCK)
+                    WHERE r.title = @adminRole
+                )
 
                 IF (@id IS NULL)
                 BEGIN
