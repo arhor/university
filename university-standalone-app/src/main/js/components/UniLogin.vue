@@ -2,9 +2,7 @@
   <v-card :loading="loading">
 
     <v-toolbar dark flat>
-      <v-toolbar-title>
-        Login form
-      </v-toolbar-title>
+      <v-toolbar-title>Login form</v-toolbar-title>
     </v-toolbar>
   
     <v-card-text>
@@ -18,7 +16,7 @@
           label="E-mail"
           name="email"
           type="text"
-          :rules="[v => !!v || 'E-mail is requred']"
+          :rules="[v => !!v || 'E-mail is required']"
           required
         />
 
@@ -50,13 +48,15 @@
 <script>
 export default {
   name: 'UniLogin',
-  data: () => ({
-    valid: true,
-    email: '',
-    password: '',
-    loading: false,
-    error: ''
-  }),
+  data() {
+    return {
+      valid: true,
+      email: '',
+      password: '',
+      loading: false,
+      error: '',
+    }
+  },
   methods: {
     async login() {
       this.loading = true

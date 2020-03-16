@@ -7,7 +7,7 @@
   >
 
     <!-- Menu button icon -->
-    <template v-slot:activator="{ on }">
+    <template #activator="{ on }">
       <v-btn icon v-on="on">
         <v-icon>mdi-translate</v-icon>
       </v-btn>

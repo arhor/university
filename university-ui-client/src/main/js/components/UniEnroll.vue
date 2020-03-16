@@ -71,13 +71,11 @@ export default {
     async enroll() {
       this.loading = true
       try {
-        console.log('enrolling...')
         await this.$store.dispatch('enrollees/enroll', {
           country: this.country,
           city: this.city,
           schoolScore: this.schoolScore,
         })
-        console.log('success')
         this.clean()
         this.$emit('success')
       } catch (e) {

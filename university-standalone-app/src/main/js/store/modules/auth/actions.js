@@ -1,13 +1,8 @@
 import axios from 'axios'
 
 const login = async ({ commit }, { email, password }) => {
-  try {
-    const { data } = await axios.post('http://localhost:8080/api/v1/auth/signin', { email, password })
-    commit('SET_AUTH', data)
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
+  const { data } = await axios.post('http://localhost:8080/api/v1/auth/signin', { email, password })
+  commit('SET_AUTH', data)
 }
 
 const logout = ({ commit }) => commit('INVALIDATE')
@@ -21,7 +16,6 @@ const refresh = async ({ getters, commit, dispatch }) => {
     })
     commit('SET_AUTH', data)
   } catch (error) {
-    console.error(error)
     dispatch('logout')
   }
 }
