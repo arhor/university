@@ -2,9 +2,7 @@
   <v-card :loading="loading">
 
     <v-toolbar dark flat>
-      <v-toolbar-title>
-        Enroll form
-      </v-toolbar-title>
+      <v-toolbar-title>Enroll form</v-toolbar-title>
     </v-toolbar>
 
     <v-card-text>
@@ -59,25 +57,25 @@
 <script>
 export default {
   name: 'UniEnroll',
-  data: () => ({
-    valid: true,
-    country: '',
-    city: '',
-    schoolScore: 0,
-    loading: false,
-    error: ''
-  }),
+  data() {
+    return {
+      valid: true,
+      country: '',
+      city: '',
+      schoolScore: 0,
+      loading: false,
+      error: ''
+    }
+  },
   methods: {
     async enroll() {
       this.loading = true
       try {
-        console.log('enrolling...')
         await this.$store.dispatch('enrollees/enroll', {
           country: this.country,
           city: this.city,
           schoolScore: this.schoolScore,
         })
-        console.log('success')
         this.clean()
         this.$emit('success')
       } catch (e) {

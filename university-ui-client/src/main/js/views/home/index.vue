@@ -1,9 +1,9 @@
 <template>
-  <v-layout row>
-    <v-flex>
+  <v-row>
+    <v-col>
       {{ 'welcome' | translate }} to the University app!
-    </v-flex>
-  </v-layout>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

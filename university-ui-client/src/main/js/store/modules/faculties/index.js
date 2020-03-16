@@ -16,7 +16,6 @@ const actions = {
       const { data } = await axios.get('http://localhost:8080/api/v1/faculties')
       commit('SET_FACULTIES', data)
     } catch (error) {
-      console.error(error)
       throw error
     }
   }

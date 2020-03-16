@@ -18,7 +18,7 @@
       dense
       :src="require('@/assets/img/university-app-bar-bg.jpg')"
     >
-      <template v-slot:img="{ props }">
+      <template #img="{ props }">
         <v-img
           v-bind="props"
           gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
@@ -45,7 +45,7 @@
         Sign in
       </v-btn>
 
-      <template v-slot:extension>
+      <template #extension>
         <v-tabs align-with-title>
           <v-tab to="/">{{ 'home' | translate }}</v-tab>
           <v-tab to="/faculties">{{ 'faculties' | translate }}</v-tab>
@@ -55,7 +55,7 @@
 
     <!-- main view -->
     <v-content>
-      <v-container class="fill-height" fluid>
+      <v-container fluid>
         <router-view/>
       </v-container>
     </v-content>
@@ -92,11 +92,13 @@ export default {
     UniEnroll,
     UniLogin,
   },
-  data: () => ({
-    drawer: false,
-    dialog: false,
-    enrollDialog: false,
-  }),
+  data() {
+    return {
+      drawer: false,
+      dialog: false,
+      enrollDialog: false,
+    }
+  },
   computed: {
     ...mapGetters('auth', [
       'isAuthenticated'

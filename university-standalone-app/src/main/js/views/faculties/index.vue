@@ -1,9 +1,9 @@
 <template>
-  <v-layout row>
-    <v-flex col="6">
+  <v-row justify="center" align="start">
+    <v-col cols="8">
       <uni-faculties-list />
-    </v-flex>
-  </v-layout>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

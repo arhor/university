@@ -11,10 +11,8 @@ const enroll = async ({ commit, rootGetters }, { country, city, schoolScore }) =
               })
             : await axios.post('http://localhost:8080/api/v1/enrollees', { country, city, schoolScore })
 
-    console.debug(data)
     commit('SET_ENROLLEE', data)
   } catch (error) {
-    console.error(error)
     throw error
   }
 }

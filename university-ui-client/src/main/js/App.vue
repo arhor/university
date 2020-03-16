@@ -18,7 +18,7 @@
       dense
       :src="require('@/assets/img/university-app-bar-bg.jpg')"
     >
-      <template v-slot:img="{ props }">
+      <template #img="{ props }">
         <v-img
           v-bind="props"
           gradient="to top right, rgba(100,115,201,.7), rgba(25,32,72,.7)"
@@ -45,7 +45,7 @@
         Sign in
       </v-btn>
 
-      <template v-slot:extension>
+      <template #extension>
         <v-tabs align-with-title>
           <v-tab to="/">{{ 'home' | translate }}</v-tab>
           <v-tab to="/faculties">{{ 'faculties' | translate }}</v-tab>

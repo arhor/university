@@ -9,13 +9,13 @@ const state = {
 }
 
 const mutations = {
-  SET_LANG(state, selectedLang) {
+  SET_LANG: (state, selectedLang) => {
     state.currentLang = selectedLang
   }
 }
 
 const actions = {
-  changeLang({ commit }, payload) {
+  changeLang: ({ commit }, payload) => {
     commit('SET_LANG', payload)
   }
 }
