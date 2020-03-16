@@ -613,12 +613,12 @@ BEGIN
     ;WITH dashboard AS (
         SELECT e.id
              , ROW_NUMBER() OVER(
-                   ORDER BY e.school_score + SUM(ehs.score) DESC
+                   ORDER BY e.school_score + SUM(es.score) DESC
                ) AS 'num'
-        FROM faculties_has_enrollees fhe
-        JOIN enrollees e ON e.id = fhe.enrollee_id
-        JOIN enrollees_has_subjects ehs  ON e.id = ehs.enrollee_id
-        WHERE fhe.faculty_id = @facultyId
+        FROM faculties_has_enrollees fe
+        JOIN enrollees e ON e.id = fe.enrollee_id
+        JOIN enrollees_has_subjects es ON e.id = es.enrollee_id
+        WHERE fe.faculty_id = @facultyId
         GROUP BY e.id, e.school_score
     )
     SELECT @position = num FROM dashboard WHERE id = @enrolleeId
@@ -697,7 +697,7 @@ SELECT r.title AS 'Role'
      , u.last_name AS 'Last Name'
      , e.country AS 'Country'
      , e.city AS 'City'
-     , e.school_score + SUM(ehs.score) AS 'Total Score'
+     , e.school_score + SUM(es.score) AS 'Total Score'
      , f.default_title AS 'Faculty'
      , (CASE
             WHEN (dbo.calcEnrollmentPosition(f.id, e.id) < f.seats_budget)
@@ -710,9 +710,9 @@ FROM users u
 JOIN langs l ON l.id = u.lang_id
 JOIN roles r ON r.id = u.role_id
 JOIN enrollees e ON u.id = e.user_id
-JOIN enrollees_has_subjects ehs ON e.id = ehs.enrollee_id
-JOIN faculties_has_enrollees fhe ON e.id = fhe.enrollee_id
-JOIN faculties f ON f.id = fhe.faculty_id
+JOIN enrollees_has_subjects es ON e.id = es.enrollee_id
+JOIN faculties_has_enrollees fe ON e.id = fe.enrollee_id
+JOIN faculties f ON f.id = fe.faculty_id
 GROUP BY r.title
        , l.label
        , u.id
@@ -725,7 +725,7 @@ GROUP BY r.title
        , f.id
        , f.default_title
        , f.seats_budget
-eats_paid
+       , f.seats_paid
 ORDER BY f.id ASC
        , 'Total Score' DESC
 GO
@@ -1011,9 +1011,9 @@ DECLARE @counter    INT = 0
 WHILE (@counter < @totalUsers)
 BEGIN
     DECLARE @userId BIGINT = (
-        SELECT   u.id
-        FROM     users u WITH(NOLOCK)
-        WHERE    u.role_id != @Admin
+        SELECT u.id
+        FROM users u WITH(NOLOCK)
+        WHERE u.role_id != @Admin
         ORDER BY u.id ASC
         OFFSET @counter ROWS
         FETCH NEXT 1 ROWS ONLY

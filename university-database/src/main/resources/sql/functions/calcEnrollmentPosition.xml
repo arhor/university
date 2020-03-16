@@ -34,12 +34,12 @@
                 ;WITH dashboard AS (
                     SELECT e.id
                          , ROW_NUMBER() OVER(
-                               ORDER BY e.school_score + SUM(ehs.score) DESC
+                               ORDER BY e.school_score + SUM(es.score) DESC
                            ) AS 'num'
-                    FROM faculties_has_enrollees fhe
-                    JOIN enrollees e ON e.id = fhe.enrollee_id
-                    JOIN enrollees_has_subjects ehs  ON e.id = ehs.enrollee_id
-                    WHERE fhe.faculty_id = @facultyId
+                    FROM faculties_has_enrollees fe
+                    JOIN enrollees e ON e.id = fe.enrollee_id
+                    JOIN enrollees_has_subjects es ON e.id = es.enrollee_id
+                    WHERE fe.faculty_id = @facultyId
                     GROUP BY e.id, e.school_score
                 )
 
