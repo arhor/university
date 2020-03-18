@@ -13,7 +13,7 @@ case class Queries(
   @xmlAttribute
   var context: String,
 
-    // annotations passed as annotation arguments should be used as regular type
+  // annotations passed as annotation arguments should be used as regular type
   @xmlElements(Array(
     new xmlElement(name = "drop",   `type` = classOf[DropQuery]),
     new xmlElement(name = "create", `type` = classOf[CreateQuery]),

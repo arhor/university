@@ -31,7 +31,9 @@ public class UserServiceImpl implements UserService {
   public void create(User user) {
     repository
         .findByEmail(user.getEmail())
-        .ifPresent(existing -> { throw new IllegalArgumentException("user already exists: " + existing.getId()); });
+        .ifPresent(existing -> {
+          throw new IllegalArgumentException("user already exists: " + existing.getId());
+        });
 
     user.setPassword(encoder.encode(user.getPassword()));
 

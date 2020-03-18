@@ -4,8 +4,8 @@
         xmlns="http://www.arhor.by/sql-module"
         name="university">
 
-    <queries>
-        <create context="master" target="database">
+    <queries context="master">
+        <create target="database">
             <![CDATA[
             IF (DB_ID('university') IS NULL)
             BEGIN

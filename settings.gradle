@@ -12,4 +12,3 @@ include ':university-auth-server'
 include ':university-gateway-server'
 include ':university-rest-api'
 include ':university-ui-client'
-
